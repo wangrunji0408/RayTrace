@@ -13,9 +13,9 @@ public:
     T x, y, z;
 
     Vector3();
-
     Vector3(T x, T y, T z);
 
+    T value (int id) const;
     float len () const;
     T len2 () const;
     T sum () const;
@@ -23,8 +23,11 @@ public:
     Vector3 operator- () const;
     Vector3 operator+ (Vector3 const& b) const;
     Vector3 operator- (Vector3 const& b) const;
+    Vector3 operator* (Vector3 const& b) const;
+    Vector3 operator/ (Vector3 const& b) const;
     Vector3 operator* (T const& k) const;
     Vector3 operator/ (T const& k) const;
+    void operator += (Vector3 const& b);
     bool operator==(const Vector3 &rhs) const;
     bool operator!=(const Vector3 &rhs) const;
 

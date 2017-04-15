@@ -3,30 +3,48 @@
 //
 
 #include "World.h"
-#include <algorithm>
+#include "../Shapes/2D/Shape2D.h"
 
-bool World::tryGetFirstIntersectionPoint(Ray const &ray, Shape *&obj, float &t) const {
+IntersectResult World::tryGetFirstIntersectionPoint(Ray const &ray) const {
     std::vector<float> ts(objects.size(), inf);
     for(int i=0; i<objects.size(); ++i) {
-        auto obj = static_cast<IRayCastable*>(objects[i]);
-        if(obj == nullptr)
+        auto shape = static_cast<IRayCastable*>(objects[i]->getShape());
+        if(shape == nullptr)
             continue;
-        bool exist = obj->tryGetIntersectionPoint(ray, ts[i]);
-//        if(!exist)
-//            ts[i] = inf;
+        bool exist = shape->tryGetIntersectionPoint(ray, ts[i]);
+        if(!exist)
+            ts[i] = inf;
     }
     auto it = std::min_element(ts.begin(), ts.end());
     if(*it == inf)
-        return false;
-    obj = objects[it - ts.begin()];
-    t = *it;
-    return true;
+        return IntersectResult::miss;
+
+    auto object = objects[it - ts.begin()];
+    float t = *it;
+    auto point = ray.getEndPoint(t);
+    auto shape2d = dynamic_cast<Shape2D*>(object->getShape());
+    auto normal = Vector3f::zero;
+    if(shape2d != nullptr)
+        normal = shape2d->getNormalVectorOnSurface(point);
+    return IntersectResult(ray, object, t, normal);
 }
 
-void World::addObject(Shape *obj) {
+void World::addObject(Object *obj) {
     objects.push_back(obj);
 }
 
-void World::removeObject(Shape *obj) {
+void World::removeObject(Object *obj) {
     objects.erase(std::find(objects.begin(), objects.end(), obj));
+}
+
+void World::addLight(LightSource *light) {
+    lights.push_back(light);
+}
+
+void World::removeLight(LightSource *light) {
+    lights.erase(std::find(lights.begin(), lights.end(), light));
+}
+
+const std::vector<LightSource *, std::allocator<LightSource *>> &World::getLights() const {
+    return lights;
 }

@@ -17,6 +17,16 @@ Vector3<T> Vector3<T>::operator-(Vector3<T> const &b) const {
 }
 
 template<class T>
+Vector3<T> Vector3<T>::operator*(Vector3<T> const &b) const {
+    return Vector3(x * b.x, y * b.y, z * b.z);
+}
+
+template<class T>
+Vector3<T> Vector3<T>::operator/(Vector3<T> const &b) const {
+    return Vector3(x / b.x, y / b.y, z / b.z);
+}
+
+template<class T>
 Vector3<T> Vector3<T>::operator-() const {
     return Vector3(-x, -y, -z);
 }
@@ -110,6 +120,16 @@ T Vector3<T>::sum() const {
 
 template <class T>
 Vector3<T>::Vector3(): Vector3(0, 0, 0) {}
+
+template <class T>
+T Vector3<T>::value(int id) const {
+    return (&x)[id];
+}
+
+template <class T>
+void Vector3<T>::operator+=(Vector3<T> const &b) {
+    *this = operator+(b);
+}
 
 template class Vector3<int>;
 template class Vector3<float>;

@@ -6,16 +6,21 @@
 #define INC_2RAYTRACE_WORLD_H
 
 #include <vector>
-#include "../Shapes/Shape.h"
 #include "../Light/Light.h"
+#include "../Object/Object.h"
+#include "../Light/LightSource/LightSource.h"
+#include "../Object/IntersectResult.h"
 
 class World {
-    std::vector<Shape*> objects;
+    std::vector<Object*> objects;
+    std::vector<LightSource*> lights;
 public:
-    void addObject (Shape* obj);
-    void removeObject (Shape* obj);
-    bool tryGetFirstIntersectionPoint (Ray const& ray, Shape* &obj, float& t) const;
-    Color rayTrace (Ray const& ray) const;
+    const std::vector<LightSource *> &getLights() const;
+    void addObject (Object* obj);
+    void removeObject (Object* obj);
+    void addLight (LightSource* light);
+    void removeLight (LightSource* light);
+    IntersectResult tryGetFirstIntersectionPoint (Ray const& ray) const;
 };
 
 

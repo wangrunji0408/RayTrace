@@ -14,7 +14,7 @@ bool Plane::tryGetIntersectionPoint(Ray const &ray, float &t) const {
     float xs = normal.calcProjectionT(ray.getStartPoint());
     float xe = normal.calcProjectionT(ray.getEndPoint());
     t = xs / (xs - xe);
-    return true;
+    return t > eps;
 }
 
 Plane::Plane(const Ray &normal) : normal(normal) {}

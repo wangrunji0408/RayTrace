@@ -9,6 +9,8 @@
 #include "Ray.h"
 #include "IRayCastable.h"
 
+typedef Vector3f Point;
+
 const float eps = 1e-6;
 const float inf = 1e28;
 inline bool isZero (float x);

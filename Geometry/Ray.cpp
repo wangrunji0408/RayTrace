@@ -39,5 +39,5 @@ Vector3f Ray::calcProjectionPoint(Vector3f const &p) const {
 }
 
 std::ostream &operator<<(std::ostream &out, Ray const &ray) {
-    return out << "s = " << ray.start << " d = " << ray.unitdir;
+    return out << "[Ray s = " << ray.start << " d = " << ray.unitdir << "]";
 }

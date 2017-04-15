@@ -10,8 +10,8 @@
 
 class ModifiedPhong: public Phong {
 public:
-    ModifiedPhong(float pd, float ps, float shiness);
-    float getF(Vector3f const &in, Vector3f const &out, Ray const &face) override;
+    ModifiedPhong(const Color &diffuse, const Color &specular, float shininess);
+    Color getF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) override;
 };
 
 
