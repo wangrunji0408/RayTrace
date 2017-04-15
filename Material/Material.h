@@ -10,8 +10,12 @@
 
 class Material {
 public:
-    virtual Color getF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) = 0;
-    virtual Color getFByPoint (Vector3f const& inPoint, Vector3f const& outPoint, Ray const& face);
+    std::string name;
+protected:
+    virtual Color calcBRDF(Vector3f const &lUnit, Vector3f const &vUnit, Vector3f const &nUnit) const = 0;
+public:
+    Color calcF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const;
+    Color calcFByPoint(Vector3f const &inPoint, Vector3f const &outPoint, Ray const &face) const;
 };
 
 

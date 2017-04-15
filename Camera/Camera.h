@@ -9,6 +9,9 @@
 #include "../Geometry/Ray.h"
 
 class Camera {
+public:
+    std::string name;
+private:
     Ray ray;
     Vector3f up, right;    // UnitVector
     int width, height;

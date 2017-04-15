@@ -12,9 +12,10 @@ class Phong: public Material {
 public:
     Color diffuse, specular;
     float shininess;
+protected:
+    Color calcBRDF(Vector3f const &l, Vector3f const &v, Vector3f const &n) const override;
 public:
     Phong(const Color &diffuse, const Color &specular, float shininess);
-    Color getF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) override;
 };
 
 

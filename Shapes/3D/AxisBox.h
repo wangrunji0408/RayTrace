@@ -10,10 +10,10 @@
 
 class AxisBox: public Box {
     Vector3f minp, maxp;
-
     static float getIntersectionT1D (float x, bool dirMinus, float min, float max);
 
 public:
+    AxisBox(const Vector3f &minp, const Vector3f &maxp);
     Vector3f getNormalVectorOnSurface(Vector3f const &point) const override;
     bool isInside(Vector3f const &point) const override;
     bool isOnSurface(Vector3f const &point) const override;

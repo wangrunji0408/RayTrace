@@ -5,11 +5,11 @@
 #include "Shapes/1D/BezierLine.h"
 #include "World/World.h"
 #include "Shapes/3D/Sphere.h"
-#include "Camera/Camera.h"
 #include "Renderer/LightProjection.h"
 #include "Material/Lambertain.h"
 #include "Light/LightSource/PointLight.h"
 #include "Material/Phong.h"
+#include "IO/SceneParser.h"
 
 using namespace std;
 
@@ -36,12 +36,13 @@ void testTriangleGravity() {
 void test() {
     auto world = new World();
     auto m1 = new Lambertain(Color(1, 0, 0));
-    auto m11 = new Phong(Color(0.2, 0, 0), Color(0.5, 0, 0), 2);
+    auto m11 = new Phong(Color(0.2, 0, 0), Color(0.4, 0, 0), 1);
     auto m2 = new Lambertain(Color(0, 0.5, 0));
     auto triangle = new Object(new Triangle(Point(-5, 0, 0), Point(0, 5, 0), Point(-5, 5, 5)), m11, "triangle");
     auto sphere = new Object(new Sphere(Point(0, 0, 0), 1), m11, "sphere");
     auto plane = new Object(new Plane(Ray(Point(0, 0, -0.5f), Point(0, 0, 1))), m2, "plane");
-    auto pointLight = new PointLight(Point(5, -5, 5), Point(100, 100, 100));
+    //auto pointLight = new ParallelLight(Ray(Point(5, -5, 5), Point(-1, 1, -1)), Color(10, 10, 10));
+    auto pointLight = new PointLight(Point(5, -5, 5), Color(1, 1, 1));
     world->addObject(sphere);
     world->addObject(plane);
     world->addObject(triangle);
@@ -55,7 +56,18 @@ void test() {
     cv::waitKey(0);
 }
 
+void testLoadFromFile ()
+{
+    auto parser = SceneParser();
+    World* world = parser.load("scene.json");
+    auto camera = world->findCamera("camera_1");
+    auto renderer = new LightProjection(world, camera);
+    auto mat = renderer->render();
+    cv::imshow("image", mat);
+    cv::waitKey(0);
+}
+
 int main() {
-    test();
+    testLoadFromFile();
     return 0;
 }

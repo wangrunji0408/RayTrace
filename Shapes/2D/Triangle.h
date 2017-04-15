@@ -14,6 +14,7 @@ public:
     Vector3f a, b, c;
 public:
     Triangle(const Vector3f &a, const Vector3f &b, const Vector3f &c);
+    Triangle(const Vector3f points[]);
 
     bool isOnSurface(Vector3f const &point) const override;
     Vector3f getNormalVectorOnSurface(Vector3f const &point) const override;

@@ -42,3 +42,6 @@ Vector3f Triangle::calcGravityCoordinate(Vector3f const &p) const {
     Vector3f t = Vector3f(ta, tb, tc);
     return t / t.sum();
 }
+
+Triangle::Triangle(const Vector3f *points):
+    Triangle(points[0], points[1], points[2]) {}

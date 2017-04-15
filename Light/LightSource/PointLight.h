@@ -10,6 +10,7 @@
 #include "LightSource.h"
 
 class PointLight: public LightSource {
+private:
     Vector3f pos;
     Color color;
 public:

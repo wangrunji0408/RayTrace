@@ -68,3 +68,5 @@ Vector3f AxisBox::getNormalVectorOnSurface(Vector3f const &p) const {
     return Vector3f::zero;  // should not reach here
 }
 
+AxisBox::AxisBox(const Vector3f &minp, const Vector3f &maxp) : minp(minp), maxp(maxp) {}
+

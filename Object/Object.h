@@ -12,8 +12,8 @@
 using std::string;
 
 class Object {
-    string name;
 private:
+    string name;
     Shape* shape;
     Material* material;
 public:

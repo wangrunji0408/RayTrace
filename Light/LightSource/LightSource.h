@@ -10,6 +10,8 @@
 
 class LightSource {
 public:
+    std::string name;
+public:
     virtual Light illuminate (Vector3f const& point) const = 0;
 };
 

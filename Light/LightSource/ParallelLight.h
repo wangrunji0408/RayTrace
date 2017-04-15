@@ -10,9 +10,18 @@
 #include "../../Geometry/Ray.h"
 
 class ParallelLight: public LightSource {
-public:
     Ray ray;
     Color color;
+public:
+    ParallelLight(const Ray &ray, const Color &color);
+
+    const Ray &getRay() const;
+
+    void setRay(const Ray &ray);
+
+    const Color &getColor() const;
+
+    void setColor(const Color &color);
 
     Light illuminate(Vector3f const &point) const override;
 };

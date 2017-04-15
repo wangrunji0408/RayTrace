@@ -15,7 +15,7 @@ cv::Vec3f LightProjection::renderPixel(int x, int y) const {
     for(auto light : world->getLights())
     {
         Light l = light->illuminate(point);
-        Color f = obj->getMaterial()->getF(-l.getUnitDir(), ray.getStartPoint() - point, result.getNormal());
+        Color f = obj->getMaterial()->calcF(-l.getUnitDir(), ray.getStartPoint() - point, result.getNormal());
         color += l.color * f;
     }
 //    std::cerr << x << ' ' << y << ' ' << color << std::endl;

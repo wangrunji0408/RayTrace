@@ -13,10 +13,12 @@ class Renderer {
 protected:
     World* world;
     Camera* camera;
+protected:
+    static void recolor (cv::Mat3f &mat);
 public:
     Renderer(World *world, Camera *camera);
     virtual cv::Vec3f renderPixel (int x, int y) const = 0;
-    cv::Mat render() const;
+    cv::Mat3f render() const;
 };
 
 

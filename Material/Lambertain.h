@@ -13,7 +13,9 @@ public:
     Color diffuse;
 public:
     Lambertain(Color color);
-    Color getF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) override;
+
+protected:
+    Color calcBRDF(Vector3f const &l, Vector3f const &v, Vector3f const &n) const override;
 };
 
 

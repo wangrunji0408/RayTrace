@@ -48,3 +48,19 @@ void World::removeLight(LightSource *light) {
 const std::vector<LightSource *, std::allocator<LightSource *>> &World::getLights() const {
     return lights;
 }
+
+void World::addCamera(Camera *camera) {
+    cameras.push_back(camera);
+}
+
+void World::removeCamera(Camera *camera) {
+    cameras.erase(std::find(cameras.begin(), cameras.end(), camera));
+}
+
+Camera *World::findCamera(std::string name) const {
+    auto it = std::find_if(cameras.begin(), cameras.end(),
+                        [&](Camera* const& camera){return camera->name == name;});
+    return it == cameras.end()? nullptr: *it;
+}
+
+
