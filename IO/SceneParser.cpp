@@ -53,8 +53,9 @@ Camera *SceneParser::buildCamera(Json::Value const &json) {
     Vector3f up = parseVector3f(json["up"]);
     int width = json["resolution"][0].asInt();
     int height = json["resolution"][1].asInt();
-    float focus = json["focus"].asFloat();
-    auto camera = new Camera(pos, target, up, width, height, focus);
+    float realw = json["realw"].asFloat();
+    bool orthographic = json["orthographic"].asBool();
+    auto camera = new Camera(pos, target, up, width, height, realw, orthographic);
     camera->name = json["name"].asString();
     return camera;
 }

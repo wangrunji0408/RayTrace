@@ -10,28 +10,27 @@ void Camera::setResolution(int width, int height) {
 }
 
 Ray Camera::getRay(int x, int y) const {
-    auto dir = ray.getUnitDir() * focalLength
-               + up * (height / 2 - x)
-               + right * (y - width / 2);
-    return Ray(ray.getStartPoint(), dir);
+    auto delta = (up * (height / 2 - x) + right * (y - width / 2)) * (realw / width);
+    if(orthographic)
+        return Ray(pos + delta, target - pos);
+    return Ray(pos, target - pos + delta);
 }
 
 Camera::Camera(const Vector3f &pos, const Vector3f &target, const Vector3f &up, int width, int height,
-               float focalLength)
+               float realw, bool orthographic)
 {
     setPosition(pos, target, up);
     setResolution(width, height);
-    setFocalLength(focalLength);
+    setRealw(realw);
+    setOrthographic(orthographic);
 }
 
 void Camera::setPosition(Vector3f const &pos, Vector3f const &target, Vector3f const &upPoint) {
-    ray = Ray::fromTo(pos, target);
+    this->pos = pos;
+    this->target = target;
+    Ray ray = Ray::fromTo(pos, target);
     up = (upPoint - ray.calcProjectionPoint(upPoint)).norm();
     right = ray.getUnitDir().det(up);
-}
-
-void Camera::setFocalLength(float f) {
-    focalLength = f;
 }
 
 int Camera::getWidth() const {
@@ -40,4 +39,20 @@ int Camera::getWidth() const {
 
 int Camera::getHeight() const {
     return height;
+}
+
+bool Camera::isOrthographic() const {
+    return orthographic;
+}
+
+void Camera::setOrthographic(bool orthographic) {
+    Camera::orthographic = orthographic;
+}
+
+float Camera::getRealw() const {
+    return realw;
+}
+
+void Camera::setRealw(float realw) {
+    Camera::realw = realw;
 }

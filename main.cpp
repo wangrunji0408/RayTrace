@@ -49,7 +49,7 @@ void test() {
     world->addLight(pointLight);
 
     auto camera = new Camera(Point(0, -10, 5), Point(0, 0, 0), Point(0, 0, 1),
-                             640, 480, 600);
+                             640, 480, 10, false);
     auto renderer = new LightProjection(world, camera);
     auto mat = renderer->render();
     cv::imshow("image", mat);

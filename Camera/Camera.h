@@ -12,17 +12,23 @@ class Camera {
 public:
     std::string name;
 private:
-    Ray ray;
+    Vector3f pos, target;
     Vector3f up, right;    // UnitVector
+    float realw;
     int width, height;
     float focalLength;
+    bool orthographic;
 public:
-    Camera(const Vector3f &pos, const Vector3f &target, const Vector3f &up, int width, int height, float focalLength);
+    Camera(const Vector3f &pos, const Vector3f &target, const Vector3f &up, int width, int height,
+           float realw, bool orthographic);
     int getWidth() const;
     int getHeight() const;
+    float getRealw() const;
     void setPosition (Vector3f const& pos, Vector3f const& target, Vector3f const& up);
     void setResolution (int width, int height);
-    void setFocalLength (float f);
+    void setRealw(float realw);
+    bool isOrthographic() const;
+    void setOrthographic(bool orthographic);
 
     virtual Ray getRay (int x, int y) const;
 };
