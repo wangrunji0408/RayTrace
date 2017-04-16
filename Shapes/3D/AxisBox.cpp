@@ -6,6 +6,7 @@
 #include "AxisBox.h"
 
 bool AxisBox::tryGetIntersectionPoint(Ray const &ray, float &t) const {
+    // TODO check
     Vector3f const& s = ray.getStartPoint();
     Vector3f const& d = ray.getUnitDir();
     float tx = getIntersectionT1D(s.x, d.x < 0, minp.x, maxp.x);

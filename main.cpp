@@ -60,9 +60,12 @@ void testLoadFromFile (const char* filePath)
 {
     auto parser = SceneParser();
     World* world = parser.load(filePath);
-    auto camera = world->findCamera("camera_1");
-    auto renderer = new LightProjection(world, camera);
-    auto mat = renderer->render();
+    auto renderer = parser.rendererDict.begin()->second;
+    auto mat = renderer->render8U3C();
+
+    char file[100];
+    sprintf(file, "./image/render(%s)_%d.png", renderer->name.c_str(), (int)clock());
+    cv::imwrite(file, mat);
     cv::imshow("image", mat);
     cv::waitKey(0);
 }

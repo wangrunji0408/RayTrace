@@ -4,18 +4,21 @@
 
 #include "Renderer.h"
 
-Renderer::Renderer(World *world, Camera *camera, bool useRecolor) :
-        world(world), camera(camera), useRecolor(useRecolor) {}
+Renderer::Renderer(World *world, Camera *camera) :
+        world(world), camera(camera) {}
 
-cv::Mat3f Renderer::render() const {
+cv::Mat Renderer::render() const {
+    auto t0 = clock();
     int h = camera->getHeight(), w = camera->getWidth();
     cv::Mat3f mat = cv::Mat(h, w, CV_32FC3);
     mat.forEach([this](cv::Vec3f & p, const int id[])
                 {
-                    p = renderPixel(id[0], id[1]);
+                    p = toCvVec3f(renderPixel(id[0], id[1]));
                 });
-    if(useRecolor)
+    if(enableRecolor)
         recolor(mat);
+    auto time = clock() - t0;
+    std::cerr << "Render End. Time = " << time << "us" << std::endl;
     return mat;
 }
 
@@ -37,4 +40,15 @@ void Renderer::recolor(cv::Mat3f &mat) {
                     p[1] /= maxValue;
                     p[2] /= maxValue;
                 });
+}
+
+cv::Vec3f Renderer::toCvVec3f(Vector3f const &p) {
+    return cv::Vec3f(p.x, p.y, p.z);
+}
+
+cv::Mat Renderer::render8U3C() const {
+    cv::Mat mat = render() * 255;
+    cv::Mat mat1;
+    mat.convertTo(mat1, CV_8UC3);
+    return mat1;
 }

@@ -14,6 +14,8 @@
 #include "../Shapes/2D/Triangle.h"
 #include "../Shapes/3D/Sphere.h"
 #include "../Shapes/3D/AxisBox.h"
+#include "../Renderer/RayTracer.h"
+#include "../Renderer/LightProjection.h"
 #include <fstream>
 
 using namespace Json;
@@ -23,7 +25,12 @@ World *SceneParser::load(const char *filePath) {
     std::ifstream fin(filePath);
     fin >> json;
     fin.close();
-    return buildWorld(json);
+    world = buildWorld(json["world"]);
+    for(auto const& j: json["renderers"]) {
+        auto renderer = buildRenderer(j);
+        rendererDict[renderer->name] = renderer;
+    }
+    return world;
 }
 
 World *SceneParser::buildWorld(Json::Value const &json) {
@@ -44,6 +51,8 @@ World *SceneParser::buildWorld(Json::Value const &json) {
         auto light = buildLight(j);
         world->addLight(light);
     }
+    world->setEnvColor(parseVector3fCanBeSingle(json["env_color"]));
+    world->name = json["name"].asString();
     return world;
 }
 
@@ -132,6 +141,8 @@ Material *SceneParser::buildMaterial(Json::Value const &json) {
     }
     else
         throw std::invalid_argument("Material type wrong: " + json["name"].asString());
+    material->transparency = json["transparency"].asFloat();
+    material->refractiveIndex = json.get("refractive_index", 1).asFloat();
     material->name = json["name"].asString();
     return material;
 }
@@ -174,4 +185,22 @@ Shape *SceneParser::buildShape(Json::Value const &json) {
         throw std::invalid_argument("Shape type wrong: " + json["name"].asString());
     shape->name = json["name"].asString();
     return shape;
+}
+
+Renderer *SceneParser::buildRenderer(Json::Value const &json) {
+    Renderer* renderer = nullptr;
+    Camera* camera = world->findCamera(json["camera"].asString());
+    if(json["type"] == "light_projection")
+    {
+        renderer = new LightProjection(world, camera);
+    }
+    else if(json["type"] == "ray_tracer")
+    {
+        auto rt = new RayTracer(world, camera);
+        rt->setMaxDepth(json.get("depth", 2).asInt());
+        renderer = rt;
+    }
+    renderer->enableRecolor = json["recolor"].asBool();
+    renderer->name = json["name"].asString();
+    return renderer;
 }

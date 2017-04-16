@@ -13,7 +13,10 @@
 #include "../Camera/Camera.h"
 
 class World {
-    std::string name;
+public:
+    string name = "world";
+private:
+    Color envColor = Color::zero;
     std::vector<Object*> objects;
     std::vector<LightSource*> lights;
     std::vector<Camera*> cameras;
@@ -26,6 +29,10 @@ public:
     void addCamera (Camera* camera);
     void removeCamera  (Camera* camera);
     Camera* findCamera (std::string name) const;
+
+    const Color &getEnvColor() const;
+    void setEnvColor(const Color &envColor);
+
     IntersectResult tryGetFirstIntersectionPoint (Ray const& ray) const;
     bool testLightBlocked(Light const& light) const;
 };

@@ -13,6 +13,7 @@ public:
     T x, y, z;
 
     Vector3();
+    Vector3(T x);
     Vector3(T x, T y, T z);
 
     T value (int id) const;
@@ -28,6 +29,7 @@ public:
     Vector3 operator* (T const& k) const;
     Vector3 operator/ (T const& k) const;
     void operator += (Vector3 const& b);
+    bool operator<(const Vector3 &rhs) const;
     bool operator==(const Vector3 &rhs) const;
     bool operator!=(const Vector3 &rhs) const;
 

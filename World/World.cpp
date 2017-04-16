@@ -68,4 +68,12 @@ bool World::testLightBlocked(Light const &light) const {
     return result.isSuccess() && result.getT() < light.len() * 0.99f;
 }
 
+const Color &World::getEnvColor() const {
+    return envColor;
+}
+
+void World::setEnvColor(const Color &envColor) {
+    World::envColor = envColor;
+}
+
 

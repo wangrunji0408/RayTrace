@@ -4,11 +4,11 @@
 
 #include "LightProjection.h"
 
-cv::Vec3f LightProjection::renderPixel(int x, int y) const {
+Color LightProjection::renderPixel(int x, int y) const {
     auto ray = camera->getRay(x, y);
     auto result = world->tryGetFirstIntersectionPoint(ray);
     if(!result.isSuccess())
-        return cv::Vec3f(0, 0, 0);
+        return world->getEnvColor();
     auto obj = result.getObject();
     auto point = result.getPoint();
     Color color = Vector3f::zero;
@@ -19,8 +19,7 @@ cv::Vec3f LightProjection::renderPixel(int x, int y) const {
         Color f = obj->getMaterial()->calcF(-l.getUnitDir(), ray.getStartPoint() - point, result.getNormal());
         color += l.color * f;
     }
-//    std::cerr << x << ' ' << y << ' ' << color << std::endl;
-    return cv::Vec3f(color.x, color.y, color.z);
+    return color;
 }
 
 LightProjection::LightProjection(World *world, Camera *camera) : Renderer(world, camera) {}

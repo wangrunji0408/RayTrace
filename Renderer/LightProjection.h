@@ -11,7 +11,7 @@
 class LightProjection: public Renderer {
 public:
     LightProjection(World *world, Camera *camera);
-    cv::Vec3f renderPixel(int x, int y) const override;
+    Color renderPixel(int x, int y) const override;
 };
 
 

@@ -2,6 +2,7 @@
 // Created by 王润基 on 2017/4/9.
 //
 
+#include <cmath>
 #include "Material.h"
 
 Color Material::calcFByPoint(Vector3f const &inPoint, Vector3f const &outPoint, Ray const &face) const {
@@ -13,5 +14,21 @@ Color Material::calcFByPoint(Vector3f const &inPoint, Vector3f const &outPoint, 
 }
 
 Color Material::calcF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const {
-    return calcBRDF(inDir.norm(), outDir.norm(), normalDir.norm());
+    auto i = inDir.norm();
+    auto o = outDir.norm();
+    auto n = normalDir.norm();
+    auto dot = n.dot(i) * n.dot(o);
+    if(dot < 0) return Color(transparency * (-dot));
+    return calcBRDF(i, o, n);
+}
+
+Vector3f Material::calcRefractiveDir(Vector3f const &inDir, Vector3f const &normalDir) const {
+    auto l = inDir.norm();
+    auto n = normalDir.norm();
+    auto m = l.det(n);
+    float sini = m.len();
+    float sinr = sini / refractiveIndex;
+    float cosr = sqrtf(1 - sinr * sinr);
+    auto rr = n.det(m).norm();
+    return n * (-cosr) + rr * sinr;
 }

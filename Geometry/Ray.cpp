@@ -4,7 +4,8 @@
 
 #include "Ray.h"
 
-Ray::Ray(const Vector3f &start, const Vector3f &direction) : start(start), unitdir(direction.norm()) {}
+Ray::Ray(const Vector3f &start, const Vector3f &direction) :
+        start(start), unitdir(direction.norm()) {}
 
 float Ray::calcProjectionT(Vector3f const &p) const {
     return (p - start).dot(unitdir.norm());

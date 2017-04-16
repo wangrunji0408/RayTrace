@@ -67,6 +67,9 @@ template<class T>
 Vector3<T>::Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
 
 template<class T>
+Vector3<T>::Vector3(T x) : x(x), y(x), z(x) {}
+
+template<class T>
 Vector3<T> Vector3<T>::norm() const {
     return *this / len();
 }
@@ -94,6 +97,20 @@ float Vector3<T>::angle(Vector3<T> const &b) const {
 template<class T>
 bool Vector3<T>::isVertical(Vector3<T> const &b) const {
     return isZero(dot(b));
+}
+
+template <>
+bool Vector3<int>::operator<(const Vector3<int> &rhs) const {
+    return x < rhs.x &&
+           y < rhs.y &&
+           z < rhs.z;
+}
+
+template <>
+bool Vector3<float>::operator<(const Vector3<float> &rhs) const {
+    return x < rhs.x - eps &&
+           y < rhs.y - eps &&
+           z < rhs.z - eps;
 }
 
 template <>

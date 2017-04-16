@@ -1,0 +1,126 @@
+// 第一行：Blinn-Phong
+// 第二行：Phong
+// 第三行：Modified-Phong
+
+{
+  "world": {
+    "objects": [
+      {
+        "name": "plane1",
+        "shape": {"type": "plane", "point": [0,0,-2], "normal": [0,0,1]},
+        "material": "green"
+      },
+      {
+        "name": "sphere1",
+        "shape": {"type": "sphere", "o": [-2,0,0], "r": 0.4},
+        "material": {"type": "phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 0.5}
+      },
+      {
+        "name": "sphere2",
+        "shape": {"type": "sphere", "o": [-1,0,0], "r": 0.4},
+        "material": {"type": "phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 1}
+      },
+      {
+        "name": "sphere3",
+        "shape": {"type": "sphere", "o": [0,0,0], "r": 0.4},
+        "material": {"type": "phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 2}
+      },
+      {
+        "name": "sphere4",
+        "shape": {"type": "sphere", "o": [1,0,0], "r": 0.4},
+        "material": {"type": "phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 3}
+      },
+      {
+        "name": "sphere5",
+        "shape": {"type": "sphere", "o": [2,0,0], "r": 0.4},
+        "material": {"type": "phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 8}
+      },
+      {
+        "name": "sphere1",
+        "shape": {"type": "sphere", "o": [-2,0,1], "r": 0.4},
+        "material": {"type": "blinn_phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 0.5}
+      },
+      {
+        "name": "sphere2",
+        "shape": {"type": "sphere", "o": [-1,0,1], "r": 0.4},
+        "material": {"type": "blinn_phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 1}
+      },
+      {
+        "name": "sphere3",
+        "shape": {"type": "sphere", "o": [0,0,1], "r": 0.4},
+        "material": {"type": "blinn_phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 2}
+      },
+      {
+        "name": "sphere4",
+        "shape": {"type": "sphere", "o": [1,0,1], "r": 0.4},
+        "material": {"type": "blinn_phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 3}
+      },
+      {
+        "name": "sphere5",
+        "shape": {"type": "sphere", "o": [2,0,1], "r": 0.4},
+        "material": {"type": "blinn_phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 8}
+      },
+      {
+        "name": "sphere1",
+        "shape": {"type": "sphere", "o": [-2,0,-1], "r": 0.4},
+        "material": {"type": "modified_phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 0.5}
+      },
+      {
+        "name": "sphere2",
+        "shape": {"type": "sphere", "o": [-1,0,-1], "r": 0.4},
+        "material": {"type": "modified_phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 1}
+      },
+      {
+        "name": "sphere3",
+        "shape": {"type": "sphere", "o": [0,0,-1], "r": 0.4},
+        "material": {"type": "modified_phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 2}
+      },
+      {
+        "name": "sphere4",
+        "shape": {"type": "sphere", "o": [1,0,-1], "r": 0.4},
+        "material": {"type": "modified_phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 3}
+      },
+      {
+        "name": "sphere5",
+        "shape": {"type": "sphere", "o": [2,0,-1], "r": 0.4},
+        "material": {"type": "modified_phong", "diffuse": [0.2, 0, 0], "specular": 0.5, "shininess": 8}
+      }
+    ],
+    "materials": [
+      {
+        "name": "green",
+        "type": "phong",
+        "diffuse": [0, 0.2, 0],
+        "specular": [0, 0.1, 0],
+        "shininess": 1
+      }
+    ],
+    "lights": [
+      {
+        "name": "parallel_light_1",
+        "type": "parallel",
+        "pos": [5, -5, 5],
+        "dir": [-1, 1, -1],
+        "color": [2, 2, 2]
+      }
+    ],
+    "cameras": [
+      {
+        "name": "camera_1",
+        "pos": [0, -50, 1],
+        "target": [0, 0, 0],
+        "up": [0, 0, 1],
+        "resolution": [640, 480],
+        "realw": 5,
+        "orthographic": true
+      }
+    ]
+  },
+  "renderers": [
+    {
+      "name": "light_projection",
+      "type": "light_projection",
+      "camera": "camera_1"
+    }
+  ]
+}
