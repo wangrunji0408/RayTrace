@@ -63,4 +63,9 @@ Camera *World::findCamera(std::string name) const {
     return it == cameras.end()? nullptr: *it;
 }
 
+bool World::testLightBlocked(Light const &light) const {
+    auto result = tryGetFirstIntersectionPoint(light.getRay());
+    return result.isSuccess() && result.getT() < light.len() * 0.99f;
+}
+
 

@@ -4,7 +4,8 @@
 
 #include "Renderer.h"
 
-Renderer::Renderer(World *world, Camera *camera) : world(world), camera(camera) {}
+Renderer::Renderer(World *world, Camera *camera, bool useRecolor) :
+        world(world), camera(camera), useRecolor(useRecolor) {}
 
 cv::Mat3f Renderer::render() const {
     int h = camera->getHeight(), w = camera->getWidth();
@@ -13,7 +14,8 @@ cv::Mat3f Renderer::render() const {
                 {
                     p = renderPixel(id[0], id[1]);
                 });
-    recolor(mat);
+    if(useRecolor)
+        recolor(mat);
     return mat;
 }
 

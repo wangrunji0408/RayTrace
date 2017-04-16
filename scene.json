@@ -35,7 +35,7 @@
       "type": "parallel",
       "pos": [5, -5, 5],
       "dir": [-1, 1, -1],
-      "color": [10, 10, 10]
+      "color": [2, 2, 2]
     }
   ],
   "cameras": [

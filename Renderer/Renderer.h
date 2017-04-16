@@ -10,13 +10,15 @@
 #include "../Camera/Camera.h"
 
 class Renderer {
+public:
+    bool useRecolor = false;
 protected:
     World* world;
     Camera* camera;
 protected:
     static void recolor (cv::Mat3f &mat);
 public:
-    Renderer(World *world, Camera *camera);
+    Renderer(World *world, Camera *camera, bool useRecolor = false);
     virtual cv::Vec3f renderPixel (int x, int y) const = 0;
     cv::Mat3f render() const;
 };

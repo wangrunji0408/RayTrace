@@ -27,6 +27,7 @@ public:
     void removeCamera  (Camera* camera);
     Camera* findCamera (std::string name) const;
     IntersectResult tryGetFirstIntersectionPoint (Ray const& ray) const;
+    bool testLightBlocked(Light const& light) const;
 };
 
 

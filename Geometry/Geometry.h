@@ -11,8 +11,8 @@
 
 typedef Vector3f Point;
 
-const float eps = 1e-6;
-const float inf = 1e28;
+const float eps = 1e-5;
+const float inf = 1e36;
 inline bool isZero (float x);
 inline bool isEqual (float x, float y);
 inline bool isBetween(float x, float min, float max);

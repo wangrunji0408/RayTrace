@@ -7,7 +7,7 @@
 Light PointLight::illuminate(Vector3f const &point) const {
     Vector3f d = point - pos;
     auto omiga = 1 / d.len2();
-    return Light(Ray(point, d), color * omiga);
+    return Light(pos, point, color * omiga);
 }
 
 PointLight::PointLight(const Vector3f &pos, const Color &color) : pos(pos), color(color) {}

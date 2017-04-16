@@ -12,12 +12,13 @@ typedef Vector3f Color;
 
 class Light {
 public:
-    Ray ray;
+    Vector3f begin, end;
     Color color;
 public:
-    Light(const Ray &ray, const Color &color) : ray(ray), color(color) {}
+    Light(const Vector3f &begin, const Vector3f &end, const Color &color);
     Vector3f getUnitDir () const;
-
+    Ray getRay () const;
+    float len () const;
     friend std::ostream &operator<<(std::ostream &os, const Light &light);
 };
 

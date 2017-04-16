@@ -56,10 +56,10 @@ void test() {
     cv::waitKey(0);
 }
 
-void testLoadFromFile ()
+void testLoadFromFile (const char* filePath)
 {
     auto parser = SceneParser();
-    World* world = parser.load("scene.json");
+    World* world = parser.load(filePath);
     auto camera = world->findCamera("camera_1");
     auto renderer = new LightProjection(world, camera);
     auto mat = renderer->render();
@@ -67,7 +67,14 @@ void testLoadFromFile ()
     cv::waitKey(0);
 }
 
-int main() {
-    testLoadFromFile();
+int main (int argc, char** argv) {
+    const char* filePath;
+    if(argc == 1)
+        filePath = "scene.json";
+    else if(argc == 2)
+        filePath = argv[1];
+    else
+        return 0;
+    testLoadFromFile(filePath);
     return 0;
 }
