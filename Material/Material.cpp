@@ -41,3 +41,8 @@ Vector3f Material::calcRefractiveDir(Vector3f const &inDir, Vector3f const &norm
         return n * cosr + rr * sinr;
     }
 }
+
+Color Material::calcAttenuation(float dist) const {
+    auto t = attenuation * (-dist);
+    return Color(expf(t.x), expf(t.y), expf(t.z));
+}

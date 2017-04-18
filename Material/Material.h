@@ -11,6 +11,7 @@
 class Material {
 public:
     std::string name;
+    Color attenuation = Color::zero;
     float refractiveIndex = 1;
     Color reflectiveness = Color::zero;
     Color transparency = Color::zero;
@@ -20,6 +21,7 @@ public:
     Color calcF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const;
     Color calcFByPoint(Vector3f const &inPoint, Vector3f const &outPoint, Ray const &face) const;
     Vector3f calcRefractiveDir (Vector3f const &inDir, Vector3f const &normalDir) const;
+    Color calcAttenuation (float dist) const;
 };
 
 

@@ -25,6 +25,10 @@ inline bool isBetween(float x, float min, float max) {
     return x > min + eps && x < max - eps;
 }
 
+inline bool isBetweenOrEqual(float x, float min, float max) {
+    return x > min - eps && x < max + eps;
+}
+
 inline bool isEqual(float x, float y) {
     return isZero(x - y);
 }

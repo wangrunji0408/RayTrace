@@ -13,7 +13,7 @@ class Renderer {
 public:
     string name = "renderer";
     bool enableRecolor = false;
-//    bool enableParallel = true;
+    bool enableParallel = true;
 protected:
     World* world;
     Camera* camera;

@@ -8,17 +8,22 @@ Renderer::Renderer(World *world, Camera *camera) :
         world(world), camera(camera) {}
 
 cv::Mat Renderer::render() const {
-    auto t0 = clock();
+    time_t t0 = time(0);
     int h = camera->getHeight(), w = camera->getWidth();
     cv::Mat3f mat = cv::Mat(h, w, CV_32FC3);
-    mat.forEach([this](cv::Vec3f & p, const int id[])
+    if(enableParallel)
+        mat.forEach([this](cv::Vec3f & p, const int id[])
                 {
                     p = toCvVec3f(renderPixel(id[0], id[1]));
                 });
+    else
+        for(int i=0; i<mat.size().height; ++i)
+            for(int j=0; j<mat.size().width; ++j)
+                mat[i][j] = toCvVec3f(renderPixel(i, j));;
     if(enableRecolor)
         recolor(mat);
-    auto time = clock() - t0;
-    std::cerr << "Render End. Time = " << time << "us" << std::endl;
+    auto t= time(0) - t0;
+    std::cerr << "Render End. Time = " << t << "s" << std::endl;
     return mat;
 }
 

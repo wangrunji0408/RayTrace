@@ -200,6 +200,7 @@ Renderer *SceneParser::buildRenderer(Json::Value const &json) {
         rt->setMaxDepth(json.get("depth", 2).asInt());
         renderer = rt;
     }
+    renderer->enableParallel = json.get("parallel", true).asBool();
     renderer->enableRecolor = json["recolor"].asBool();
     renderer->name = json["name"].asString();
     return renderer;

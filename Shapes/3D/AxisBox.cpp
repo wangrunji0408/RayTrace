@@ -3,10 +3,10 @@
 //
 
 #include <algorithm>
+#include <cmath>
 #include "AxisBox.h"
 
 bool AxisBox::tryGetIntersectionPoint(Ray const &ray, float &t) const {
-    // TODO check
     Vector3f const& s = ray.getStartPoint();
     Vector3f const& d = ray.getUnitDir();
     float tx = getIntersectionT1D(s.x, d.x < 0, minp.x, maxp.x);
@@ -14,10 +14,9 @@ bool AxisBox::tryGetIntersectionPoint(Ray const &ray, float &t) const {
     float tz = getIntersectionT1D(s.z, d.z < 0, minp.z, maxp.z);
     if(tx == inf || ty == inf || tz == inf)
         return false;
-    tx /= d.x, ty /= d.y, tz /= d.z;
-    t = std::min(std::min(tx, ty), tz);
-    // 检测在不在表面？？
-    return true;
+    tx /= fabs(d.x), ty /= fabs(d.y), tz /= fabs(d.z);
+    t = std::max(std::max(tx, ty), tz);
+    return isOnSurface(ray.getEndPoint(t));
 }
 
 bool AxisBox::isInside(Vector3f const &p) const {
@@ -40,17 +39,14 @@ bool AxisBox::isOnSurface(Vector3f const &p) const {
 }
 
 float AxisBox::getIntersectionT1D(float x, bool dirMinus, float min, float max) {
-    if(dirMinus)
-        x = -x, std::swap(min, max), min = -min, max = -max;
-    if(x < min + eps)       return min - x;
-    else if(x < max + eps)  return max - x;
-    else                    return inf;
+    if(dirMinus)    return -max + x;
+    return min - x;
 }
 
 Vector3f AxisBox::getNormalVectorOnSurface(Vector3f const &p) const {
-    bool xb = isBetween(p.x, minp.x, maxp.x);
-    bool yb = isBetween(p.y, minp.y, maxp.y);
-    bool zb = isBetween(p.z, minp.z, maxp.z);
+    bool xb = isBetweenOrEqual(p.x, minp.x, maxp.x);
+    bool yb = isBetweenOrEqual(p.y, minp.y, maxp.y);
+    bool zb = isBetweenOrEqual(p.z, minp.z, maxp.z);
     if(xb && yb)
     {
         if(isEqual(p.z, minp.z))    return Vector3f(0, 0, -1);
@@ -66,8 +62,12 @@ Vector3f AxisBox::getNormalVectorOnSurface(Vector3f const &p) const {
         if(isEqual(p.x, minp.x))    return Vector3f(-1, 0, 0);
         if(isEqual(p.x, maxp.x))    return Vector3f(1, 0, 0);
     }
-    return Vector3f::zero;  // should not reach here
+    std::cerr << p << std::endl;
+    throw std::exception();
+//    return Vector3f::zero;  // should not reach here
 }
 
-AxisBox::AxisBox(const Vector3f &minp, const Vector3f &maxp) : minp(minp), maxp(maxp) {}
+AxisBox::AxisBox(const Vector3f &a, const Vector3f &b) :
+        minp(Vector3f(std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z))),
+        maxp(Vector3f(std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z))) {}
 
