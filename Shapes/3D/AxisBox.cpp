@@ -16,7 +16,7 @@ bool AxisBox::tryGetIntersectionPoint(Ray const &ray, float &t) const {
         return false;
     tx /= fabs(d.x), ty /= fabs(d.y), tz /= fabs(d.z);
     t = std::max(std::max(tx, ty), tz);
-    return isOnSurface(ray.getEndPoint(t));
+    return t > -eps && isOnSurface(ray.getEndPoint(t));
 }
 
 bool AxisBox::isInside(Vector3f const &p) const {

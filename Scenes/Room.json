@@ -154,6 +154,6 @@
       "depth": 3
       // "refraction": false,
     }
-  ]
-  // "show_light": [307,179]
+  ],
+  "show_light": [63,252]
 }

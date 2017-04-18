@@ -82,8 +82,9 @@ void testLoadFromFile (const char* filePath)
         for (auto l: rr->renderPixelGetLights(x, y)) {
             auto p1 = toPoint(camera->getPos(l.begin));
             auto p2 = toPoint(camera->getPos(l.end));
-            cv::arrowedLine(mat, p1, p2, cv::Scalar(255, 255, 255), 5);
-            cv::arrowedLine(mat, p1, p2, toScalar(l.color), 3);
+            cv::arrowedLine(mat, p1, p2, cv::Scalar(255, 255, 255), 6);
+            cv::arrowedLine(mat, p1, p2, cv::Scalar(0,0,0), 4);
+            cv::arrowedLine(mat, p1, p2, toScalar(l.color), 2);
             cerr << l << endl;
         }
     }
