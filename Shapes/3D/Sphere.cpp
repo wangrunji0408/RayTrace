@@ -12,8 +12,10 @@ bool Sphere::tryGetIntersectionPoint(Ray const &ray, float &t) const {
     if(d > r + eps)
         return false;
     t = ray.calcProjectionT(o);
-    if(d < r - eps) // d < r
-        t -= sqrt(r * r - d * d);
+    float x = sqrtf(r * r - d * d);
+    if(t > x - eps) t -= x;
+    else if(t > -x - eps) t += x;
+    else return false;
     return true;
 }
 

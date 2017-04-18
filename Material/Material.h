@@ -12,7 +12,8 @@ class Material {
 public:
     std::string name;
     float refractiveIndex = 1;
-    float transparency = 0;
+    Color reflectiveness = Color::zero;
+    Color transparency = Color::zero;
 protected:
     virtual Color calcBRDF(Vector3f const &lUnit, Vector3f const &vUnit, Vector3f const &nUnit) const = 0;
 public:

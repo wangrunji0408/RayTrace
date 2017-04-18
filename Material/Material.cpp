@@ -17,18 +17,27 @@ Color Material::calcF(Vector3f const &inDir, Vector3f const &outDir, Vector3f co
     auto i = inDir.norm();
     auto o = outDir.norm();
     auto n = normalDir.norm();
-    auto dot = n.dot(i) * n.dot(o);
-    if(dot < 0) return Color(transparency * (-dot));
+//    auto dot = n.dot(i) * n.dot(o);
+//    if(dot < 0) return transparency * (-dot);
     return calcBRDF(i, o, n);
 }
 
 Vector3f Material::calcRefractiveDir(Vector3f const &inDir, Vector3f const &normalDir) const {
     auto l = inDir.norm();
     auto n = normalDir.norm();
-    auto m = l.det(n);
+    auto m = n.det(l);
     float sini = m.len();
-    float sinr = sini / refractiveIndex;
-    float cosr = sqrtf(1 - sinr * sinr);
-    auto rr = n.det(m).norm();
-    return n * (-cosr) + rr * sinr;
+    if(n.dot(l) > eps) {
+        float sinr = sini / refractiveIndex;
+        float cosr = sqrtf(1 - sinr * sinr);
+        auto rr = n.det(m).norm();
+        return n * (-cosr) + rr * sinr;
+    }
+    else
+    {
+        float sinr = sini * refractiveIndex;
+        float cosr = sqrtf(1 - sinr * sinr);
+        auto rr = n.det(m).norm();
+        return n * cosr + rr * sinr;
+    }
 }

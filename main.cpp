@@ -10,6 +10,7 @@
 #include "Light/LightSource/PointLight.h"
 #include "Material/Phong.h"
 #include "IO/SceneParser.h"
+#include "Renderer/RayTracer.h"
 
 using namespace std;
 
@@ -56,12 +57,36 @@ void test() {
     cv::waitKey(0);
 }
 
+cv::Scalar toScalar (Color const& color)
+{
+    return cv::Scalar(color.x, color.y, color.z) * 255;
+}
+
+cv::Point toPoint (Vector3i const& point)
+{
+    return cv::Point(point.y, point.x);
+}
+
 void testLoadFromFile (const char* filePath)
 {
     auto parser = SceneParser();
     World* world = parser.load(filePath);
     auto renderer = parser.rendererDict.begin()->second;
     auto mat = renderer->render8U3C();
+
+    auto rr = dynamic_cast<RayTracer*>(renderer);
+    auto camera = renderer->getCamera();
+    if(rr != nullptr && !parser.json["show_light"].isNull()) {
+        int x = parser.json["show_light"][0].asInt();
+        int y = parser.json["show_light"][1].asInt();
+        for (auto l: rr->renderPixelGetLights(x, y)) {
+            auto p1 = toPoint(camera->getPos(l.begin));
+            auto p2 = toPoint(camera->getPos(l.end));
+            cv::arrowedLine(mat, p1, p2, cv::Scalar(255, 255, 255), 5);
+            cv::arrowedLine(mat, p1, p2, toScalar(l.color), 3);
+            cerr << l << endl;
+        }
+    }
 
     char file[100];
     sprintf(file, "./image/render(%s)_%d.png", renderer->name.c_str(), (int)clock());

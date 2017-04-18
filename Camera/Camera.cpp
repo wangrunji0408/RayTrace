@@ -3,6 +3,7 @@
 //
 
 #include "Camera.h"
+#include "../Shapes/2D/Plane.h"
 
 void Camera::setResolution(int width, int height) {
     this->width = width;
@@ -55,4 +56,18 @@ float Camera::getRealw() const {
 
 void Camera::setRealw(float realw) {
     Camera::realw = realw;
+}
+
+Vector3i Camera::getPos(Vector3f const &p) const {
+    if(p == pos) return Vector3i(height/2, width/2, 0);
+    auto ray = orthographic?
+               Ray(pos, pos - target):
+               Ray::fromTo(pos, p);
+    float t;
+    Plane(Ray::fromTo(target, pos)).tryGetIntersectionPoint(ray, t);
+    Point point = ray.getEndPoint(t);
+    int x = height / 2 - (int)(Ray(target, up).calcProjectionT(point) / realw * width);
+    int y = width / 2 + (int)(Ray(target, right).calcProjectionT(point) / realw * width);
+//    std::cerr << getRay(x, y).calcDist(p) << std::endl;
+    return Vector3i(x, y, 0);
 }

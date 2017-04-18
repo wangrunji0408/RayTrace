@@ -52,3 +52,7 @@ cv::Mat Renderer::render8U3C() const {
     mat.convertTo(mat1, CV_8UC3);
     return mat1;
 }
+
+Camera *Renderer::getCamera() const {
+    return camera;
+}

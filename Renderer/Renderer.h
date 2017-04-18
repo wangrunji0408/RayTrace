@@ -23,8 +23,10 @@ protected:
 public:
     Renderer(World *world, Camera *camera);
     virtual Color renderPixel(int x, int y) const = 0;
-    cv::Mat render() const;
+
+    virtual cv::Mat render() const;
     cv::Mat render8U3C() const;
+    Camera *getCamera() const;
 };
 
 

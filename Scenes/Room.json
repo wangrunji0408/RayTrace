@@ -1,0 +1,134 @@
+{
+  "world": {
+    "name": "room",
+    "env_color": 0,
+    "objects": [
+    {
+      "name": "left_plane",
+      "shape": {"type": "plane", "point": [-6,0,0], "normal": [1,0,0]},
+      "material": "green"
+    },
+    {
+      "name": "right_plane",
+      "shape": {"type": "plane", "point": [6,0,0], "normal": [-1,0,0]},
+      "material": "red"
+    },
+    {
+      "name": "buttom_plane",
+      "shape": {"type": "plane", "point": [0,0,0], "normal": [0,0,1]},
+      "material": "yellow"
+    },
+    {
+      "name": "up_plane",
+      "shape": {"type": "plane", "point": [0,0,10], "normal": [0,0,-1]},
+      "material": "white"
+    },
+    {
+      "name": "back_plane",
+      "shape": {"type": "plane", "point": [0,5,0], "normal": [0,-1,0]},
+      "material": "white"
+    },
+    {
+      "name": "sphere1",
+      "shape": {"type": "sphere", "o": [-4,0,3], "r": 2},
+      "material": "mirror"
+    },
+    // {
+    //   "name": "triangle1",
+    //   "shape": {"type": "triangle", "points": [[-2,2,1], [0,0,8], [-5,1,1]]},
+    //   "material": "trans"
+    // }
+    {
+      "name": "sphere2",
+      "shape": {"type": "sphere", "o": [0,0,3], "r": 1},
+      "material": "mirror"
+    }
+    //    {
+    //      "name": "box1",
+    //      "shape": {"type": "axis_box", "min": [-2,-2,0], "max": [-1,-1,1]},
+    //      "material": "mirror"
+    //    }
+  ],
+    "materials": [
+    {
+      "name": "green",
+      "type": "lambert",
+      "diffuse": [0, 0.5, 0],
+      "reflectiveness": 0.2
+    },
+    {
+      "name": "red",
+      "type": "lambert",
+      "diffuse": [0, 0, 0.5],
+      "reflectiveness": 0.2
+    },
+    {
+      "name": "yellow",
+      "type": "lambert",
+      "diffuse": [0, 0.5, 0.5],
+      "reflectiveness": 0.2
+    },
+    {
+      "name": "white",
+      "type": "lambert",
+      "diffuse": 0.5,
+      "reflectiveness": 0.2
+    },
+    {
+      "name": "mirror",
+      "type": "lambert",
+      "diffuse": 0,
+      "reflectiveness": 1
+    },
+    {
+      "name": "trans",
+      "type": "lambert",
+      "diffuse": 0,
+      "reflectiveness": 0,
+      "transparency": 1,
+      "refractive_index": 1
+    }
+  ],
+    "lights": [
+    {
+      "name": "point_light_1",
+      "type": "point",
+      "pos": [0,0,9],
+      "color": 200
+    }
+    // {
+    //   "name": "parallel_light_1",
+    //   "type": "parallel",
+    //   "pos": [5, -5, 5],
+    //   "dir": [-1, 1, -1],
+    //   "color": [2, 2, 2]
+    // }
+  ],
+    "cameras": [
+    {
+      "name": "camera_1",
+      "pos": [0,-10,5],
+      "target": [0, 0, 5],
+      "up": [0,0,10],
+      "resolution": [640, 480],
+      "realw": 20,
+      "orthographic": false
+    }
+  ]
+  },
+  "renderers": [
+  //  {
+  //    "name": "light_projection",
+  //    "type": "light_projection",
+  //    "camera": "camera_1"
+  //  }
+    {
+      "name": "ray_tracer_1",
+      "type": "ray_tracer",
+      "camera": "camera_1",
+      "depth": 8
+      // "refraction": false,
+    }
+  ]
+  // "show_light": [307,179]
+}

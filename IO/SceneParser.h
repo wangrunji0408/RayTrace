@@ -15,6 +15,7 @@ public:
     std::map<std::string, Material*> materialDict;
     std::map<std::string, Renderer*> rendererDict;
     World* world;
+    Json::Value json;
 protected:
     static Vector3f parseVector3f (Json::Value const& json);
     static Vector3f parseVector3fCanBeSingle (Json::Value const& json);

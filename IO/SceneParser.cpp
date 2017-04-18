@@ -21,7 +21,6 @@
 using namespace Json;
 
 World *SceneParser::load(const char *filePath) {
-    Json::Value json;
     std::ifstream fin(filePath);
     fin >> json;
     fin.close();
@@ -97,7 +96,7 @@ LightSource *SceneParser::buildLight(Json::Value const &json) {
     if(json["type"] == "point")
     {
         auto pos = parseVector3f(json["pos"]);
-        auto color = parseVector3f(json["color"]);
+        auto color = parseVector3fCanBeSingle(json["color"]);
         auto light = new PointLight(pos, color);
         light->name = json["name"].asString();
         return light;
@@ -136,12 +135,13 @@ Material *SceneParser::buildMaterial(Json::Value const &json) {
     }
     else if(json["type"] == "lambert")
     {
-        auto diffuse = parseVector3f(json["diffuse"]);
+        auto diffuse = parseVector3fCanBeSingle(json["diffuse"]);
         material = new Lambertain(diffuse);
     }
     else
         throw std::invalid_argument("Material type wrong: " + json["name"].asString());
-    material->transparency = json["transparency"].asFloat();
+    material->reflectiveness = parseVector3fCanBeSingle(json["reflectiveness"]);
+    material->transparency = parseVector3fCanBeSingle(json["transparency"]);
     material->refractiveIndex = json.get("refractive_index", 1).asFloat();
     material->name = json["name"].asString();
     return material;

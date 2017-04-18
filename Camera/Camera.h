@@ -29,6 +29,7 @@ public:
     void setRealw(float realw);
     bool isOrthographic() const;
     void setOrthographic(bool orthographic);
+    Vector3i getPos (Vector3f const& p) const;
 
     virtual Ray getRay (int x, int y) const;
 };
