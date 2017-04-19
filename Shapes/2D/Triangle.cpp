@@ -45,3 +45,9 @@ Vector3f Triangle::calcGravityCoordinate(Vector3f const &p) const {
 
 Triangle::Triangle(const Vector3f *points):
     Triangle(points[0], points[1], points[2]) {}
+
+Vector3f Triangle::getUV(Vector3f const &point) const {
+    float u = (b-a).dot(point - a) / (b-a).len2();
+    float v = (c-a).dot(point - a) / (c-a).len2();
+    return Vector3f(u,v,0);
+}

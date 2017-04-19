@@ -16,7 +16,7 @@
     {
       "name": "buttom_plane",
       "shape": {"type": "plane", "point": [0,0,0], "normal": [0,0,1]},
-      "material": "white"
+      "material": "grid"
     },
     {
       "name": "up_plane",
@@ -26,14 +26,12 @@
     {
       "name": "back_plane",
       "shape": {"type": "plane", "point": [0,5,0], "normal": [0,-1,0]},
-      "material": "white",
-      "uvmap": {"type": "sphere", "pos": [0,0,0]}
+      "material": "image"
     },
      {
        "name": "sphere1",
        "shape": {"type": "sphere", "o": [-3, 3, 2], "r": 2},
-       "material": "mirror",
-       "uvmap": {"type": "sphere", "pos": [-3, 3, 2]}
+       "material": "mirror"
      },
      {
        "name": "sphere2",
@@ -70,11 +68,11 @@
     },
     {
       "name": "image",
-      "diffuse": {"type": "image", "file": "../Scenes/marble.bmp"}
+      "diffuse": {"type": "image", "file": "../Scenes/marble.png"}
     },
     {
       "name": "grid",
-      "diffuse": {"type": "grid", "n": 32, "a": [0.5, 0, 0]}
+      "diffuse": {"type": "grid", "n": 1, "a": 0.2}
     },
     {
       "name": "light",

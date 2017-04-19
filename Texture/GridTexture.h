@@ -9,10 +9,10 @@
 #include "Texture.h"
 
 class GridTexture: public Texture {
-    int n;
+    float n;
     Color a, b;
 public:
-    GridTexture(int n = 8, const Color &a = Color::zero, const Color &b = Color(1,1,1));
+    GridTexture(float n = 8, const Color &a = Color::zero, const Color &b = Color(1,1,1));
     Color operator()(Point const &uv) const override;
 };
 

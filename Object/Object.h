@@ -8,7 +8,7 @@
 #include <string>
 #include "../Shapes/Shape.h"
 #include "../Material/Material.h"
-#include "../Texture/UVMaps/UVMap.h"
+#include "../UVMaps/UVMap.h"
 #include "../Material/ObjectMaterial.h"
 
 using std::string;

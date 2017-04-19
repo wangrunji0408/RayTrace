@@ -16,8 +16,6 @@ const std::string &Object::getName() const {
 }
 
 Material Object::getMaterialAt(Vector3f const &point) const {
-    if(uvMap == nullptr) //throw std::exception();
-        return material->getMaterial(Point::zero);
-    Point uv = uvMap->getUV(point);
+    Point uv = uvMap == nullptr? shape->getUV(point): uvMap->getUV(point);
     return material->getMaterial(uv);
 }

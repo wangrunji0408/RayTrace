@@ -35,3 +35,10 @@ Sphere::Sphere(): o(Vector3f::zero), r(1) {
 
 }
 
+Vector3f Sphere::getUV(Vector3f const &point) const {
+    auto r = (point - o).norm();
+    float u = atan2f(r.y, r.x) / (float)M_PI / 2 + 0.5f;
+    float v = asinf(r.z) / (float)M_PI + 0.5f;
+    return Vector3f(u, v, 0);
+}
+

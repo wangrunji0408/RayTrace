@@ -18,7 +18,7 @@
 #include "../Texture/ImageTexture.h"
 #include "../Texture/GridTexture.h"
 #include "../Texture/ConstTexture.h"
-#include "../Texture/UVMaps/SphereMap.h"
+#include "../UVMaps/SphereMap.h"
 #include <fstream>
 
 using namespace Json;
@@ -253,7 +253,7 @@ Texture *SceneParser::buildTexture(Json::Value const &json) {
     }
     else if(json["type"] == "grid")
     {
-        int n = json["n"].asInt();
+        float n = json["n"].asFloat();
         Color a = Color::zero;
         Color b = Color(1, 1, 1);
         if(!json["a"].isNull())
@@ -270,7 +270,7 @@ Texture *SceneParser::buildTexture(Json::Value const &json) {
 
 UVMap *SceneParser::buildUVMap(Json::Value const &json) {
     if(json.isNull())
-        return new UVMap();
+        return nullptr;
     if(json["type"] == "sphere")
     {
         auto uvmap = new SphereMap();

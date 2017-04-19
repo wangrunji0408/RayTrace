@@ -30,3 +30,12 @@ Vector3f Plane::getNormalVectorOnSurface(Vector3f const &point) const {
     return normal.getUnitDir();
 }
 
+Vector3f Plane::getUV(Vector3f const &point) const {
+    Point const& p = normal.getStartPoint();
+    Ray rayu = Ray(p, normal.getUnitDir().det(Vector3f(1,0,0)));
+    Ray rayv = Ray(p, normal.getUnitDir().det(rayu.getUnitDir()));
+    float u = rayu.calcProjectionT(point - p);
+    float v = rayv.calcProjectionT(point - p);
+    return Vector3f(u,v,0);
+}
+

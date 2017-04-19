@@ -7,11 +7,12 @@
 
 #include "Shape3D.h"
 
-class Sphere: public Shape3D {
+class Sphere : public Shape3D {
     Vector3f o;
     float r;
 public:
     Sphere();
+
     Sphere(const Vector3f &o, float r);
 
     bool isInside(Vector3f const &point) const override;
@@ -19,6 +20,8 @@ public:
     bool isOnSurface(Vector3f const &point) const override;
 
     bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
+
+    Vector3f getUV(Vector3f const &point) const override;
 
     Vector3f getNormalVectorOnSurface(Vector3f const &point) const override;
 };

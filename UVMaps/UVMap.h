@@ -6,7 +6,7 @@
 #define INC_2RAYTRACE_UVMAP_H
 
 
-#include "../../Geometry/Vector3.h"
+#include "../Geometry/Vector3.h"
 
 class UVMap {
 public:

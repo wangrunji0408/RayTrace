@@ -21,6 +21,9 @@ public:
     bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
 
     Plane getPlane() const;
+
+    Vector3f getUV(Vector3f const &point) const override;
+
     Vector3f calcGravityCoordinate (Vector3f const &point) const;
 };
 

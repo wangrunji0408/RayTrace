@@ -4,11 +4,11 @@
 
 #include "GridTexture.h"
 
-GridTexture::GridTexture(int n, const Color &a, const Color &b) :
+GridTexture::GridTexture(float n, const Color &a, const Color &b) :
         n(n), a(a), b(b) {}
 
 Color GridTexture::operator()(Point const &uv) const {
-    int x = (int)(uv.x * n) & 1;
-    int y = (int)(uv.y * n) & 1;
+    int x = (int)floorf(uv.x * n) & 1;
+    int y = (int)floorf(uv.y * n) & 1;
     return x ^ y? a: b;
 }

@@ -6,8 +6,12 @@
 #define INC_2RAYTRACE_SHAPE_H
 
 #include "../Geometry/Geometry.h"
+#include "../UVMaps/UVMap.h"
 
-class Shape: public IRayCastable {
+class Shape: public IRayCastable, public UVMap {
+public:
+    Vector3f getUV(Vector3f const &point) const override;
+
 public:
     std::string name;
 };
