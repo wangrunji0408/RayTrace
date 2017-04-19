@@ -104,7 +104,7 @@
       "name": "trans",
       "diffuse": 0,
       "reflection": 0,
-      "transparency": 1,
+      "refraction": 1,
       "refractive_index": 1
     }
   ],
@@ -129,7 +129,7 @@
       "pos": [0,-10,5],
       "target": [0, 0, 5],
       "up": [0,0,10],
-      "resolution": [640, 480],
+      "resolution": [320, 240],
       "realw": 20,
       "orthographic": false
     }
@@ -148,6 +148,14 @@
       "depth": 3
       // "refraction": false,
     }
+//    {
+//      "name": "ray_tracer_1",
+//      "type": "path_tracer",
+//      "camera": "camera_1",
+//      "depth": 10,
+//      "times": 100
+//      // "refraction": false,
+//    }
   ]
   // "show_light": [63,252]
 }

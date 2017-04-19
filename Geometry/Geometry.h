@@ -33,4 +33,9 @@ inline bool isEqual(float x, float y) {
     return isZero(x - y);
 }
 
+inline float rand01 ()
+{
+    return (float)rand() / RAND_MAX;
+}
+
 #endif //INC_2RAYTRACE_GRAPHIC_H

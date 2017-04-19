@@ -9,6 +9,8 @@ Renderer::Renderer(World *world, Camera *camera) :
 
 cv::Mat Renderer::render() const {
     time_t t0 = time(0);
+    if(super)
+        camera->setResolution(camera->getWidth() * 2, camera->getHeight() * 2);
     int h = camera->getHeight(), w = camera->getWidth();
     cv::Mat3f mat = cv::Mat(h, w, CV_32FC3);
     if(enableParallel)
@@ -17,13 +19,20 @@ cv::Mat Renderer::render() const {
                     p = toCvVec3f(renderPixel(id[0], id[1]));
                 });
     else
-        for(int i=0; i<mat.size().height; ++i)
-            for(int j=0; j<mat.size().width; ++j)
+        for(int i=0; i<h; ++i)
+            for(int j=0; j<w; ++j)
                 mat[i][j] = toCvVec3f(renderPixel(i, j));;
     if(enableRecolor)
         recolor(mat);
     auto t= time(0) - t0;
     std::cerr << "Render End. Time = " << t << "s" << std::endl;
+    if(super)
+    {
+        camera->setResolution(w/2, h/2);
+        cv::Mat3f mat1;
+        cv::resize(mat, mat1, cv::Size(w/2, h/2));
+        return mat1;
+    }
     return mat;
 }
 

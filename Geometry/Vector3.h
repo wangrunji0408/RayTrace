@@ -43,6 +43,7 @@ public:
     static float angle (Vector3 const& a, Vector3 const& b);
     static T dot (Vector3 const& a, Vector3 const& b);
     static Vector3 det (Vector3 const& a, Vector3 const& b);
+    static Vector3 getRandUnit ();
 
     friend std::ostream& operator<<(std::ostream &out, Vector3<T> const& p)
     {

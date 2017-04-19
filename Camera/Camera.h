@@ -31,7 +31,7 @@ public:
     void setOrthographic(bool orthographic);
     Vector3i getPos (Vector3f const& p) const;
 
-    virtual Ray getRay (int x, int y) const;
+    virtual Ray getRay(float x, float y) const;
 };
 
 

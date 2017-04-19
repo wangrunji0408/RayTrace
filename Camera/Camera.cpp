@@ -10,7 +10,7 @@ void Camera::setResolution(int width, int height) {
     this->height = height;
 }
 
-Ray Camera::getRay(int x, int y) const {
+Ray Camera::getRay(float x, float y) const {
     auto delta = (up * (height / 2 - x) + right * (y - width / 2)) * (realw / width);
     if(orthographic)
         return Ray(pos + delta, target - pos);

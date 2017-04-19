@@ -14,6 +14,7 @@
 #include "../Renderer/LightProjection.h"
 #include "../Shapes/3D/TriangleMesh.h"
 #include "../Light/LightSource/SpotLight.h"
+#include "../Renderer/PathTracer.h"
 #include <fstream>
 
 using namespace Json;
@@ -217,6 +218,14 @@ Renderer *SceneParser::buildRenderer(Json::Value const &json) {
         rt->setMaxDepth(json.get("depth", 2).asInt());
         renderer = rt;
     }
+    else if(json["type"] == "path_tracer")
+    {
+        auto rt = new PathTracer(world, camera);
+        rt->setMaxDepth(json.get("depth", 2).asInt());
+        rt->times = json.get("times", 5).asInt();
+        renderer = rt;
+    }
+    renderer->super = json["super"].asBool();
     renderer->enableParallel = json.get("parallel", true).asBool();
     renderer->enableRecolor = json["recolor"].asBool();
     renderer->name = json["name"].asString();

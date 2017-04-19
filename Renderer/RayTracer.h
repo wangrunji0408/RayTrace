@@ -16,7 +16,7 @@ protected:
     int maxDepth = 2;
     Color epsColor = Color(1e-3f, 1e-3f, 1e-3f);
 protected:
-    Color renderRay (Ray const& ray, int depth, Color weight) const;
+    virtual Color renderRay (Ray const& ray, int depth, Color weight) const;
 public:
     RayTracer(World *world, Camera *camera);
     Color renderPixel(int x, int y) const override;

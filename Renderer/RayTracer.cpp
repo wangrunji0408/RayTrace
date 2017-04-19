@@ -40,8 +40,9 @@ Color RayTracer::renderRay(Ray const &ray, int depth, Color weight) const {
     }
     if(!(material->refraction < epsColor))
     {
-        auto refract = Ray(point, World::calcRefractiveDir(ray.getStartPoint() - point, result.getNormal(),
-                                                           material->refractiveIndex, material->outRefractiveIndex));
+        auto refract = Ray(point, World::calcRefractiveDir(v, n,
+                                                           material->refractiveIndex,
+                                                           material->outRefractiveIndex));
         refract = Ray(refract.getEndPoint(1e-4f), refract.getUnitDir());
         Color f = material->refraction;
         color += f * renderRay(refract, depth - 1, weight * f);

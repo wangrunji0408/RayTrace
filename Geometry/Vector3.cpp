@@ -153,6 +153,18 @@ float Vector3<T>::cos(Vector3<T> const &b) const {
     return dot(b) / b.len() / len();
 }
 
+template <>
+Vector3f Vector3f::getRandUnit() {
+    Vector3f p;
+    do{
+        p.x = rand01() * 2 - 1;
+        p.y = rand01() * 2 - 1;
+        p.z = rand01() * 2 - 1;
+    }
+    while(p.len2() > 1 || p.len2() < eps);
+    return p.norm();
+}
+
 template class Vector3<int>;
 template class Vector3<float>;
 //template class Vector3<double>;

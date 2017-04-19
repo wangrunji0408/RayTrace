@@ -14,6 +14,7 @@ public:
     string name = "renderer";
     bool enableRecolor = false;
     bool enableParallel = true;
+    bool super = false;
 protected:
     World* world;
     Camera* camera;
