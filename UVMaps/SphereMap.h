@@ -8,9 +8,11 @@
 
 #include "UVMap.h"
 #include "../Geometry/Ray.h"
+#include "../Geometry/Geometry.h"
 
 class SphereMap: public UVMap {
-    Ray up;
+public:
+    Point pos;
 public:
     Vector3f getUV(Vector3f const &point) const override;
 };

@@ -15,6 +15,10 @@
 #include "../Shapes/3D/TriangleMesh.h"
 #include "../Light/LightSource/SpotLight.h"
 #include "../Renderer/PathTracer.h"
+#include "../Texture/ImageTexture.h"
+#include "../Texture/GridTexture.h"
+#include "../Texture/ConstTexture.h"
+#include "../Texture/UVMaps/SphereMap.h"
 #include <fstream>
 
 using namespace Json;
@@ -85,8 +89,9 @@ Ray SceneParser::parseRay(Json::Value const &json) {
 Object *SceneParser::buildObject(Json::Value const &json) {
     auto shape = buildShape(json["shape"]);
     auto material = buildMaterial(json["material"]);
+    auto uvMap = buildUVMap(json["uvmap"]);
     auto name = json["name"].asString();
-    return new Object(shape, material, name);
+    return new Object(shape, material, uvMap, name);
 }
 
 LightSource *SceneParser::buildLight(Json::Value const &json) {
@@ -132,27 +137,28 @@ LightSource *SceneParser::buildLight(Json::Value const &json) {
     return light;
 }
 
-Material *SceneParser::buildMaterial(Json::Value const &json) {
+ObjectMaterial * SceneParser::buildMaterial(Json::Value const &json) {
     if(json.isString()) {
         auto m = materialDict[json.asString()];
         if(m == nullptr)
             throw std::invalid_argument("Can not find material: " + json.asString());
         return m;
     }
-    Material* material = new Material();
-    material->emission = parseVector3fCanBeSingle(json["emission"]);
-    material->diffuse = material->ambient = parseVector3fCanBeSingle(json["diffuse"]);
+    auto material = new ObjectMaterial();
+    material->m.emission = parseVector3fCanBeSingle(json["emission"]);
+//    material->m.ambient = parseVector3fCanBeSingle(json["diffuse"]);
     if(!json["ambient"].isNull())   // 若不设置，ambient = diffuse
-        material->ambient = parseVector3fCanBeSingle(json["ambient"]);
-    material->specular = parseVector3fCanBeSingle(json["specular"]);
-    material->shininess = json["shininess"].asFloat();
-    material->tdiffuse = parseVector3fCanBeSingle(json["tdiffuse"]);
-    material->tspecular = parseVector3fCanBeSingle(json["tspecular"]);
-    material->tshininess = json["tshininess"].asFloat();
-    material->reflection = parseVector3fCanBeSingle(json["reflection"]);
-    material->refraction = parseVector3fCanBeSingle(json["refraction"]);
-    material->refractiveIndex = json.get("refractive_index", 1).asFloat();
-    material->outRefractiveIndex = json.get("out_refractive_index", 1).asFloat();
+        material->m.ambient = parseVector3fCanBeSingle(json["ambient"]);
+    material->diffuse = buildTexture(json["diffuse"]);
+    material->m.specular = parseVector3fCanBeSingle(json["specular"]);
+    material->m.shininess = json["shininess"].asFloat();
+    material->m.tdiffuse = parseVector3fCanBeSingle(json["tdiffuse"]);
+    material->m.tspecular = parseVector3fCanBeSingle(json["tspecular"]);
+    material->m.tshininess = json["tshininess"].asFloat();
+    material->m.reflection = parseVector3fCanBeSingle(json["reflection"]);
+    material->m.refraction = parseVector3fCanBeSingle(json["refraction"]);
+    material->m.refractiveIndex = json.get("refractive_index", 1).asFloat();
+    material->m.outRefractiveIndex = json.get("out_refractive_index", 1).asFloat();
     material->name = json["name"].asString();
     return material;
 }
@@ -230,4 +236,47 @@ Renderer *SceneParser::buildRenderer(Json::Value const &json) {
     renderer->enableRecolor = json["recolor"].asBool();
     renderer->name = json["name"].asString();
     return renderer;
+}
+
+Texture *SceneParser::buildTexture(Json::Value const &json) {
+    Texture* texture = nullptr;
+    if(!json.isObject())
+    {
+        Color c = parseVector3fCanBeSingle(json);
+        texture = new ConstTexture(c);
+        return texture;
+    }
+    else if(json["type"] == "image")
+    {
+        auto file = json["file"].asString();
+        texture = new ImageTexture(file);
+    }
+    else if(json["type"] == "grid")
+    {
+        int n = json["n"].asInt();
+        Color a = Color::zero;
+        Color b = Color(1, 1, 1);
+        if(!json["a"].isNull())
+            a = parseVector3fCanBeSingle(json["a"]);
+        if(!json["b"].isNull())
+            b = parseVector3fCanBeSingle(json["b"]);
+        texture = new GridTexture(n, a, b);
+    }
+    else
+        throw std::invalid_argument("Texture type wrong: " + json["name"].asString());
+    texture->name = json["name"].asString();
+    return texture;
+}
+
+UVMap *SceneParser::buildUVMap(Json::Value const &json) {
+    if(json.isNull())
+        return new UVMap();
+    if(json["type"] == "sphere")
+    {
+        auto uvmap = new SphereMap();
+        uvmap->pos = parseVector3fCanBeSingle(json["pos"]);
+        return uvmap;
+    }
+    else
+        throw std::invalid_argument("UVMap type wrong: " + json["name"].asString());
 }

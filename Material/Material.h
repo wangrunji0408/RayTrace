@@ -7,6 +7,7 @@
 
 #include "../Light/Light.h"
 #include "../Geometry/Geometry.h"
+#include "../Texture/Texture.h"
 
 class Material {
 public:

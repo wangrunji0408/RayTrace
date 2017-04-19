@@ -21,16 +21,16 @@ Color PathTracer::renderRay(Ray const &ray, int depth, Color weight) const {
         return world->getEnvColor();
     auto obj = result.getObject();
     auto point = result.getPoint();
-    auto material = obj->getMaterial();
+    auto material = obj->getMaterialAt(point);
     auto v = ray.getStartPoint() - point;
     auto n = result.getNormal();
-    Color color = material->calcEmission(v, n);
+    Color color = material.calcEmission(v, n);
     for(auto const& light : world->getLights())
     {
         Light l = light->illuminate(point);
         if(world->testLightBlocked(l))  continue;
         if(saveLights) lights->push_back(l);
-        Color f = material->calcF(-l.getUnitDir(), v, n);
+        Color f = material.calcF(-l.getUnitDir(), v, n);
         color += l.color * f;
     }
     {
@@ -42,7 +42,7 @@ Color PathTracer::renderRay(Ray const &ray, int depth, Color weight) const {
 //        refract = Ray(refract.getEndPoint(1e-4f), refract.getUnitDir());
         auto l = Vector3f::getRandUnit();
         auto ray = Ray(point + l * 1e-4f, l);
-        Color f = material->calcF(l, v, n);
+        Color f = material.calcF(l, v, n);
         color += f * renderRay(ray, depth - 1, weight * f);
     }
     if(saveLights)

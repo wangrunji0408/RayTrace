@@ -17,34 +17,34 @@ Color RayTracer::renderRay(Ray const &ray, int depth, Color weight) const {
         return world->getEnvColor();
     auto obj = result.getObject();
     auto point = result.getPoint();
-    auto material = obj->getMaterial();
+    auto material = obj->getMaterialAt(point);
     auto v = ray.getStartPoint() - point;
     auto n = result.getNormal();
     Color color = Color::zero;
-    color += world->getEnvColor() * material->ambient;
-    color += material->calcEmission(v, n);
+    color += world->getEnvColor() * material.ambient;
+    color += material.calcEmission(v, n);
     for(auto const& light : world->getLights())
     {
         Light l = light->illuminate(point);
         if(world->testLightBlocked(l))  continue;
         if(saveLights) lights->push_back(l);
-        Color f = material->calcF(-l.getUnitDir(), v, n);
+        Color f = material.calcF(-l.getUnitDir(), v, n);
         color += l.color * f;
     }
-    if(!(material->reflection < epsColor))
+    if(!(material.reflection < epsColor))
     {
         auto reflect = Ray(point, World::calcReflectiveDir(v, n));
         reflect = Ray(reflect.getEndPoint(1e-4f), reflect.getUnitDir());    // 防止自相交
-        Color f = material->reflection;
+        Color f = material.reflection;
         color += f * renderRay(reflect, depth - 1, weight * f);
     }
-    if(!(material->refraction < epsColor))
+    if(!(material.refraction < epsColor))
     {
         auto refract = Ray(point, World::calcRefractiveDir(v, n,
-                                                           material->refractiveIndex,
-                                                           material->outRefractiveIndex));
+                                                           material.refractiveIndex,
+                                                           material.outRefractiveIndex));
         refract = Ray(refract.getEndPoint(1e-4f), refract.getUnitDir());
-        Color f = material->refraction;
+        Color f = material.refraction;
         color += f * renderRay(refract, depth - 1, weight * f);
     }
     if(saveLights)

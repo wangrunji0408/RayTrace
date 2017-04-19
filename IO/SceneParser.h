@@ -12,7 +12,7 @@
 
 class SceneParser {
 public:
-    std::map<std::string, Material*> materialDict;
+    std::map<std::string, ObjectMaterial*> materialDict;
     std::map<std::string, Renderer*> rendererDict;
     World* world;
     Json::Value json;
@@ -22,7 +22,9 @@ protected:
     static Ray parseRay (Json::Value const& json);
     Object* buildObject (Json::Value const& json);
     static Shape* buildShape (Json::Value const& json);
-    Material* buildMaterial (Json::Value const& json);
+    static Texture* buildTexture (Json::Value const& json);
+    static UVMap* buildUVMap (Json::Value const& json);
+    ObjectMaterial * buildMaterial(Json::Value const &json);
     static LightSource* buildLight (Json::Value const& json);
     World* buildWorld (Json::Value const& json);
     static Camera* buildCamera (Json::Value const& json);

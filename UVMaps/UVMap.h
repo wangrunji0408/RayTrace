@@ -6,12 +6,11 @@
 #define INC_2RAYTRACE_UVMAP_H
 
 
-#include "../Geometry/Vector3.h"
+#include "../../Geometry/Vector3.h"
 
 class UVMap {
 public:
-    virtual Vector3f getUV (Vector3f const& point) const = 0;
+    virtual Vector3f getUV (Vector3f const& point) const;
 };
-
 
 #endif //INC_2RAYTRACE_UVMAP_H

@@ -8,21 +8,23 @@
 #include <string>
 #include "../Shapes/Shape.h"
 #include "../Material/Material.h"
-#include "../Texture/UVMap.h"
+#include "../Texture/UVMaps/UVMap.h"
+#include "../Material/ObjectMaterial.h"
 
 using std::string;
 
 class Object {
-private:
-    string name;
-    Shape* shape;
-    Material* material;
-    UVMap* uvMap;
 public:
-    Object(Shape *shape, Material *material, string name = "object");
+    string name;
+private:
+    Shape* shape;
+    ObjectMaterial* material;
+    UVMap* uvMap = nullptr;
+public:
+    Object(Shape *shape, ObjectMaterial *material, UVMap *uvMap = nullptr, string name = "object");
     const string &getName() const;
     Shape* getShape() const;
-    Material *getMaterial() const;
+    Material getMaterialAt(Vector3f const& point) const;
 };
 
 
