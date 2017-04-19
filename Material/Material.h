@@ -11,17 +11,30 @@
 class Material {
 public:
     std::string name;
-    Color attenuation = Color::zero;
-    float refractiveIndex = 1;
-    Color reflectiveness = Color::zero;
-    Color transparency = Color::zero;
+    Color emission = Color::zero;   // 自发光
+    Color ambient = Color::zero;    // 环境光
+
+    Color diffuse = Color::zero;    // 漫反射
+    Color specular = Color::zero;   // 反射高光
+    float shininess = 0;            // 反射光泽度
+
+    Color tdiffuse = Color::zero;   // 漫透射
+    Color tspecular = Color::zero;  // 透射高光
+    float tshininess = 0;            // 透射光泽度
+
+    Color attenuation = Color::zero;// 衰减
+    float refractiveIndex = 1;      // 折射率
+    float outRefractiveIndex = 1;   // 外部材质折射率（临时解决方案）
+
+    Color reflection = Color::zero; // 反射系数
+    Color refraction = Color::zero; // 折射系数（透明度）
 protected:
-    virtual Color calcBRDF(Vector3f const &lUnit, Vector3f const &vUnit, Vector3f const &nUnit) const = 0;
+    virtual Color calcBRDF(Vector3f const &lUnit, Vector3f const &vUnit, Vector3f const &nUnit) const;
 public:
     Color calcF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const;
     Color calcFByPoint(Vector3f const &inPoint, Vector3f const &outPoint, Ray const &face) const;
-    Vector3f calcRefractiveDir (Vector3f const &inDir, Vector3f const &normalDir) const;
     Color calcAttenuation (float dist) const;
+    Color calcEmission (Vector3f const &outDir, Vector3f const &normalDir) const;
 };
 
 

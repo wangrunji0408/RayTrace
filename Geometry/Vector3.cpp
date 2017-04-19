@@ -148,6 +148,11 @@ void Vector3<T>::operator+=(Vector3<T> const &b) {
     *this = operator+(b);
 }
 
+template <class T>
+float Vector3<T>::cos(Vector3<T> const &b) const {
+    return dot(b) / b.len() / len();
+}
+
 template class Vector3<int>;
 template class Vector3<float>;
 //template class Vector3<double>;

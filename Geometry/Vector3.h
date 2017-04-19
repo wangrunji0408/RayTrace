@@ -36,6 +36,7 @@ public:
     T dot (Vector3 const& b) const;
     Vector3 det (Vector3 const& b) const;
     float angle (Vector3 const& b) const;
+    float cos (Vector3 const& b) const;
     bool isVertical (Vector3 const& b) const;
 //    float getProjection (Vector3 const& b) const;
 

@@ -1,0 +1,80 @@
+{
+  "world": {
+    "name": "world",
+    "env_color": 0,
+    "objects": [
+    {
+      "name": "plane",
+      "shape": {"type": "plane", "point": [0,10,0], "normal": [0,-1,0]},
+      "material": "green"
+    },
+    {
+      "name": "sphere1",
+      "shape": {"type": "sphere", "o": [0,0,0], "r": 5},
+      "material": "trans"
+    },
+    {
+      "name": "sphere2",
+      "shape": {"type": "sphere", "o": [0,0,0], "r": 4},
+      "material": "trans"
+    },
+    {
+      "name": "sphere3",
+      "shape": {"type": "sphere", "o": [0,0,0], "r": 3},
+      "material": "trans"
+    },
+    {
+      "name": "sphere4",
+      "shape": {"type": "sphere", "o": [0,0,0], "r": 2},
+      "material": "trans"
+    }
+  ],
+    "materials": [
+    {
+      "name": "green",
+      "diffuse": [0, 0.5, 0]
+    },
+    {
+      "name": "trans",
+      "diffuse": 0,
+      "specular": 0.0,
+      "shininess": 10,
+      "refraction": 0.9,
+      "refractive_index": 1.05
+    }
+  ],
+    "lights": [
+    {
+      "name": "light_1",
+      "type": "point",
+      "pos": [5, 1, 2],
+      "color": 200
+    },
+    {
+      "name": "light_2",
+      "type": "point",
+      "pos": [-5, 1, -2],
+      "color": 200
+    }
+  ],
+    "cameras": [
+    {
+      "name": "camera_1",
+      "pos": [0, -10, 0],
+      "target": [0, 0, 0],
+      "up": [0, 0, 1],
+      "resolution": [640, 480],
+      "realw": 20,
+      "orthographic": false
+    }
+  ]
+  },
+  "renderers": [
+    {
+      "name": "ray_tracer_1",
+      "type": "ray_tracer",
+      "camera": "camera_1",
+      "depth": 10
+    }
+  ]
+}

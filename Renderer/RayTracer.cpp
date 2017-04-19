@@ -18,27 +18,32 @@ Color RayTracer::renderRay(Ray const &ray, int depth, Color weight) const {
     auto obj = result.getObject();
     auto point = result.getPoint();
     auto material = obj->getMaterial();
-    auto color = Color::zero;
+    auto v = ray.getStartPoint() - point;
+    auto n = result.getNormal();
+    Color color = Color::zero;
+    color += world->getEnvColor() * material->ambient;
+    color += material->calcEmission(v, n);
     for(auto const& light : world->getLights())
     {
         Light l = light->illuminate(point);
         if(world->testLightBlocked(l))  continue;
         if(saveLights) lights->push_back(l);
-        Color f = material->calcF(-l.getUnitDir(), ray.getStartPoint() - point, result.getNormal());
+        Color f = material->calcF(-l.getUnitDir(), v, n);
         color += l.color * f;
     }
-    if(!(material->reflectiveness < epsColor))
+    if(!(material->reflection < epsColor))
     {
-        auto reflect = Ray::fromTo(point, result.getFace().calcSymmetryPoint(ray.getStartPoint()));
+        auto reflect = Ray(point, World::calcReflectiveDir(v, n));
         reflect = Ray(reflect.getEndPoint(1e-4f), reflect.getUnitDir());    // 防止自相交
-        Color f = material->reflectiveness;
+        Color f = material->reflection;
         color += f * renderRay(reflect, depth - 1, weight * f);
     }
-    if(!(material->transparency < epsColor))
+    if(!(material->refraction < epsColor))
     {
-        auto refract = Ray(point, material->calcRefractiveDir(ray.getStartPoint() - point, result.getNormal()));
+        auto refract = Ray(point, World::calcRefractiveDir(ray.getStartPoint() - point, result.getNormal(),
+                                                           material->refractiveIndex, material->outRefractiveIndex));
         refract = Ray(refract.getEndPoint(1e-4f), refract.getUnitDir());
-        Color f = material->transparency;
+        Color f = material->refraction;
         color += f * renderRay(refract, depth - 1, weight * f);
     }
     if(saveLights)

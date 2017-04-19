@@ -31,3 +31,7 @@ Vector3f Sphere::getNormalVectorOnSurface(Vector3f const &point) const {
     return (point - o).norm();
 }
 
+Sphere::Sphere(): o(Vector3f::zero), r(1) {
+
+}
+

@@ -22,7 +22,7 @@ protected:
     static Ray parseRay (Json::Value const& json);
     Object* buildObject (Json::Value const& json);
     static Shape* buildShape (Json::Value const& json);
-    static Material* buildMaterial (Json::Value const& json);
+    Material* buildMaterial (Json::Value const& json);
     static LightSource* buildLight (Json::Value const& json);
     World* buildWorld (Json::Value const& json);
     static Camera* buildCamera (Json::Value const& json);

@@ -8,6 +8,7 @@
 #include <string>
 #include "../Shapes/Shape.h"
 #include "../Material/Material.h"
+#include "../Texture/UVMap.h"
 
 using std::string;
 
@@ -16,6 +17,7 @@ private:
     string name;
     Shape* shape;
     Material* material;
+    UVMap* uvMap;
 public:
     Object(Shape *shape, Material *material, string name = "object");
     const string &getName() const;

@@ -11,7 +11,6 @@
 
 class ParallelLight: public LightSource {
     Ray ray;
-    Color color;
 public:
     ParallelLight(const Ray &ray, const Color &color);
 

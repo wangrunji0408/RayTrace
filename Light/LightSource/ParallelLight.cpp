@@ -10,7 +10,10 @@ Light ParallelLight::illuminate(Vector3f const &point) const {
     return Light(point - ray.getUnitDir() * t, point, color0);
 }
 
-ParallelLight::ParallelLight(const Ray &ray, const Color &color) : ray(ray), color(color) {}
+ParallelLight::ParallelLight(const Ray &ray, const Color &color) : ray(ray)
+{
+    this->color = color;
+}
 
 const Ray &ParallelLight::getRay() const {
     return ray;

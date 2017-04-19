@@ -11,6 +11,8 @@
 class LightSource {
 public:
     std::string name;
+    Color color;
+    bool enable = true;
 public:
     virtual Light illuminate (Vector3f const& point) const = 0;
 };

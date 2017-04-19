@@ -39,14 +39,18 @@ void World::removeObject(Object *obj) {
 
 void World::addLight(LightSource *light) {
     lights.push_back(light);
+    if(light->enable)
+        enabledLights.push_back(light);
 }
 
 void World::removeLight(LightSource *light) {
     lights.erase(std::find(lights.begin(), lights.end(), light));
+    if(light->enable)
+        enabledLights.erase(std::find(enabledLights.begin(), enabledLights.end(), light));
 }
 
 const std::vector<LightSource *, std::allocator<LightSource *>> &World::getLights() const {
-    return lights;
+    return enabledLights;
 }
 
 void World::addCamera(Camera *camera) {
@@ -74,6 +78,33 @@ const Color &World::getEnvColor() const {
 
 void World::setEnvColor(const Color &envColor) {
     World::envColor = envColor;
+}
+
+Vector3f World::calcRefractiveDir(Vector3f const &inDir, Vector3f const &normalDir, float indexInside, float indexOutside) {
+    auto l = inDir.norm();
+    auto n = normalDir.norm();
+    auto m = n.det(l);
+    float index = indexInside / indexOutside;
+    float sini = m.len();
+    if(n.dot(l) > eps) {
+        float sinr = sini / index;
+        float cosr = sqrtf(1 - sinr * sinr);
+        auto rr = n.det(m).norm();
+        return n * (-cosr) + rr * sinr;
+    }
+    else
+    {
+        float sinr = sini * index;
+        float cosr = sqrtf(1 - sinr * sinr);
+        auto rr = n.det(m).norm();
+        return n * cosr + rr * sinr;
+    }
+}
+
+Vector3f World::calcReflectiveDir(Vector3f const &inDir, Vector3f const &normalDir) {
+    auto l = inDir.norm();
+    auto n = normalDir.norm();
+    return n * 2 * n.dot(l) - l;
 }
 
 

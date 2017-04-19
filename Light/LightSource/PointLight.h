@@ -12,7 +12,6 @@
 class PointLight: public LightSource {
 private:
     Vector3f pos;
-    Color color;
 public:
     const Vector3f &getPos() const;
     void setPos(const Vector3f &pos);

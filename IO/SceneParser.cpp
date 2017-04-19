@@ -5,10 +5,6 @@
 #include "SceneParser.h"
 #include "../Light/LightSource/PointLight.h"
 #include "../Light/LightSource/ParallelLight.h"
-#include "../Material/Lambertain.h"
-#include "../Material/Phong.h"
-#include "../Material/BlinnPhong.h"
-#include "../Material/ModifiedPhong.h"
 #include "../Shapes/1D/BezierLine.h"
 #include "../Shapes/2D/Plane.h"
 #include "../Shapes/2D/Triangle.h"
@@ -16,6 +12,8 @@
 #include "../Shapes/3D/AxisBox.h"
 #include "../Renderer/RayTracer.h"
 #include "../Renderer/LightProjection.h"
+#include "../Shapes/3D/TriangleMesh.h"
+#include "../Light/LightSource/SpotLight.h"
 #include <fstream>
 
 using namespace Json;
@@ -85,21 +83,18 @@ Ray SceneParser::parseRay(Json::Value const &json) {
 
 Object *SceneParser::buildObject(Json::Value const &json) {
     auto shape = buildShape(json["shape"]);
-    auto material = json["material"].isString()?
-                    materialDict[json["material"].asString()]:
-                    buildMaterial(json["material"]);
+    auto material = buildMaterial(json["material"]);
     auto name = json["name"].asString();
     return new Object(shape, material, name);
 }
 
 LightSource *SceneParser::buildLight(Json::Value const &json) {
+    LightSource* light = nullptr;
     if(json["type"] == "point")
     {
         auto pos = parseVector3f(json["pos"]);
         auto color = parseVector3fCanBeSingle(json["color"]);
-        auto light = new PointLight(pos, color);
-        light->name = json["name"].asString();
-        return light;
+        light = new PointLight(pos, color);
     }
     else if(json["type"] == "parallel")
     {
@@ -111,38 +106,52 @@ LightSource *SceneParser::buildLight(Json::Value const &json) {
             dir = parseVector3f(json["target"]) - pos;
         else
             throw std::invalid_argument("ParallelLight does not contain 'dir' or 'target'.");
-        auto color = parseVector3f(json["color"]);
-        auto light = new ParallelLight(Ray(pos, dir), color);
-        light->name = json["name"].asString();
-        return light;
+        auto color = parseVector3fCanBeSingle(json["color"]);
+        light = new ParallelLight(Ray(pos, dir), color);
     }
-    throw std::invalid_argument("LightSource type wrong.");
+    else if(json["type"] == "spot")
+    {
+        auto pos = parseVector3f(json["pos"]);
+        Vector3f dir;
+        if(!json["dir"].isNull())
+            dir = parseVector3f(json["dir"]);
+        else if(!json["target"].isNull())
+            dir = parseVector3f(json["target"]) - pos;
+        else
+            throw std::invalid_argument("SpotLight does not contain 'dir' or 'target'.");
+        auto color = parseVector3fCanBeSingle(json["color"]);
+        auto angle = json["angle"].asFloat();
+        auto edgeAngle = json["edge_angle"].asFloat();
+        light = new SpotLight(color, Ray(pos, dir), angle, edgeAngle);
+    }
+    else
+        throw std::invalid_argument("LightSource type wrong.");
+    light->name = json["name"].asString();
+    light->enable = json.get("enable", true).asBool();
+    return light;
 }
 
 Material *SceneParser::buildMaterial(Json::Value const &json) {
-    Material* material = nullptr;
-    if(json["type"] == "phong" || json["type"] == "blinn_phong" || json["type"] == "modified_phong")
-    {
-        auto diffuse = parseVector3fCanBeSingle(json["diffuse"]);
-        auto specular = parseVector3fCanBeSingle(json["specular"]);
-        auto shininess = json["shininess"].asFloat();
-        if(json["type"] == "phong")
-            material = new Phong(diffuse, specular, shininess);
-        else if(json["type"] == "blinn_phong")
-            material = new BlinnPhong(diffuse, specular, shininess);
-        else if(json["type"] == "modified_phong")
-            material = new ModifiedPhong(diffuse, specular, shininess);
+    if(json.isString()) {
+        auto m = materialDict[json.asString()];
+        if(m == nullptr)
+            throw std::invalid_argument("Can not find material: " + json.asString());
+        return m;
     }
-    else if(json["type"] == "lambert")
-    {
-        auto diffuse = parseVector3fCanBeSingle(json["diffuse"]);
-        material = new Lambertain(diffuse);
-    }
-    else
-        throw std::invalid_argument("Material type wrong: " + json["name"].asString());
-    material->reflectiveness = parseVector3fCanBeSingle(json["reflectiveness"]);
-    material->transparency = parseVector3fCanBeSingle(json["transparency"]);
+    Material* material = new Material();
+    material->emission = parseVector3fCanBeSingle(json["emission"]);
+    material->diffuse = material->ambient = parseVector3fCanBeSingle(json["diffuse"]);
+    if(!json["ambient"].isNull())   // 若不设置，ambient = diffuse
+        material->ambient = parseVector3fCanBeSingle(json["ambient"]);
+    material->specular = parseVector3fCanBeSingle(json["specular"]);
+    material->shininess = json["shininess"].asFloat();
+    material->tdiffuse = parseVector3fCanBeSingle(json["tdiffuse"]);
+    material->tspecular = parseVector3fCanBeSingle(json["tspecular"]);
+    material->tshininess = json["tshininess"].asFloat();
+    material->reflection = parseVector3fCanBeSingle(json["reflection"]);
+    material->refraction = parseVector3fCanBeSingle(json["refraction"]);
     material->refractiveIndex = json.get("refractive_index", 1).asFloat();
+    material->outRefractiveIndex = json.get("out_refractive_index", 1).asFloat();
     material->name = json["name"].asString();
     return material;
 }
@@ -180,6 +189,14 @@ Shape *SceneParser::buildShape(Json::Value const &json) {
         auto minp = parseVector3f(json["min"]);
         auto maxp = parseVector3f(json["max"]);
         shape = new AxisBox(minp, maxp);
+    }
+    else if(json["type"] == "mesh")
+    {
+        auto file = json["obj_file"].asString();
+        auto mesh = new TriangleMesh(file);
+        mesh->faces.resize(20);
+        std::cerr << *mesh << std::endl;
+        shape = mesh;
     }
     else
         throw std::invalid_argument("Shape type wrong: " + json["name"].asString());

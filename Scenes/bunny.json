@@ -1,0 +1,115 @@
+{
+  "world": {
+    "name": "room",
+    "env_color": 0.1,
+    "objects": [
+    {
+      "name": "left_plane",
+      "shape": {"type": "plane", "point": [-0.2,0,0], "normal": [1,0,0]},
+      "material": "green"
+    },
+    {
+      "name": "right_plane",
+      "shape": {"type": "plane", "point": [0.2,0,0], "normal": [-1,0,0]},
+      "material": "red"
+    },
+    {
+      "name": "buttom_plane",
+      "shape": {"type": "plane", "point": [0,0,-0.2], "normal": [0,0,1]},
+      "material": "yellow"
+    },
+    {
+      "name": "up_plane",
+      "shape": {"type": "plane", "point": [0,0,0.2], "normal": [0,0,-1]},
+      "material": "white"
+    },
+    {
+      "name": "back_plane",
+      "shape": {"type": "plane", "point": [0,0.2,0], "normal": [0,-1,0]},
+      "material": "white"
+    },
+    {
+      "name": "bunny",
+      "shape": {"type": "mesh", "obj_file": "../Scenes/bun_zipper_res4.obj"},
+      "material": "yellow"
+    }
+  ],
+    "materials": [
+    {
+      "name": "green",
+      "type": "lambert",
+      "diffuse": [0, 0.5, 0],
+      "reflectiveness": 0.2
+    },
+    {
+      "name": "red",
+      "type": "lambert",
+      "diffuse": [0, 0, 0.5],
+      "reflectiveness": 0.2
+    },
+    {
+      "name": "yellow",
+      "type": "lambert",
+      "diffuse": [0, 0.5, 0.5],
+      "reflectiveness": 0.2
+    },
+    {
+      "name": "white",
+      "type": "lambert",
+      "diffuse": 0.5,
+      "reflectiveness": 0.2
+    },
+    {
+      "name": "mirror",
+      "type": "lambert",
+      "diffuse": 0,
+      "reflectiveness": 1
+    },
+    {
+      "name": "trans",
+      "type": "lambert",
+      "diffuse": 0,
+      "reflectiveness": 0,
+      "transparency": 1,
+      "refractive_index": 1
+    }
+  ],
+    "lights": [
+    {
+      "name": "light_1",
+      "type": "spot",
+      "pos": [0.2,0,0.15],
+      "target": [0,0,0],
+      "angle": 0.5,
+      "edge_angle": 0.2,
+      "color": 0.2
+    }
+  ],
+    "cameras": [
+    {
+      "name": "camera_1",
+      "pos": [0,-1,0],
+      "target": [0, 0, 0],
+      "up": [0,0,10],
+      "resolution": [640, 480],
+      "realw": 0.6,
+      "orthographic": false
+    }
+  ]
+  },
+  "renderers": [
+   {
+     "name": "light_projection",
+     "type": "light_projection",
+     "camera": "camera_1"
+   }
+    // {
+    //   "name": "ray_tracer_1",
+    //   "type": "ray_tracer",
+    //   "camera": "camera_1",
+    //   "depth": 3
+    //   // "refraction": false,
+    // }
+  ]
+  // "show_light": [63,252]
+}

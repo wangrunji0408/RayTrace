@@ -11,6 +11,7 @@ class Sphere: public Shape3D {
     Vector3f o;
     float r;
 public:
+    Sphere();
     Sphere(const Vector3f &o, float r);
 
     bool isInside(Vector3f const &point) const override;

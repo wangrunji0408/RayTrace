@@ -22,26 +22,24 @@
       "name": "triangle1",
       "shape": {"type": "triangle", "points": [[-5,2,0], [5,2,0], [0, 1, 5]]},
       "material": "mirror"
+    },
+    {
+      "name": "box1",
+      "shape": {"type": "axis_box", "min": [-2,-2,0], "max": [-1,-1,1]},
+      "material": "mirror"
     }
-    //    {
-    //      "name": "box1",
-    //      "shape": {"type": "axis_box", "min": [-2,-2,0], "max": [-1,-1,1]},
-    //      "material": "mirror"
-    //    }
   ],
     "materials": [
     {
       "name": "green",
-      "type": "lambert",
       "diffuse": [0, 0.5, 0]
     },
     {
       "name": "mirror",
-      "type": "phong",
       "diffuse": 0,
       "specular": 1,
       "shininess": 10,
-      "transparency": 0.5,
+      "refraction": 0.5,
       "refractive_index": 1.2
     }
   ],
@@ -50,14 +48,14 @@
       "name": "point_light_1",
       "type": "point",
       "pos": [5, -5, 5],
-      "color": [1, 1, 1]
+      "color": 1
     },
     {
       "name": "parallel_light_1",
       "type": "parallel",
       "pos": [5, -5, 5],
       "dir": [-1, 1, -1],
-      "color": [2, 2, 2]
+      "color": 2
     }
   ],
     "cameras": [

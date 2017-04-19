@@ -19,6 +19,7 @@ private:
     Color envColor = Color::zero;
     std::vector<Object*> objects;
     std::vector<LightSource*> lights;
+    std::vector<LightSource*> enabledLights;
     std::vector<Camera*> cameras;
 public:
     const std::vector<LightSource *> &getLights() const;
@@ -35,6 +36,9 @@ public:
 
     IntersectResult tryGetFirstIntersectionPoint (Ray const& ray) const;
     bool testLightBlocked(Light const& light) const;
+
+    static Vector3f calcRefractiveDir (Vector3f const &inDir, Vector3f const &normalDir, float indexInside, float indexOutside);
+    static Vector3f calcReflectiveDir (Vector3f const &inDir, Vector3f const &normalDir);
 };
 
 

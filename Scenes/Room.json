@@ -1,7 +1,7 @@
 {
   "world": {
     "name": "room",
-    "env_color": 0,
+    "env_color": 0.1,
     "objects": [
     {
       "name": "left_plane",
@@ -77,39 +77,33 @@
     "materials": [
     {
       "name": "green",
-      "type": "lambert",
       "diffuse": [0, 0.5, 0],
-      "reflectiveness": 0.2
+      "reflection": 0.2
     },
     {
       "name": "red",
-      "type": "lambert",
       "diffuse": [0, 0, 0.5],
-      "reflectiveness": 0.2
+      "reflection": 0.2
     },
     {
       "name": "yellow",
-      "type": "lambert",
       "diffuse": [0, 0.5, 0.5],
-      "reflectiveness": 0.2
+      "reflection": 0.2
     },
     {
       "name": "white",
-      "type": "lambert",
       "diffuse": 0.5,
-      "reflectiveness": 0.2
+      "reflection": 0.2
     },
     {
       "name": "mirror",
-      "type": "lambert",
       "diffuse": 0,
-      "reflectiveness": 1
+      "reflection": 1
     },
     {
       "name": "trans",
-      "type": "lambert",
       "diffuse": 0,
-      "reflectiveness": 0,
+      "reflection": 0,
       "transparency": 1,
       "refractive_index": 1
     }
@@ -119,7 +113,7 @@
       "name": "point_light_1",
       "type": "point",
       "pos": [0,0,9],
-      "color": 200
+      "color": 100
     }
     // {
     //   "name": "parallel_light_1",
@@ -154,6 +148,6 @@
       "depth": 3
       // "refraction": false,
     }
-  ],
-  "show_light": [63,252]
+  ]
+  // "show_light": [63,252]
 }
