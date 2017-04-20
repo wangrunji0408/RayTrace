@@ -20,7 +20,6 @@ protected:
     Camera* camera;
 protected:
     static void recolor (cv::Mat3f &mat);
-    static cv::Vec3f toCvVec3f (Vector3f const& p);
 public:
     Renderer(World *world, Camera *camera);
     virtual Color renderPixel(int x, int y) const = 0;

@@ -16,12 +16,12 @@ cv::Mat Renderer::render() const {
     if(enableParallel)
         mat.forEach([this](cv::Vec3f & p, const int id[])
                 {
-                    p = toCvVec3f(renderPixel(id[0], id[1]));
+                    p = renderPixel(id[0], id[1]);
                 });
     else
         for(int i=0; i<h; ++i)
             for(int j=0; j<w; ++j)
-                mat[i][j] = toCvVec3f(renderPixel(i, j));;
+                mat[i][j] = renderPixel(i, j);
     if(enableRecolor)
         recolor(mat);
     auto t= time(0) - t0;
@@ -54,10 +54,6 @@ void Renderer::recolor(cv::Mat3f &mat) {
                     p[1] /= maxValue;
                     p[2] /= maxValue;
                 });
-}
-
-cv::Vec3f Renderer::toCvVec3f(Vector3f const &p) {
-    return cv::Vec3f(p.x, p.y, p.z);
 }
 
 cv::Mat Renderer::render8U3C() const {

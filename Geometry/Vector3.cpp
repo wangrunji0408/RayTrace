@@ -4,7 +4,6 @@
 
 #include "Vector3.h"
 #include "Geometry.h"
-#include <cmath>
 
 template<class T>
 Vector3<T> Vector3<T>::operator+(Vector3<T> const &b) const {
@@ -139,7 +138,12 @@ template <class T>
 Vector3<T>::Vector3(): Vector3(0, 0, 0) {}
 
 template <class T>
-T Vector3<T>::value(int id) const {
+T& Vector3<T>::value(int id) {
+    return (&x)[id];
+}
+
+template <class T>
+T const& Vector3<T>::value(int id) const {
     return (&x)[id];
 }
 
@@ -163,6 +167,16 @@ Vector3f Vector3f::getRandUnit() {
     }
     while(p.len2() > 1 || p.len2() < eps);
     return p.norm();
+}
+
+template <class T>
+Vector3<T>::operator cv::Scalar() const {
+    return cv::Scalar(x, y, z);
+}
+
+template<class T>
+Vector3<T>::operator cv::Vec<T, 3>() const {
+    return cv::Vec<T, 3>(x, y, z);
 }
 
 template class Vector3<int>;

@@ -27,7 +27,14 @@ Color Material::calcAttenuation(float dist) const {
 
 Color Material::calcBRDF(Vector3f const &l, Vector3f const &v, Vector3f const &n) const {
     float dotnl = n.dot(l), dotnv = n.dot(v);
-    if(dotnl > eps && dotnv > eps)  // 正面反射
+    if(dotnl < -eps && dotnv < -eps)    // 背面反射
+    {
+
+//        Vector3f h = (l + v).norm();
+//        float ks = powf(-n.dot(h), shininess);
+//        return diffuse * -dotnl + specular * ks;
+    }
+    else if(dotnl > eps && dotnv > eps)  // 正面反射
     {
         Vector3f h = (l + v).norm();
         float ks = powf(n.dot(h), shininess);

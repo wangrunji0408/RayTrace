@@ -77,11 +77,8 @@
     "lights": [
     {
       "name": "light_1",
-      "type": "spot",
-      "pos": [0.2,0,0.15],
-      "target": [0,0,0],
-      "angle": 0.5,
-      "edge_angle": 0.2,
+      "type": "point",
+      "pos": [0,0,0.15],
       "color": 0.2
     }
   ],
@@ -101,7 +98,8 @@
    {
      "name": "light_projection",
      "type": "light_projection",
-     "camera": "camera_1"
+     "camera": "camera_1",
+     "parallel": true
    }
     // {
     //   "name": "ray_tracer_1",

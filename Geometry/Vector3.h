@@ -6,6 +6,7 @@
 #define INC_2RAYTRACE_VECTOR3_H
 
 #include <iostream>
+#include <opencv2/opencv.hpp>
 
 template <class T>
 class Vector3 {
@@ -16,7 +17,8 @@ public:
     Vector3(T x);
     Vector3(T x, T y, T z);
 
-    T value (int id) const;
+    T& value (int id);
+    T const& value (int id) const;
     float len () const;
     T len2 () const;
     T sum () const;
@@ -32,6 +34,9 @@ public:
     bool operator<(const Vector3 &rhs) const;
     bool operator==(const Vector3 &rhs) const;
     bool operator!=(const Vector3 &rhs) const;
+
+    operator cv::Scalar () const;
+    operator cv::Vec<T,3> () const;
 
     T dot (Vector3 const& b) const;
     Vector3 det (Vector3 const& b) const;

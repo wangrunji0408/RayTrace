@@ -200,8 +200,10 @@ Shape *SceneParser::buildShape(Json::Value const &json) {
     else if(json["type"] == "mesh")
     {
         auto file = json["obj_file"].asString();
-        auto mesh = new TriangleMesh(file);
-        mesh->faces.resize(20);
+        auto mesh = new TriangleMesh();
+        if(!json["cut"].isNull())
+            mesh->cutSize = json["cut"].asInt();
+        mesh->loadFromObj(file);
         std::cerr << *mesh << std::endl;
         shape = mesh;
     }

@@ -38,4 +38,16 @@ inline float rand01 ()
     return (float)rand() / RAND_MAX;
 }
 
+template <class T>
+inline void updateMin (T& x, T const& y)
+{
+    x = std::min(x, y);
+}
+
+template <class T>
+inline void updateMax (T& x, T const& y)
+{
+    x = std::max(x, y);
+}
+
 #endif //INC_2RAYTRACE_GRAPHIC_H
