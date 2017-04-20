@@ -17,9 +17,18 @@ Plane Triangle::getPlane() const {
     return Plane(a, b, c);
 }
 
-bool Triangle::isOnSurface(Vector3f const &point) const {
-    Vector3f gc = calcGravityCoordinate(point);
-    return gc.x > -eps && gc.y > -eps && gc.z > -eps;
+inline float detx (Vector3f const& a, Vector3f const& b)
+{
+    return a.y * b.z - a.z * b.y;
+}
+
+bool Triangle::isOnSurface(Vector3f const &p) const {
+//    Vector3f gc = calcGravityCoordinate(point);
+//    return gc.x > -eps && gc.y > -eps && gc.z > -eps;
+    float x = detx(b-a, p-a);
+    float y = detx(c-b, p-b);
+    float z = detx(a-c, p-c);
+    return (x > 0 && y > 0 && z > 0) || (x < 0 && y < 0 && z < 0);
 }
 
 Vector3f Triangle::getNormalVectorOnSurface(Vector3f const &point) const {
@@ -27,20 +36,21 @@ Vector3f Triangle::getNormalVectorOnSurface(Vector3f const &point) const {
 }
 
 Vector3f Triangle::calcGravityCoordinate(Vector3f const &p) const {
-    Vector3f detc = (b-a).det(p-a);
-    Vector3f deta = (c-b).det(p-b);
-    Vector3f detb = (a-c).det(p-c);
-
-    Vector3f deti;
-    if(deta != Vector3f::zero) deti = deta;
-    else if(detb != Vector3f::zero) deti = detb;
-    else deti = detc;
-
-    float ta = deta.dot(deti);
-    float tb = detb.dot(deti);
-    float tc = detc.dot(deti);
-    Vector3f t = Vector3f(ta, tb, tc);
-    return t / t.sum();
+//    Vector3f detc = (b-a).det(p-a);
+//    Vector3f deta = (c-b).det(p-b);
+//    Vector3f detb = (a-c).det(p-c);
+//    Vector3f deti = deta + detb + detc;
+//    float ta = deta.dot(deti);
+//    float tb = detb.dot(deti);
+//    float tc = detc.dot(deti);
+//    Vector3f t = Vector3f(ta, tb, tc);
+//    return t / t.sum();
+    // 注意到deta/detb/detc共线，因此只计算一个分量即可
+    float x = detx(b-a, p-a);
+    float y = detx(c-b, p-b);
+    float z = detx(a-c, p-c);
+    float sum = x + y + z;
+    return Vector3f(x, y, z) / sum;
 }
 
 Triangle::Triangle(const Vector3f *points):

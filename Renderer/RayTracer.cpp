@@ -26,7 +26,7 @@ Color RayTracer::renderRay(Ray const &ray, int depth, Color weight) const {
     for(auto const& light : world->getLights())
     {
         Light l = light->illuminate(point);
-        if(world->testLightBlocked(l))  continue;
+        if(light->shade && world->testLightBlocked(l))  continue;
         if(saveLights) lights->push_back(l);
         Color f = material.calcF(-l.getUnitDir(), v, n);
         color += l.color * f;

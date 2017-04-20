@@ -16,7 +16,8 @@ public:
     Ray(const Vector3f &start, const Vector3f &direction);
     static Ray fromTo (Vector3f const& from, Vector3f const& to);
     Vector3f getStartPoint() const;
-    Vector3f getEndPoint(float t = 1) const;
+    Vector3f getEndPoint(float t) const;
+    Vector3f getEndPoint() const;
     Vector3f getUnitDir() const;
     float calcDist(Vector3f const &p) const;
     float calcProjectionT(Vector3f const &p) const;

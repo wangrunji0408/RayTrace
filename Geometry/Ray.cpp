@@ -8,11 +8,15 @@ Ray::Ray(const Vector3f &start, const Vector3f &direction) :
         start(start), unitdir(direction.norm()) {}
 
 float Ray::calcProjectionT(Vector3f const &p) const {
-    return (p - start).dot(unitdir.norm());
+    return (p - start).dot(unitdir);
 }
 
 Vector3f Ray::getEndPoint(float t) const {
     return start + unitdir * t;
+}
+
+Vector3f Ray::getEndPoint() const {
+    return start + unitdir;
 }
 
 Vector3f Ray::getStartPoint() const {

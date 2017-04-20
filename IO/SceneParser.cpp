@@ -133,6 +133,7 @@ LightSource *SceneParser::buildLight(Json::Value const &json) {
     else
         throw std::invalid_argument("LightSource type wrong.");
     light->name = json["name"].asString();
+    light->shade = json.get("shade", true).asBool();
     light->enable = json.get("enable", true).asBool();
     return light;
 }
