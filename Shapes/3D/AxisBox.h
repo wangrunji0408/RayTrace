@@ -14,6 +14,9 @@ public:
     Vector3f minp, maxp;
 protected:
 public:
+    bool tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const override;
+
+public:
     friend std::ostream &operator<<(std::ostream &os, const AxisBox &box);
 
 protected:

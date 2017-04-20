@@ -12,6 +12,7 @@ class Shape2D: public Shape {
 public:
     virtual bool isOnSurface (Vector3f const& point) const = 0;
     virtual Vector3f getNormalVectorOnSurface(Vector3f const &point) const = 0;
+    virtual bool tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const;
 };
 
 

@@ -56,20 +56,24 @@ void KDTree::print() const {
         std::cout << i++ << "\tNo." << id << '\t' << ps[id] << std::endl;
 }
 
-std::vector<int> KDTree::getIntersectSpaces(Ray const &ray, AxisBox const &globalBound) const {
-    std::vector<int> result;
+std::vector<KDTreeIntersect> KDTree::getIntersectSpaces(Ray const &ray, AxisBox const &globalBound) const {
+    std::vector<KDTreeIntersect> result;
     result.reserve(ps.size());
     getIntersectSpaces(ray, globalBound, result, order.begin(), order.end(), 0);
+    std::sort(result.begin(), result.end(), [](KDTreeIntersect const& a, KDTreeIntersect const& b)
+    {
+        return a.t < b.t;
+    });
     return result;
 }
 
-void KDTree::getIntersectSpaces(Ray const &ray, AxisBox const& bound, std::vector<int> &result,
+void KDTree::getIntersectSpaces(Ray const &ray, AxisBox const& bound, std::vector<KDTreeIntersect> &result,
                                 KDTree::Iterc begin, KDTree::Iterc end, int d) const {
-    static float t;
+    float t;
     if(begin == end || !bound.tryGetIntersectionPoint(ray, t))
         return;
     Iterc mid = getMid(begin, end);
-    result.push_back(*mid);
+    result.push_back(KDTreeIntersect{*mid, t});
     float midValue = ps[*mid].value(d);
     AxisBox leftBound = bound, rightBound = bound;
     leftBound.maxp.value(d) = midValue;

@@ -69,20 +69,35 @@ void TriangleMesh::loadFromObj(std::istream &in) {
 }
 
 bool TriangleMesh::tryGetIntersectionPoint(Ray const &ray, float &t) const {
+    Vector3f point, normal;
+    return tryGetIntersectionInfo(ray, t, point, normal);
+}
+
+bool TriangleMesh::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const {
     if(!tryIntersect(ray))
         return false;
-
+    int faceCnt = 0;
+    int face = 0;
     t = inf;
-    float tt;
 //    for(int i=1; i<faces.size(); ++i) // force
-    for(int point: kdTree.getIntersectSpaces(ray, boundingBox)) // use KDTree
-        for(int faceId: faceIdsInSpace[point+1])
+    for(auto const& pair: kdTree.getIntersectSpaces(ray, boundingBox)) // use KDTree
     {
-        auto triangle = toTriangle(faceId);
-        bool exist = triangle.tryGetIntersectionPoint(ray, tt);
-        if(exist) t = std::min(tt, t);
+        if(pair.t > t + eps)
+            continue;
+//        faceCnt += faceIdsInSpace[pair.point + 1].size();
+//        std::cerr << faceIdsInSpace[point + 1].size() << " ";
+        for (int faceId: faceIdsInSpace[pair.point + 1]) {
+            auto triangle = toTriangle(faceId);
+            float tt;
+            bool exist = triangle.tryGetIntersectionPoint(ray, tt);
+            if (exist && tt < t - eps)
+                t = tt, face = faceId;
+        }
     }
-    return t != inf;
+    if(t == inf)    return false;
+    point = ray.getEndPoint(t);
+    normal = toTriangle(face).getNormalVectorOnSurface(point);
+    return true;
 }
 
 bool TriangleMesh::isOnSurface(Vector3f const &point) const {

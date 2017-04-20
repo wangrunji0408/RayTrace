@@ -19,6 +19,40 @@ bool AxisBox::tryGetIntersectionPoint(Ray const &ray, float &t) const {
     return t > -eps && isOnSurface(ray.getEndPoint(t));
 }
 
+bool AxisBox::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &p, Vector3f &normal) const {
+    Vector3f const& s = ray.getStartPoint();
+    Vector3f const& d = ray.getUnitDir();
+    float tx = getIntersectionT1D(s.x, d.x < 0, minp.x, maxp.x);
+    float ty = getIntersectionT1D(s.y, d.y < 0, minp.y, maxp.y);
+    float tz = getIntersectionT1D(s.z, d.z < 0, minp.z, maxp.z);
+    if(tx == inf || ty == inf || tz == inf)
+        return false;
+    tx /= fabs(d.x), ty /= fabs(d.y), tz /= fabs(d.z);
+    t = std::max(std::max(tx, ty), tz);
+    if(t <= -eps)   return false;
+    p = ray.getEndPoint(t);
+
+    bool xb = isBetweenOrEqual(p.x, minp.x, maxp.x);
+    bool yb = isBetweenOrEqual(p.y, minp.y, maxp.y);
+    bool zb = isBetweenOrEqual(p.z, minp.z, maxp.z);
+    if(xb && yb)
+    {
+        if(isEqual(p.z, minp.z))    {normal = Vector3f(0, 0, -1); return true;}
+        if(isEqual(p.z, maxp.z))    {normal = Vector3f(0, 0, 1); return true;}
+    }
+    if(xb && zb)
+    {
+        if(isEqual(p.y, minp.y))    {normal = Vector3f(0, -1, 0); return true;}
+        if(isEqual(p.y, maxp.y))    {normal = Vector3f(0, 1, 0); return true;}
+    }
+    if(yb && zb)
+    {
+        if(isEqual(p.x, minp.x))    {normal = Vector3f(-1, 0, 0); return true;}
+        if(isEqual(p.x, maxp.x))    {normal = Vector3f(1, 0, 0); return true;}
+    }
+    return false;
+}
+
 bool AxisBox::isInside(Vector3f const &p) const {
     bool xb = isBetween(p.x, minp.x, maxp.x);
     bool yb = isBetween(p.y, minp.y, maxp.y);

@@ -46,6 +46,8 @@ public:
     bool tryIntersect (Ray const &ray) const;
 
     bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
+    bool tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const override;
+
     bool isOnSurface(Vector3f const &point) const override;
     int getFaceId(Vector3f const &point) const;
     Vector3f getNormalVectorOnSurface(Vector3f const &point) const override;
