@@ -4,7 +4,7 @@
 
 #include "Renderer.h"
 
-Renderer::Renderer(World *world, Camera *camera) :
+Renderer::Renderer(shared_ptr<World> world, shared_ptr<Camera> camera) :
         world(world), camera(camera) {}
 
 cv::Mat Renderer::render() const {
@@ -63,6 +63,6 @@ cv::Mat Renderer::render8U3C() const {
     return mat1;
 }
 
-Camera *Renderer::getCamera() const {
+shared_ptr<Camera> Renderer::getCamera() const {
     return camera;
 }

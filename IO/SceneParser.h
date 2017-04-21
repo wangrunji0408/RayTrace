@@ -12,25 +12,25 @@
 
 class SceneParser {
 public:
-    std::map<std::string, ObjectMaterial*> materialDict;
-    std::map<std::string, Renderer*> rendererDict;
-    World* world;
+    std::map<std::string, shared_ptr<ObjectMaterial>> materialDict;
+    std::map<std::string, shared_ptr<Renderer>> rendererDict;
+    shared_ptr<World> world;
     Json::Value json;
 protected:
     static Vector3f parseVector3f (Json::Value const& json);
     static Vector3f parseVector3fCanBeSingle (Json::Value const& json);
     static Ray parseRay (Json::Value const& json);
-    Object* buildObject (Json::Value const& json);
-    static Shape* buildShape (Json::Value const& json);
-    static Texture* buildTexture (Json::Value const& json);
-    static UVMap* buildUVMap (Json::Value const& json);
-    ObjectMaterial * buildMaterial(Json::Value const &json);
-    static LightSource* buildLight (Json::Value const& json);
-    World* buildWorld (Json::Value const& json);
-    static Camera* buildCamera (Json::Value const& json);
-    Renderer* buildRenderer (Json::Value const& json);
+    unique_ptr<Object> buildObject(Json::Value const &json);
+    static unique_ptr<Shape> buildShape(Json::Value const &json);
+    static unique_ptr<Texture> buildTexture(Json::Value const &json);
+    static unique_ptr<UVMap> buildUVMap(Json::Value const &json);
+    shared_ptr<ObjectMaterial> buildMaterial(Json::Value const &json);
+    static unique_ptr<LightSource> buildLight(Json::Value const &json);
+    unique_ptr<World> buildWorld(Json::Value const &json);
+    static unique_ptr<Camera> buildCamera(Json::Value const &json);
+    unique_ptr<Renderer> buildRenderer(Json::Value const &json);
 public:
-    World* load (const char* filePath);
+    shared_ptr<World> load(const char *filePath);
 };
 
 

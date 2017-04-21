@@ -17,13 +17,13 @@ class Object {
 public:
     string name;
 private:
-    Shape* shape;
-    ObjectMaterial* material;
-    UVMap* uvMap = nullptr;
+    shared_ptr<Shape> shape;
+    shared_ptr<ObjectMaterial> material;
+    shared_ptr<UVMap> uvMap;
 public:
-    Object(Shape *shape, ObjectMaterial *material, UVMap *uvMap = nullptr, string name = "object");
-    const string &getName() const;
-    Shape* getShape() const;
+    Object(shared_ptr<Shape> shape, shared_ptr<ObjectMaterial> material, shared_ptr<UVMap> uvMap = nullptr,
+           string name = "object");
+    shared_ptr<Shape> getShape() const;
     Material getMaterialAt(Vector3f const& point) const;
 };
 

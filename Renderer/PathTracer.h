@@ -16,7 +16,7 @@ public:
 protected:
     Color renderRay(Ray const &ray, int depth, Color weight) const override;
 public:
-    PathTracer(World *world, Camera *camera);
+    PathTracer(shared_ptr<World> world, shared_ptr<Camera> camera);
 };
 
 

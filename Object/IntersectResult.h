@@ -14,10 +14,10 @@ class IntersectResult {
     Ray ray;
     Ray face;
     float t;
-    Object* object;
+    shared_ptr<Object> object;
 public:
     IntersectResult();
-    IntersectResult(const Ray &ray, Object *object, float t, Vector3f const& normal);
+    IntersectResult(const Ray &ray, shared_ptr<Object> object, float t, Vector3f const &normal);
 
     bool isSuccess () const;
     bool isOuter () const;
@@ -25,7 +25,7 @@ public:
     Vector3f getNormal() const;
     Ray getFace () const;
     float getT () const;
-    Object* getObject() const;
+    shared_ptr<Object> getObject() const;
 
     friend std::ostream &operator<<(std::ostream &os, const IntersectResult &result);
 

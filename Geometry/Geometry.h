@@ -5,9 +5,14 @@
 #ifndef INC_2RAYTRACE_GRAPHIC_H
 #define INC_2RAYTRACE_GRAPHIC_H
 
+#include <memory>
 #include "Vector3.h"
 #include "Ray.h"
 #include "IRayCastable.h"
+
+using std::unique_ptr;
+using std::shared_ptr;
+using std::make_shared;
 
 typedef Vector3f Point;
 

@@ -16,17 +16,17 @@ public:
     bool enableParallel = true;
     bool super = false;
 protected:
-    World* world;
-    Camera* camera;
+    shared_ptr<World> world;
+    shared_ptr<Camera> camera;
 protected:
     static void recolor (cv::Mat3f &mat);
 public:
-    Renderer(World *world, Camera *camera);
+    Renderer(shared_ptr<World> world, shared_ptr<Camera> camera);
     virtual Color renderPixel(int x, int y) const = 0;
 
     virtual cv::Mat render() const;
     cv::Mat render8U3C() const;
-    Camera *getCamera() const;
+    shared_ptr<Camera> getCamera() const;
 };
 
 

@@ -11,7 +11,7 @@
 class ObjectMaterial {
 public:
     std::string name;
-    Texture* diffuse = nullptr;    // 漫反射
+    shared_ptr<Texture> diffuse = nullptr;    // 漫反射
     Material m;
 public:
     Material getMaterial (Vector3f const& uv) const;

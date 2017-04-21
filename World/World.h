@@ -17,24 +17,24 @@ public:
     string name = "world";
 private:
     Color envColor = Color::zero;
-    std::vector<Object*> objects;
-    std::vector<LightSource*> lights;
-    std::vector<LightSource*> enabledLights;
-    std::vector<Camera*> cameras;
+    std::vector<shared_ptr<Object>> objects;
+    std::vector<shared_ptr<LightSource>> lights;
+    std::vector<shared_ptr<LightSource>> enabledLights;
+    std::vector<shared_ptr<Camera>> cameras;
 public:
-    const std::vector<LightSource *> &getLights() const;
-    void addObject (Object* obj);
-    void removeObject (Object* obj);
-    void addLight (LightSource* light);
-    void removeLight (LightSource* light);
-    void addCamera (Camera* camera);
-    void removeCamera  (Camera* camera);
-    Camera* findCamera (std::string name) const;
+    const std::vector<shared_ptr<LightSource>> &getLights() const;
+    void addObject(shared_ptr<Object> obj);
+    void removeObject(shared_ptr<Object> obj);
+    void addLight(shared_ptr<LightSource> light);
+    void removeLight(shared_ptr<LightSource> light);
+    void addCamera(shared_ptr<Camera> camera);
+    void removeCamera(shared_ptr<Camera> camera);
+    shared_ptr<Camera> findCamera(std::string name) const;
 
     const Color &getEnvColor() const;
     void setEnvColor(const Color &envColor);
-
-    IntersectResult tryGetFirstIntersectionPoint (Ray const& ray) const;
+    // 如果有比t小的直接返回
+    IntersectResult tryGetFirstIntersectionPoint (Ray const& ray, float tmin = 0) const;
     bool testLightBlocked(Light const& light) const;
 
     static Vector3f calcRefractiveDir (Vector3f const &inDir, Vector3f const &normalDir, float indexInside, float indexOutside);

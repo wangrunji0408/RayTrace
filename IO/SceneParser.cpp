@@ -23,42 +23,39 @@
 
 using namespace Json;
 
-World *SceneParser::load(const char *filePath) {
+shared_ptr<World> SceneParser::load(const char *filePath) {
     std::ifstream fin(filePath);
     fin >> json;
     fin.close();
     world = buildWorld(json["world"]);
     for(auto const& j: json["renderers"]) {
         auto renderer = buildRenderer(j);
-        rendererDict[renderer->name] = renderer;
+        rendererDict[renderer->name] = std::move(renderer);
     }
     return world;
 }
 
-World *SceneParser::buildWorld(Json::Value const &json) {
-    auto world = new World();
+unique_ptr<World> SceneParser::buildWorld(Json::Value const &json) {
+    auto world = unique_ptr<World>(new World());
     for(auto const& j: json["materials"]) {
         auto material = buildMaterial(j);
-        materialDict[material->name] = material;
+        materialDict[material->name] = std::move(material);
     }
     for(auto const& j: json["objects"]) {
-        auto object = buildObject(j);
-        world->addObject(object);
+        world->addObject(buildObject(j));
     }
     for(auto const& j: json["cameras"]) {
-        auto camera = buildCamera(j);
-        world->addCamera(camera);
+        world->addCamera(buildCamera(j));
     }
     for(auto const& j: json["lights"]) {
-        auto light = buildLight(j);
-        world->addLight(light);
+        world->addLight(buildLight(j));
     }
     world->setEnvColor(parseVector3fCanBeSingle(json["env_color"]));
     world->name = json["name"].asString();
     return world;
 }
 
-Camera *SceneParser::buildCamera(Json::Value const &json) {
+unique_ptr<Camera> SceneParser::buildCamera(Json::Value const &json) {
     Vector3f pos = parseVector3f(json["pos"]);
     Vector3f target = parseVector3f(json["target"]);
     Vector3f up = parseVector3f(json["up"]);
@@ -66,7 +63,7 @@ Camera *SceneParser::buildCamera(Json::Value const &json) {
     int height = json["resolution"][1].asInt();
     float realw = json["realw"].asFloat();
     bool orthographic = json["orthographic"].asBool();
-    auto camera = new Camera(pos, target, up, width, height, realw, orthographic);
+    auto camera = unique_ptr<Camera>(new Camera(pos, target, up, width, height, realw, orthographic));
     camera->name = json["name"].asString();
     return camera;
 }
@@ -86,15 +83,15 @@ Ray SceneParser::parseRay(Json::Value const &json) {
     return Ray(parseVector3f(json[0]), parseVector3f(json[1]));
 }
 
-Object *SceneParser::buildObject(Json::Value const &json) {
+unique_ptr<Object> SceneParser::buildObject(Json::Value const &json) {
     auto shape = buildShape(json["shape"]);
     auto material = buildMaterial(json["material"]);
     auto uvMap = buildUVMap(json["uvmap"]);
     auto name = json["name"].asString();
-    return new Object(shape, material, uvMap, name);
+    return unique_ptr<Object>(new Object(move(shape), move(material), move(uvMap), name));
 }
 
-LightSource *SceneParser::buildLight(Json::Value const &json) {
+unique_ptr<LightSource> SceneParser::buildLight(Json::Value const &json) {
     LightSource* light = nullptr;
     if(json["type"] == "point")
     {
@@ -135,17 +132,17 @@ LightSource *SceneParser::buildLight(Json::Value const &json) {
     light->name = json["name"].asString();
     light->shade = json.get("shade", true).asBool();
     light->enable = json.get("enable", true).asBool();
-    return light;
+    return unique_ptr<LightSource>(light);
 }
 
-ObjectMaterial * SceneParser::buildMaterial(Json::Value const &json) {
+shared_ptr<ObjectMaterial> SceneParser::buildMaterial(Json::Value const &json) {
     if(json.isString()) {
         auto m = materialDict[json.asString()];
         if(m == nullptr)
             throw std::invalid_argument("Can not find material: " + json.asString());
         return m;
     }
-    auto material = new ObjectMaterial();
+    auto material = make_shared<ObjectMaterial>();
     material->m.emission = parseVector3fCanBeSingle(json["emission"]);
 //    material->m.ambient = parseVector3fCanBeSingle(json["diffuse"]);
     if(!json["ambient"].isNull())   // 若不设置，ambient = diffuse
@@ -164,7 +161,7 @@ ObjectMaterial * SceneParser::buildMaterial(Json::Value const &json) {
     return material;
 }
 
-Shape *SceneParser::buildShape(Json::Value const &json) {
+unique_ptr<Shape> SceneParser::buildShape(Json::Value const &json) {
     Shape* shape = nullptr;
     if(json["type"] == "bezier_line")
     {
@@ -212,28 +209,28 @@ Shape *SceneParser::buildShape(Json::Value const &json) {
     else
         throw std::invalid_argument("Shape type wrong: " + json["name"].asString());
     shape->name = json["name"].asString();
-    return shape;
+    return unique_ptr<Shape>(shape);
 }
 
-Renderer *SceneParser::buildRenderer(Json::Value const &json) {
-    Renderer* renderer = nullptr;
-    Camera* camera = world->findCamera(json["camera"].asString());
+unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
+    unique_ptr<Renderer> renderer = nullptr;
+    auto camera = world->findCamera(json["camera"].asString());
     if(json["type"] == "light_projection")
     {
-        renderer = new LightProjection(world, camera);
+        renderer.reset(new LightProjection(world, camera));
     }
     else if(json["type"] == "ray_tracer")
     {
         auto rt = new RayTracer(world, camera);
         rt->setMaxDepth(json.get("depth", 2).asInt());
-        renderer = rt;
+        renderer.reset(rt);
     }
     else if(json["type"] == "path_tracer")
     {
         auto rt = new PathTracer(world, camera);
         rt->setMaxDepth(json.get("depth", 2).asInt());
         rt->times = json.get("times", 5).asInt();
-        renderer = rt;
+        renderer.reset(rt);
     }
     renderer->super = json["super"].asBool();
     renderer->enableParallel = json.get("parallel", true).asBool();
@@ -242,18 +239,18 @@ Renderer *SceneParser::buildRenderer(Json::Value const &json) {
     return renderer;
 }
 
-Texture *SceneParser::buildTexture(Json::Value const &json) {
-    Texture* texture = nullptr;
+unique_ptr<Texture> SceneParser::buildTexture(Json::Value const &json) {
+    unique_ptr<Texture> texture = nullptr;
     if(!json.isObject())
     {
         Color c = parseVector3fCanBeSingle(json);
-        texture = new ConstTexture(c);
+        texture.reset(new ConstTexture(c));
         return texture;
     }
     else if(json["type"] == "image")
     {
         auto file = json["file"].asString();
-        texture = new ImageTexture(file);
+        texture.reset(new ImageTexture(file));
     }
     else if(json["type"] == "grid")
     {
@@ -264,7 +261,7 @@ Texture *SceneParser::buildTexture(Json::Value const &json) {
             a = parseVector3fCanBeSingle(json["a"]);
         if(!json["b"].isNull())
             b = parseVector3fCanBeSingle(json["b"]);
-        texture = new GridTexture(n, a, b);
+        texture.reset(new GridTexture(n, a, b));
     }
     else
         throw std::invalid_argument("Texture type wrong: " + json["name"].asString());
@@ -272,15 +269,17 @@ Texture *SceneParser::buildTexture(Json::Value const &json) {
     return texture;
 }
 
-UVMap *SceneParser::buildUVMap(Json::Value const &json) {
+unique_ptr<UVMap> SceneParser::buildUVMap(Json::Value const &json) {
     if(json.isNull())
         return nullptr;
+    unique_ptr<UVMap> uvmap;
     if(json["type"] == "sphere")
     {
-        auto uvmap = new SphereMap();
-        uvmap->pos = parseVector3fCanBeSingle(json["pos"]);
-        return uvmap;
+        auto sphere = new SphereMap();
+        sphere->pos = parseVector3fCanBeSingle(json["pos"]);
+        uvmap.reset(sphere);
     }
     else
         throw std::invalid_argument("UVMap type wrong: " + json["name"].asString());
+    return uvmap;
 }

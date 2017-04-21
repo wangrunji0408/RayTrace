@@ -5,17 +5,19 @@
 #include "World.h"
 #include "../Shapes/2D/Shape2D.h"
 
-IntersectResult World::tryGetFirstIntersectionPoint(Ray const &ray) const {
+IntersectResult World::tryGetFirstIntersectionPoint(Ray const &ray, float tmin) const {
     std::vector<float> ts(objects.size(), inf);
     std::vector<Vector3f> normals(objects.size());
     for(int i=0; i<objects.size(); ++i) {
-        auto shape = static_cast<Shape2D*>(objects[i]->getShape());
+        auto shape = std::static_pointer_cast<Shape2D>(objects[i]->getShape());
         if(shape == nullptr)
             continue;
         Point point;
         bool exist = shape->tryGetIntersectionInfo(ray, ts[i], point, normals[i]);
         if(!exist)
             ts[i] = inf;
+        else if(ts[i] < tmin)
+            return IntersectResult(ray, objects[i], ts[i], normals[i]);
     }
     auto it = std::min_element(ts.begin(), ts.end());
     if(*it == inf)
@@ -25,51 +27,50 @@ IntersectResult World::tryGetFirstIntersectionPoint(Ray const &ray) const {
     auto object = objects[index];
     float t = *it;
     auto point = ray.getEndPoint(t);
-    auto shape2d = dynamic_cast<Shape2D*>(object->getShape());
     auto normal = normals[index];
     return IntersectResult(ray, object, t, normal);
 }
 
-void World::addObject(Object *obj) {
+void World::addObject(shared_ptr<Object> obj) {
     objects.push_back(obj);
 }
 
-void World::removeObject(Object *obj) {
+void World::removeObject(shared_ptr<Object> obj) {
     objects.erase(std::find(objects.begin(), objects.end(), obj));
 }
 
-void World::addLight(LightSource *light) {
+void World::addLight(shared_ptr<LightSource> light) {
     lights.push_back(light);
     if(light->enable)
         enabledLights.push_back(light);
 }
 
-void World::removeLight(LightSource *light) {
+void World::removeLight(shared_ptr<LightSource> light) {
     lights.erase(std::find(lights.begin(), lights.end(), light));
     if(light->enable)
         enabledLights.erase(std::find(enabledLights.begin(), enabledLights.end(), light));
 }
 
-const std::vector<LightSource *, std::allocator<LightSource *>> &World::getLights() const {
+const std::vector<shared_ptr<LightSource>> &World::getLights() const {
     return enabledLights;
 }
 
-void World::addCamera(Camera *camera) {
+void World::addCamera(shared_ptr<Camera> camera) {
     cameras.push_back(camera);
 }
 
-void World::removeCamera(Camera *camera) {
+void World::removeCamera(shared_ptr<Camera> camera) {
     cameras.erase(std::find(cameras.begin(), cameras.end(), camera));
 }
 
-Camera *World::findCamera(std::string name) const {
+shared_ptr<Camera> World::findCamera(std::string name) const {
     auto it = std::find_if(cameras.begin(), cameras.end(),
-                        [&](Camera* const& camera){return camera->name == name;});
+                        [&](shared_ptr<Camera> const& camera){return camera->name == name;});
     return it == cameras.end()? nullptr: *it;
 }
 
 bool World::testLightBlocked(Light const &light) const {
-    auto result = tryGetFirstIntersectionPoint(light.getRay());
+    auto result = tryGetFirstIntersectionPoint(light.getRay(), light.len() * 0.99f);
     return result.isSuccess() && result.getT() < light.len() * 0.99f;
 }
 

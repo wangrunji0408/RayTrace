@@ -18,7 +18,7 @@ protected:
 protected:
     virtual Color renderRay (Ray const& ray, int depth, Color weight) const;
 public:
-    RayTracer(World *world, Camera *camera);
+    RayTracer(shared_ptr<World> world, shared_ptr<Camera> camera);
     Color renderPixel(int x, int y) const override;
     std::vector<Light> renderPixelGetLights(int x, int y);
     int getMaxDepth() const;

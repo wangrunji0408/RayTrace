@@ -23,4 +23,4 @@ Color LightProjection::renderPixel(int x, int y) const {
     return color;
 }
 
-LightProjection::LightProjection(World *world, Camera *camera) : Renderer(world, camera) {}
+LightProjection::LightProjection(shared_ptr<World> world, shared_ptr<Camera> camera) : Renderer(world, camera) {}

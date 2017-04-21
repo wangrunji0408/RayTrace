@@ -12,7 +12,7 @@ Color PathTracer::renderPixel(int x, int y) const {
     return color / times;
 }
 
-PathTracer::PathTracer(World *world, Camera *camera) : RayTracer(world, camera) {}
+PathTracer::PathTracer(shared_ptr<World> world, shared_ptr<Camera> camera) : RayTracer(world, camera) {}
 
 Color PathTracer::renderRay(Ray const &ray, int depth, Color weight) const {
     if(depth == 0 || weight < epsColor)  return Color::zero;

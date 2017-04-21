@@ -51,11 +51,11 @@ inline cv::Point toPoint (Vector3i const& point)
 void testLoadFromFile (const char* filePath)
 {
     auto parser = SceneParser();
-    World* world = parser.load(filePath);
+    auto world = parser.load(filePath);
     auto renderer = parser.rendererDict.begin()->second;
     auto mat = renderer->render8U3C();
 
-    auto rr = dynamic_cast<RayTracer*>(renderer);
+    auto rr = dynamic_pointer_cast<RayTracer>(renderer);
     auto camera = renderer->getCamera();
     if(rr != nullptr && !parser.json["show_light"].isNull()) {
         int x = parser.json["show_light"][0].asInt();
