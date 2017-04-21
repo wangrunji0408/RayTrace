@@ -25,6 +25,7 @@ public:
     };
 public:
     int cutSize = 1 << 28;
+    bool normalInterpolation = true;
     std::vector<Point> vs;
     std::vector<Point> vns;
     std::vector<Point> vts;
@@ -40,7 +41,6 @@ public:
 
     void loadFromObj (std::istream& in);
     void loadFromObj (std::string file);
-    void buildBound ();
     void buildKDTree ();
     void fixFaceNormal ();
     bool tryIntersect (Ray const &ray) const;

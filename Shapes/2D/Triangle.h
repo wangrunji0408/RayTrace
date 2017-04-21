@@ -12,7 +12,9 @@
 class Triangle: public Shape2D {
 public:
     Vector3f a, b, c;
+//    Plane plane;
 public:
+    Triangle() {}
     Triangle(const Vector3f &a, const Vector3f &b, const Vector3f &c);
     Triangle(const Vector3f points[]);
 

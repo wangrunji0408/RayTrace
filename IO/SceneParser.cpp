@@ -204,6 +204,7 @@ Shape *SceneParser::buildShape(Json::Value const &json) {
         auto mesh = new TriangleMesh();
         if(!json["cut"].isNull())
             mesh->cutSize = json["cut"].asInt();
+        mesh->normalInterpolation = json["normal_interpolation"].asBool();
         mesh->loadFromObj(file);
         std::cerr << *mesh << std::endl;
         shape = mesh;

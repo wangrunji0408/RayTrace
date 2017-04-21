@@ -9,12 +9,20 @@ void KDTree::buildTree(KDTree::Iter begin, KDTree::Iter end, int d) {
         return;
     std::stable_sort(begin, end, [&](int const& i, int const& j){return cmp(i,j,d);});
     Iter mid = getMid(begin, end);
+
+    std::vector<Point> points;
+    points.reserve(end - begin);
+    for(auto it = begin; it != end; ++it)
+        points.push_back(ps[*it]);
+    boxs[mid - order.begin()] = AxisBox(points.data(), points.size());
+
     buildTree(begin, mid, nextd(d));
     buildTree(mid+1, end, nextd(d));
 }
 
 KDTree::KDTree(const Point *points, int n) {
     ps.assign(points, points + n);
+    boxs.resize(n);
     order.resize(n);
     for(int i=0; i<n; ++i)
         order[i] = i;
@@ -56,10 +64,10 @@ void KDTree::print() const {
         std::cout << i++ << "\tNo." << id << '\t' << ps[id] << std::endl;
 }
 
-std::vector<KDTreeIntersect> KDTree::getIntersectSpaces(Ray const &ray, AxisBox const &globalBound) const {
+std::vector<KDTreeIntersect> KDTree::getIntersectSpaces(Ray const &ray) const {
     std::vector<KDTreeIntersect> result;
     result.reserve(ps.size());
-    getIntersectSpaces(ray, globalBound, result, order.begin(), order.end(), 0);
+    getIntersectSpaces(ray, result, order.begin(), order.end(), 0);
     std::sort(result.begin(), result.end(), [](KDTreeIntersect const& a, KDTreeIntersect const& b)
     {
         return a.t < b.t;
@@ -67,36 +75,34 @@ std::vector<KDTreeIntersect> KDTree::getIntersectSpaces(Ray const &ray, AxisBox 
     return result;
 }
 
-void KDTree::getIntersectSpaces(Ray const &ray, AxisBox const& bound, std::vector<KDTreeIntersect> &result,
-                                KDTree::Iterc begin, KDTree::Iterc end, int d) const {
+void
+KDTree::getIntersectSpaces(Ray const &ray, std::vector<KDTreeIntersect> &result, Iterc begin, Iterc end, int d) const {
     float t;
-    if(begin == end || !bound.tryGetIntersectionPoint(ray, t))
-        return;
     Iterc mid = getMid(begin, end);
+    if(end - begin <= 1 || !boxs[mid - order.begin()].tryGetIntersectionPoint(ray, t))
+        return;
     result.push_back(KDTreeIntersect{*mid, t});
     float midValue = ps[*mid].value(d);
-    AxisBox leftBound = bound, rightBound = bound;
-    leftBound.maxp.value(d) = midValue;
-    rightBound.minp.value(d) = midValue;
-    getIntersectSpaces(ray, leftBound, result, begin, mid, nextd(d));
-    getIntersectSpaces(ray, rightBound, result, mid+1, end, nextd(d));
+    getIntersectSpaces(ray, result, begin, mid, nextd(d));
+    getIntersectSpaces(ray, result, mid + 1, end, nextd(d));
 }
 
 int KDTree::calcCommonRoot(std::vector<int> const &ids) const {
     Iterc begin = order.begin(), end = order.end(), mid;
     for(int d=0; begin != end; d = nextd(d)) {
         mid = getMid(begin, end);
-        int cnt0 = 0;
+        int cnt0 = 0, cnt1 = 0;
         for(int id : ids)
-            cnt0 += cmp(id, *mid, d);
+            cnt0 += cmp(id, *mid, d),
+            cnt1 += cmp(*mid, id, d);
         if(cnt0 == ids.size()) // left
             end = mid;
-        else if(cnt0 == 0)    // right
+        else if(cnt1 == ids.size())    // right
             begin = mid+1;
         else
-            break;
+            return *mid;
     }
-    return *mid;
+    throw std::invalid_argument("KDTree: Failed to calcCommonRoot.");
 }
 
 int KDTree::idAt(std::string path) const {

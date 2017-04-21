@@ -30,7 +30,13 @@
       //    },
       {
         "name": "dragon",
-        "shape": {"type": "mesh", "obj_file": "../Scenes/dragon_vrip_res4.obj", "cut": 100000},
+        "shape":
+        {
+          "type": "mesh",
+          "obj_file": "../Scenes/dragon_vrip_res4.obj",
+          "cut": 100000,
+          "normal_interpolation": true
+        },
         "material": "trans"
       }
 //      {
@@ -86,7 +92,7 @@
         "target": [-0.1,0.05,-0.1],
         "angle": 1.3,
         "color": 0.15,
-        "shade": true
+        "shade": false
       }
     ],
     "cameras": [
@@ -112,7 +118,8 @@
        "name": "ray_tracer_1",
        "type": "ray_tracer",
        "camera": "camera_1",
-       "depth": 8
+       "depth": 8,
+       "parallel": true
        // "refraction": false,
      }
   ]

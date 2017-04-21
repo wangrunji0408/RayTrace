@@ -12,7 +12,7 @@ class Ray {
 private:
     Vector3f start, unitdir;
 public:
-    Ray() {}
+    Ray();
     Ray(const Vector3f &start, const Vector3f &direction);
     static Ray fromTo (Vector3f const& from, Vector3f const& to);
     Vector3f getStartPoint() const;

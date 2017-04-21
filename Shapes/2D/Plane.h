@@ -11,6 +11,8 @@ class Plane : public Shape2D {
 public:
     Ray normal;
 public:
+    Plane() {}
+
     Plane(const Ray &normal);
 
     Plane(Vector3f const &a, Vector3f const &b, Vector3f const &c);

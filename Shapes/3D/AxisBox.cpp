@@ -107,6 +107,22 @@ AxisBox::AxisBox(const Vector3f &a, const Vector3f &b) :
 
 AxisBox::AxisBox() {}
 
+AxisBox::AxisBox(const Vector3f *points, size_t n) {
+    minp = Point(inf, inf, inf);
+    maxp = -Point(inf, inf, inf);
+    for(int i=0; i<n; ++i){
+        Point const& p = points[i];
+        updateMin(minp.x, p.x);
+        updateMin(minp.y, p.y);
+        updateMin(minp.z, p.z);
+        updateMax(maxp.x, p.x);
+        updateMax(maxp.y, p.y);
+        updateMax(maxp.z, p.z);
+    }
+//    minp += -Point(eps, eps, eps);
+//    maxp += Point(eps, eps, eps);
+}
+
 std::ostream &operator<<(std::ostream &os, const AxisBox &box) {
     os << "[AxisBox minp: " << box.minp << " maxp: " << box.maxp << "]";
     return os;

@@ -4,7 +4,8 @@
 
 #include "Triangle.h"
 
-Triangle::Triangle(const Vector3f &a, const Vector3f &b, const Vector3f &c) : a(a), b(b), c(c) {}
+Triangle::Triangle(const Vector3f &a, const Vector3f &b, const Vector3f &c) :
+        a(a), b(b), c(c) {}
 
 bool Triangle::tryGetIntersectionPoint(Ray const &ray, float &t) const {
     bool exist = getPlane().tryGetIntersectionPoint(ray, t);
@@ -25,9 +26,9 @@ inline float detx (Vector3f const& a, Vector3f const& b)
 bool Triangle::isOnSurface(Vector3f const &p) const {
 //    Vector3f gc = calcGravityCoordinate(point);
 //    return gc.x > -eps && gc.y > -eps && gc.z > -eps;
-    float x = detx(b-a, p-a);
-    float y = detx(c-b, p-b);
-    float z = detx(a-c, p-c);
+    float z = detx(b-a, p-a);
+    float x = detx(c-b, p-b);
+    float y = detx(a-c, p-c);
     return (x > 0 && y > 0 && z > 0) || (x < 0 && y < 0 && z < 0);
 }
 
@@ -46,9 +47,9 @@ Vector3f Triangle::calcGravityCoordinate(Vector3f const &p) const {
 //    Vector3f t = Vector3f(ta, tb, tc);
 //    return t / t.sum();
     // 注意到deta/detb/detc共线，因此只计算一个分量即可
-    float x = detx(b-a, p-a);
-    float y = detx(c-b, p-b);
-    float z = detx(a-c, p-c);
+    float z = detx(b-a, p-a);
+    float x = detx(c-b, p-b);
+    float y = detx(a-c, p-c);
     float sum = x + y + z;
     return Vector3f(x, y, z) / sum;
 }

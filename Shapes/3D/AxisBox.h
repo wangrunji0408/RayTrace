@@ -25,6 +25,7 @@ protected:
 public:
     AxisBox();
     AxisBox(const Vector3f &minp, const Vector3f &maxp);
+    AxisBox(const Vector3f *points, size_t n);
     Vector3f getNormalVectorOnSurface(Vector3f const &point) const override;
     bool isInside(Vector3f const &point) const override;
     bool isOnSurface(Vector3f const &point) const override;

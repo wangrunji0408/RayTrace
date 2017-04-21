@@ -43,6 +43,8 @@ Vector3f Ray::calcProjectionPoint(Vector3f const &p) const {
     return getEndPoint(calcProjectionT(p));
 }
 
+Ray::Ray(): start(Vector3f::zero), unitdir(Vector3f(1,0,0)) {}
+
 std::ostream &operator<<(std::ostream &out, Ray const &ray) {
     return out << "[Ray s = " << ray.start << " d = " << ray.unitdir << "]";
 }

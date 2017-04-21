@@ -64,7 +64,7 @@ void TriangleMesh::loadFromObj(std::istream &in) {
     }
     faces.resize(std::min((size_t)cutSize, faces.size()));
     fixFaceNormal();
-    buildBound();
+    boundingBox = AxisBox(vs.data() + 1, vs.size() - 1);
     buildKDTree();
 }
 
@@ -80,11 +80,11 @@ bool TriangleMesh::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &po
     int face = 0;
     t = inf;
 //    for(int i=1; i<faces.size(); ++i) // force
-    for(auto const& pair: kdTree.getIntersectSpaces(ray, boundingBox)) // use KDTree
+    for(auto const& pair: kdTree.getIntersectSpaces(ray)) // use KDTree
     {
         if(pair.t > t + eps)
             continue;
-//        faceCnt += faceIdsInSpace[pair.point + 1].size();
+        faceCnt += faceIdsInSpace[pair.point + 1].size();
 //        std::cerr << faceIdsInSpace[point + 1].size() << " ";
         for (int faceId: faceIdsInSpace[pair.point + 1]) {
             auto triangle = toTriangle(faceId);
@@ -94,9 +94,17 @@ bool TriangleMesh::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &po
                 t = tt, face = faceId;
         }
     }
+//    std::cerr << faceCnt << std::endl;
     if(t == inf)    return false;
     point = ray.getEndPoint(t);
-    normal = toTriangle(face).getNormalVectorOnSurface(point);
+    if(normalInterpolation) {
+        auto gravity = toTriangle(face).calcGravityCoordinate(point);
+        normal = vns[faces[face].vn[0]] * gravity.x
+                 + vns[faces[face].vn[1]] * gravity.y
+                 + vns[faces[face].vn[2]] * gravity.z;
+    }
+    else
+        normal = toTriangle(face).getNormalVectorOnSurface(point);
     return true;
 }
 
@@ -144,20 +152,6 @@ TriangleMesh::TriangleMesh(std::string file)
     loadFromObj(file);
 }
 
-void TriangleMesh::buildBound() {
-    boundingBox.minp = Point(inf, inf, inf);
-    boundingBox.maxp = -Point(inf, inf, inf);
-    for(int i=1; i<vs.size(); ++i){
-        Point const& p = vs[i];
-        updateMin(boundingBox.minp.x, p.x);
-        updateMin(boundingBox.minp.y, p.y);
-        updateMin(boundingBox.minp.z, p.z);
-        updateMax(boundingBox.maxp.x, p.x);
-        updateMax(boundingBox.maxp.y, p.y);
-        updateMax(boundingBox.maxp.z, p.z);
-    }
-}
-
 bool TriangleMesh::tryIntersect(Ray const &ray) const {
     float t;
     return boundingBox.tryGetIntersectionPoint(ray, t);
@@ -181,12 +175,13 @@ int TriangleMesh::calcSpaceId(int faceId) const {
 void TriangleMesh::fixFaceNormal() {
     for(int i=1; i<faces.size(); ++i)
     {
-        Point const& p0 = vs[faces[i].v[0]];
-        Point const& p1 = vs[faces[i].v[1]];
-        Point const& p2 = vs[faces[i].v[2]];
-        Point const& n0 = vns[faces[i].vn[0]];
+        auto& face = faces[i];
+        Point const& p0 = vs[face.v[0]];
+        Point const& p1 = vs[face.v[1]];
+        Point const& p2 = vs[face.v[2]];
+        Point const& n0 = vns[face.vn[0]];
         if((p1-p0).det(p2-p0).dot(n0) < -eps)
-            faces[i].swap(0, 2);
+            face.swap(0, 2);
     }
 
 }
