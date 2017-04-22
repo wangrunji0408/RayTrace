@@ -11,7 +11,8 @@
 class LightProjection: public Renderer {
 public:
     LightProjection(shared_ptr<World> world, shared_ptr<Camera> camera);
-    Color renderPixel(int x, int y) const override;
+
+    virtual Color renderRay(Ray const &ray) const;
 };
 
 

@@ -11,10 +11,10 @@ void Camera::setResolution(int width, int height) {
 }
 
 Ray Camera::getRay(float x, float y) const {
-    auto delta = (up * (height / 2 - x) + right * (y - width / 2)) * (realw / width);
+    auto delta = calcDelta(x, y);
     if(orthographic)
         return Ray(pos + delta, target - pos);
-    return Ray(pos, target - pos + delta);
+    return Ray::fromTo(pos, target + delta);
 }
 
 Camera::Camera(const Vector3f &pos, const Vector3f &target, const Vector3f &up, int width, int height,
@@ -70,4 +70,37 @@ Vector3i Camera::getPos(Vector3f const &p) const {
     int y = width / 2 + (int)(Ray(target, right).calcProjectionT(point) / realw * width);
 //    std::cerr << getRay(x, y).calcDist(p) << std::endl;
     return Vector3i(x, y, 0);
+}
+
+Ray Camera::getRandRay(float x, float y) const {
+    float dx, dy;
+    do{
+        dx = rand01() * 2 - 1;
+        dy = rand01() * 2 - 1;
+    }while(dx * dx + dy * dy > 1);
+    auto delta = calcDelta(x, y);
+    auto pt = target - pos;
+    auto focalPoint = pos + (pt + delta) * (focalLength / pt.len());
+    auto pos1 = pos + (up * dx + right * dy) * aperture;
+    return Ray::fromTo(pos1, focalPoint);
+}
+
+float Camera::getAperture() const {
+    return aperture;
+}
+
+void Camera::setAperture(float aperture) {
+    Camera::aperture = aperture;
+}
+
+float Camera::getFocalLength() const {
+    return focalLength;
+}
+
+void Camera::setFocalLength(float focalLength) {
+    Camera::focalLength = focalLength;
+}
+
+Vector3f Camera::calcDelta(float x, float y) const {
+    return (up * (height / 2 - x) + right * (y - width / 2)) * (realw / width);
 }

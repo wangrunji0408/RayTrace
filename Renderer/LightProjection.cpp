@@ -4,8 +4,9 @@
 
 #include "LightProjection.h"
 
-Color LightProjection::renderPixel(int x, int y) const {
-    auto ray = camera->getRay(x, y);
+LightProjection::LightProjection(shared_ptr<World> world, shared_ptr<Camera> camera) : Renderer(world, camera) {}
+
+Color LightProjection::renderRay(Ray const &ray) const {
     auto result = world->tryGetFirstIntersectionPoint(ray);
     if(!result.isSuccess())
         return world->getEnvColor();
@@ -22,5 +23,3 @@ Color LightProjection::renderPixel(int x, int y) const {
     }
     return color;
 }
-
-LightProjection::LightProjection(shared_ptr<World> world, shared_ptr<Camera> camera) : Renderer(world, camera) {}

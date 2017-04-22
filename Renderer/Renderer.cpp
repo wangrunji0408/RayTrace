@@ -66,3 +66,15 @@ cv::Mat Renderer::render8U3C() const {
 shared_ptr<Camera> Renderer::getCamera() const {
     return camera;
 }
+
+Color Renderer::renderPixel(int x, int y) const {
+    if(apertureTimes > 0 && camera->getAperture() != 0)
+    {
+        auto color = Color::zero;
+        for(int i=0; i<apertureTimes; ++i)
+            color += renderRay(camera->getRandRay(x, y));
+        return color / apertureTimes;
+    }
+    else
+        return renderRay(camera->getRay(x, y));
+}

@@ -4,10 +4,6 @@
 
 #include "RayTracer.h"
 
-Color RayTracer::renderPixel(int x, int y) const {
-    return renderRay(camera->getRay(x, y), maxDepth, Color(1,1,1));
-}
-
 RayTracer::RayTracer(shared_ptr<World> world, shared_ptr<Camera> camera) : Renderer(world, camera) {}
 
 Color RayTracer::renderRay(Ray const &ray, int depth, Color weight) const {
@@ -67,4 +63,8 @@ std::vector<Light> RayTracer::renderPixelGetLights(int x, int y) {
     auto ans = *lights;
     lights->clear();
     return ans;
+}
+
+Color RayTracer::renderRay(Ray const &ray) const {
+    return renderRay(ray, maxDepth, Color(1,1,1));
 }

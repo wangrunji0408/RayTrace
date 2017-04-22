@@ -30,7 +30,7 @@ shared_ptr<World> SceneParser::load(const char *filePath) {
     world = buildWorld(json["world"]);
     for(auto const& j: json["renderers"]) {
         auto renderer = buildRenderer(j);
-        rendererDict[renderer->name] = std::move(renderer);
+        rendererDict[renderer->name] = move(renderer);
     }
     return world;
 }
@@ -65,6 +65,8 @@ unique_ptr<Camera> SceneParser::buildCamera(Json::Value const &json) {
     bool orthographic = json["orthographic"].asBool();
     auto camera = unique_ptr<Camera>(new Camera(pos, target, up, width, height, realw, orthographic));
     camera->name = json["name"].asString();
+    camera->setAperture(json["aperture"].asFloat());
+    camera->setFocalLength(json["focal"].asFloat());
     return camera;
 }
 
@@ -235,6 +237,7 @@ unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
     renderer->super = json["super"].asBool();
     renderer->enableParallel = json.get("parallel", true).asBool();
     renderer->enableRecolor = json["recolor"].asBool();
+    renderer->apertureTimes = json["aperture_times"].asInt();
     renderer->name = json["name"].asString();
     return renderer;
 }

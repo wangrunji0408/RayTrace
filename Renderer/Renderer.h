@@ -15,6 +15,7 @@ public:
     bool enableRecolor = false;
     bool enableParallel = true;
     bool super = false;
+    int apertureTimes = 0;
 protected:
     shared_ptr<World> world;
     shared_ptr<Camera> camera;
@@ -22,8 +23,9 @@ protected:
     static void recolor (cv::Mat3f &mat);
 public:
     Renderer(shared_ptr<World> world, shared_ptr<Camera> camera);
-    virtual Color renderPixel(int x, int y) const = 0;
 
+    virtual Color renderPixel(int x, int y) const;
+    virtual Color renderRay (Ray const& ray) const = 0;
     virtual cv::Mat render() const;
     cv::Mat render8U3C() const;
     shared_ptr<Camera> getCamera() const;

@@ -97,7 +97,9 @@
       "up": [0,0,10],
       "resolution": [640, 480],
       "realw": 18,
-      "orthographic": false
+      "orthographic": false,
+      "focal": 20,
+      "aperture": 1
     }
   ]
   },
@@ -108,7 +110,8 @@
       "camera": "camera_1",
       "super": false,
       "parallel": true,
-      "depth": 5
+      "depth": 5,
+      "aperture_times": 50
       // "refraction": false,
     }
   ]
