@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.7)
 project(2RayTrace)
 
+if(WIN32)
+    set(OpenCV_DIR "D:\\Program Files\\opencv\\build")
+endif()
+
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
