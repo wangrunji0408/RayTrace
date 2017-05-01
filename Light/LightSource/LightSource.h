@@ -16,6 +16,7 @@ public:
     bool enable = true;
 public:
     virtual Light illuminate (Vector3f const& point) const = 0;
+    virtual Light sample () const = 0;
 };
 
 

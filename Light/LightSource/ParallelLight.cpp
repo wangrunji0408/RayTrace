@@ -6,11 +6,12 @@
 
 Light ParallelLight::illuminate(Vector3f const &point) const {
     float t = ray.calcProjectionT(point);
-    Color color0 = t > 0? color: Vector3f::zero;
-    return Light(point - ray.getUnitDir() * t, point, color0);
+    float d = ray.calcDist(point);
+    if(d > r || t < 0)  return Light(point, point, Vector3f::zero);
+    return Light(point - ray.getUnitDir() * t, point, color);
 }
 
-ParallelLight::ParallelLight(const Ray &ray, const Color &color) : ray(ray)
+ParallelLight::ParallelLight(const Ray &ray, float r, const Color &color) : ray(ray), r(r)
 {
     this->color = color;
 }
@@ -29,4 +30,9 @@ const Color &ParallelLight::getColor() const {
 
 void ParallelLight::setColor(const Color &color) {
     ParallelLight::color = color;
+}
+
+Light ParallelLight::sample() const {
+    // TODO
+    throw std::exception();
 }

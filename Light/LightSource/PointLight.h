@@ -13,6 +13,8 @@ class PointLight: public LightSource {
 private:
     Vector3f pos;
 public:
+    Light sample() const override;
+
     const Vector3f &getPos() const;
     void setPos(const Vector3f &pos);
     const Color &getColor() const;

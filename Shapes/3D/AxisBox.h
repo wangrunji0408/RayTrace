@@ -13,9 +13,6 @@ class AxisBox: public Shape3D {
 public:
     Vector3f minp, maxp;
     static int intersectCount;
-protected:
-    static float getIntersectionT1D (float x, bool dirMinus, float min, float max);
-
 public:
     AxisBox();
     AxisBox(const Vector3f &minp, const Vector3f &maxp);
@@ -27,7 +24,6 @@ public:
     bool isInside(Vector3f const &point) const override;
     bool isOnSurface(Vector3f const &point) const override;
     bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
-    bool tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const override;
     friend std::ostream &operator<<(std::ostream &os, const AxisBox &box);
 
     float fastIntersect(Ray const &ray) const override;

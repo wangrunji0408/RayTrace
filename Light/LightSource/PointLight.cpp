@@ -39,3 +39,7 @@ std::ostream &operator<<(std::ostream &os, const PointLight &light) {
     os << "[PointLight pos: " << light.pos << " color: " << light.color << "]";
     return os;
 }
+
+Light PointLight::sample() const {
+    return Light(pos, pos + Vector3f::getRandUnit(), color);
+}

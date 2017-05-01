@@ -13,6 +13,7 @@ class SpotLight: public LightSource {
     float angle;
     float edgeAngle;
 public:
+    Light sample() const override;
     Light illuminate(Vector3f const &point) const override;
     SpotLight(Color const &color, const Ray &ray, float angle, float edgeAngle = 0);
     bool inRange (Vector3f const &point) const;

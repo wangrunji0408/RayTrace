@@ -17,8 +17,8 @@ using std::make_shared;
 
 typedef Vector3f Point;
 
-const float eps = std::numeric_limits<float>::epsilon() * 2;
-const float inf = 1e36;
+const float eps = std::numeric_limits<float>::epsilon() * 8;
+const float inf = std::numeric_limits<float>::max() / 8;
 inline bool isZero (float x);
 inline bool isEqual (float x, float y);
 inline bool isBetween(float x, float min, float max);

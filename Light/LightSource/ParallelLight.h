@@ -11,8 +11,9 @@
 
 class ParallelLight: public LightSource {
     Ray ray;
+    float r;
 public:
-    ParallelLight(const Ray &ray, const Color &color);
+    ParallelLight(const Ray &ray, float r, const Color &color);
 
     const Ray &getRay() const;
 
@@ -23,6 +24,8 @@ public:
     void setColor(const Color &color);
 
     Light illuminate(Vector3f const &point) const override;
+
+    Light sample() const override;
 };
 
 

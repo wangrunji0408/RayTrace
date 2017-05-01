@@ -104,6 +104,7 @@ unique_ptr<LightSource> SceneParser::buildLight(Json::Value const &json) {
     else if(json["type"] == "parallel")
     {
         auto pos = parseVector3f(json["pos"]);
+        auto r = json.get("r", 1).asFloat();
         Vector3f dir;
         if(!json["dir"].isNull())
             dir = parseVector3f(json["dir"]);
@@ -112,7 +113,7 @@ unique_ptr<LightSource> SceneParser::buildLight(Json::Value const &json) {
         else
             throw std::invalid_argument("ParallelLight does not contain 'dir' or 'target'.");
         auto color = parseVector3fCanBeSingle(json["color"]);
-        light = new ParallelLight(Ray(pos, dir), color);
+        light = new ParallelLight(Ray(pos, dir), r, color);
     }
     else if(json["type"] == "spot")
     {
