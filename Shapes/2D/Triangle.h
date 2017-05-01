@@ -16,6 +16,9 @@ public:
 //    Plane plane;
 public:
     Triangle() {}
+
+    bool testRayBlocked(Ray const &ray, float tmin) const override;
+
     Triangle(const Vector3f &a, const Vector3f &b, const Vector3f &c);
     Triangle(const Vector3f points[]);
 

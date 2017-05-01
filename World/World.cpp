@@ -70,8 +70,16 @@ shared_ptr<Camera> World::findCamera(std::string name) const {
 }
 
 bool World::testLightBlocked(Light const &light) const {
-    auto result = tryGetFirstIntersectionPoint(light.getRay(), light.len() * 0.99f);
-    return result.isSuccess() && result.getT() < light.len() * 0.99f;
+    Ray const& ray = light.getRay();
+    float tmin = light.len() * 0.99f;
+    for(int i=0; i<objects.size(); ++i) {
+        auto shape = std::static_pointer_cast<Shape2D>(objects[i]->getShape());
+        if(shape == nullptr)
+            continue;
+        if(shape->testRayBlocked(ray, tmin))
+            return true;
+    }
+    return false;
 }
 
 const Color &World::getEnvColor() const {

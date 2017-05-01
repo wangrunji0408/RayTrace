@@ -52,6 +52,8 @@ public:
 
     AxisBox getAABB() const override;
 
+    bool testRayBlocked(Ray const &ray, float tmin) const override;
+
     bool tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const override;
 
     bool isOnSurface(Vector3f const &point) const override;

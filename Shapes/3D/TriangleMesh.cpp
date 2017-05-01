@@ -233,6 +233,10 @@ std::ostream &operator<<(std::ostream &os, const TriangleMesh::TriFace &face) {
     return os << "]\n";
 }
 
+bool TriangleMesh::testRayBlocked(Ray const &ray, float tmin) const {
+    return aabbTree.testRayBlocked(ray, tmin);
+}
+
 void TriangleMesh::TriFace::swap(int i, int j) {
     std::swap(v[i], v[j]);
     std::swap(vn[i], vn[j]);

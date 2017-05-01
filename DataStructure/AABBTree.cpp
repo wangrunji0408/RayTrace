@@ -6,7 +6,8 @@
 #include "../Shapes/3D/AxisBox.h"
 
 void AABBTree::build(std::vector<shared_ptr<Shape> > const &shapes) {
-    n = (int)shapes.size();
+    size_t n = shapes.size();
+    this->n = (int)n;
     this->shapes = shapes;
     rightBegin.assign(n, 0);
     subtreeAABBs.assign(n, AxisBox());
@@ -21,7 +22,7 @@ void AABBTree::build(std::vector<shared_ptr<Shape> > const &shapes) {
     leftAABBs.assign(n, AxisBox());
     rightAABBs.assign(n, AxisBox());
     surfaceAreas.assign(n, 0);
-    buildTree(0, n, 0);
+    buildTree(0, this->n, 0);
     leftAABBs.clear();
     rightAABBs.clear();
     surfaceAreas.clear();
@@ -101,4 +102,31 @@ void AABBTree::updateIntersectionInfo(Ray const &ray, float &t, int &shape, int 
         if(rightT < t) updateIntersectionInfo(ray, t, shape, rightBegin[begin], end);
         if(leftT < t) updateIntersectionInfo(ray, t, shape, begin + 1, rightBegin[begin]);
     }
+}
+
+bool AABBTree::testRayBlocked(Ray const &ray, float tmin, int begin, int end) const {
+    if(end - begin <= 0)
+        return false;
+    if(shapeAABBs[order[begin]].fastIntersect(ray) < tmin)
+    {
+        auto const& nodeShape = shapes[order[begin]];
+        if(nodeShape->testRayBlocked(ray, tmin))
+            return true;
+    }
+    if(end - begin == 1)
+        return false;
+    auto const& leftAABB = subtreeAABBs[begin+1];
+    auto const& rightAABB = subtreeAABBs[rightBegin[begin]];
+    float leftT = leftAABB.fastIntersect(ray);
+    float rightT = rightAABB.fastIntersect(ray);
+    if(leftT < rightT)
+        return leftT < tmin && testRayBlocked(ray, tmin, begin + 1, rightBegin[begin])
+               || rightT < tmin && testRayBlocked(ray, tmin, rightBegin[begin], end);
+    else
+        return rightT < tmin && testRayBlocked(ray, tmin, rightBegin[begin], end)
+               || leftT < tmin && testRayBlocked(ray, tmin, begin + 1, rightBegin[begin]);
+}
+
+bool AABBTree::testRayBlocked(Ray const &ray, float tmin) const {
+    return testRayBlocked(ray, tmin, 0, n);
 }

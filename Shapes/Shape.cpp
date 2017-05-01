@@ -26,3 +26,7 @@ float Shape::calcIntersect(Ray const &ray) const {
     float t;
     return tryGetIntersectionPoint(ray, t)? t: inf;
 }
+
+bool Shape::testRayBlocked(Ray const &ray, float tmin) const {
+    return calcIntersect(ray) < tmin;
+}

@@ -70,3 +70,12 @@ Vector3f Triangle::getUV(Vector3f const &point) const {
 AxisBox Triangle::getAABB() const {
     return AxisBox(&a, 3);
 }
+
+bool Triangle::testRayBlocked(Ray const &ray, float tmin) const {
+    ++intersectCount;
+    float t;
+    bool exist = getPlane().tryGetIntersectionPoint(ray, t);
+    if(!exist || t >= tmin)  return false;
+    Vector3f p = ray.getEndPoint(t);
+    return isOnSurface(p);
+}
