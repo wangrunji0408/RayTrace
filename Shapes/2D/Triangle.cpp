@@ -3,11 +3,15 @@
 //
 
 #include "Triangle.h"
+#include "../3D/AxisBox.h"
+
+int Triangle::intersectCount = 0;
 
 Triangle::Triangle(const Vector3f &a, const Vector3f &b, const Vector3f &c) :
         a(a), b(b), c(c) {}
 
 bool Triangle::tryGetIntersectionPoint(Ray const &ray, float &t) const {
+    ++intersectCount;
     bool exist = getPlane().tryGetIntersectionPoint(ray, t);
     if(!exist)  return false;
     Vector3f p = ray.getEndPoint(t);
@@ -61,4 +65,8 @@ Vector3f Triangle::getUV(Vector3f const &point) const {
     float u = (b-a).dot(point - a) / (b-a).len2();
     float v = (c-a).dot(point - a) / (c-a).len2();
     return Vector3f(u,v,0);
+}
+
+AxisBox Triangle::getAABB() const {
+    return AxisBox(&a, 3);
 }

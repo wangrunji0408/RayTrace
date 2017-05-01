@@ -71,6 +71,7 @@ Vector3<T>::Vector3(T x) : x(x), y(x), z(x) {}
 template<class T>
 Vector3<T> Vector3<T>::norm() const {
     return *this / len();
+//    return *this * rsqrtf(len2());
 }
 
 template<class T>

@@ -3,6 +3,7 @@
 //
 
 #include "BezierLine.h"
+#include "../3D/AxisBox.h"
 
 Vector3f BezierLine::getPoint(float t) const {
     std::vector<Vector3f> ps = points;
@@ -17,4 +18,8 @@ BezierLine::BezierLine(const std::vector<Vector3f> &points) : points(points) {}
 bool BezierLine::tryGetIntersectionPoint(Ray const &ray, float &t) const {
     // TODO
     return false;
+}
+
+AxisBox BezierLine::getAABB() const {
+    return AxisBox(points.data(), points.size());
 }

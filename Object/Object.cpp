@@ -15,3 +15,8 @@ Material Object::getMaterialAt(Vector3f const &point) const {
     Point uv = uvMap == nullptr? shape->getUV(point): uvMap->getUV(point);
     return material->getMaterial(uv);
 }
+
+void Object::applyTransform(Transform const &t) {
+    transform = t * transform;
+    transform_i = t.inverse() * transform_i;
+}

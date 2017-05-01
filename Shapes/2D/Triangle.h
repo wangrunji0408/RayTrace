@@ -12,6 +12,7 @@
 class Triangle: public Shape2D {
 public:
     Vector3f a, b, c;
+    static int intersectCount;
 //    Plane plane;
 public:
     Triangle() {}
@@ -27,6 +28,8 @@ public:
     Vector3f getUV(Vector3f const &point) const override;
 
     Vector3f calcGravityCoordinate (Vector3f const &point) const;
+
+    virtual AxisBox getAABB() const override ;
 };
 
 

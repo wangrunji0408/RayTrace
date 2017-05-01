@@ -70,6 +70,8 @@ void testLoadFromFile (const char* filePath)
         }
     }
 
+    cerr << "Intersect Count:\n" << "Triangle: " << Triangle::intersectCount
+                                 << "\nAxisBox: " << AxisBox::intersectCount << endl;
     char file[100];
     sprintf(file, "./image/render(%s)_%d.png", renderer->name.c_str(), (int)clock());
     cv::imwrite(file, mat);

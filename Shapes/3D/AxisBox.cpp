@@ -7,6 +7,7 @@
 #include "AxisBox.h"
 
 bool AxisBox::tryGetIntersectionPoint(Ray const &ray, float &t) const {
+    ++intersectCount;
     Vector3f const& s = ray.getStartPoint();
     Vector3f const& d = ray.getUnitDir();
     float tx = getIntersectionT1D(s.x, d.x < 0, minp.x, maxp.x);
@@ -20,6 +21,7 @@ bool AxisBox::tryGetIntersectionPoint(Ray const &ray, float &t) const {
 }
 
 bool AxisBox::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &p, Vector3f &normal) const {
+    ++intersectCount;
     Vector3f const& s = ray.getStartPoint();
     Vector3f const& d = ray.getUnitDir();
     float tx = getIntersectionT1D(s.x, d.x < 0, minp.x, maxp.x);
@@ -123,8 +125,41 @@ AxisBox::AxisBox(const Vector3f *points, size_t n) {
 //    maxp += Point(eps, eps, eps);
 }
 
+float AxisBox::getSurfaceArea() const {
+    auto d = maxp - minp;
+    return (d.x * d.y + d.y * d.z + d.z * d.x) * 2;
+}
+
+Vector3f AxisBox::getMidPoint() const {
+    return (minp + maxp) / 2;
+}
+
+AxisBox AxisBox::getAABB() const {
+    return *this;
+}
+
+float AxisBox::fastIntersect(Ray const &ray) const {
+    if(isInside(ray.getStartPoint()))
+        return 0;
+    float t;
+    bool exist = tryGetIntersectionPoint(ray, t);
+    return exist? t: inf;
+}
+
 std::ostream &operator<<(std::ostream &os, const AxisBox &box) {
     os << "[AxisBox minp: " << box.minp << " maxp: " << box.maxp << "]";
     return os;
 }
 
+AxisBox AxisBox::merge(AxisBox const& other) {
+    AxisBox c;
+    c.minp.x = std::min(minp.x, other.minp.x);
+    c.minp.y = std::min(minp.y, other.minp.y);
+    c.minp.z = std::min(minp.z, other.minp.z);
+    c.maxp.x = std::max(maxp.x, other.maxp.x);
+    c.maxp.y = std::max(maxp.y, other.maxp.y);
+    c.maxp.z = std::max(maxp.z, other.maxp.z);
+    return c;
+}
+
+int AxisBox::intersectCount = 0;

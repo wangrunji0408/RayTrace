@@ -11,6 +11,7 @@
 #include "Sphere.h"
 #include "AxisBox.h"
 #include "../../DataStructure/KDTree.h"
+#include "../../DataStructure/AABBTree.h"
 #include <vector>
 #include <ostream>
 
@@ -30,9 +31,11 @@ public:
     std::vector<Point> vns;
     std::vector<Point> vts;
     std::vector<TriFace> faces;
+    std::vector<Triangle> triangles;
     std::vector<std::vector<int> > faceIdsInSpace;
     AxisBox boundingBox;
     KDTree kdTree;
+    AABBTree aabbTree;
     Triangle toTriangle(int faceId) const;
     int calcSpaceId (int faceId) const;
 public:
@@ -42,10 +45,13 @@ public:
     void loadFromObj (std::istream& in);
     void loadFromObj (std::string file);
     void buildKDTree ();
+    void buildAABBTree ();
     void fixFaceNormal ();
-    bool tryIntersect (Ray const &ray) const;
 
     bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
+
+    AxisBox getAABB() const override;
+
     bool tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const override;
 
     bool isOnSurface(Vector3f const &point) const override;

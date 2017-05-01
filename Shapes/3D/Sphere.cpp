@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include "Sphere.h"
+#include "AxisBox.h"
 
 Sphere::Sphere(const Vector3f &o, float r) : o(o), r(r) {}
 
@@ -40,5 +41,10 @@ Vector3f Sphere::getUV(Vector3f const &point) const {
     float u = atan2f(r.y, r.x) / (float)M_PI / 2 + 0.5f;
     float v = asinf(r.z) / (float)M_PI + 0.5f;
     return Vector3f(u, v, 0);
+}
+
+AxisBox Sphere::getAABB() const {
+    auto dr = Vector3f(r);
+    return AxisBox(o - dr, o + dr);
 }
 

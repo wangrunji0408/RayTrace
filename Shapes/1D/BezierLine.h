@@ -15,8 +15,9 @@ private:
 public:
     BezierLine(const std::vector<Vector3f> &points);
     Vector3f getPoint (float t) const;
-
     bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
+
+    AxisBox getAABB() const override;
 };
 
 

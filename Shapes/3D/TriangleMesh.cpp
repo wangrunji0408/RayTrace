@@ -65,7 +65,8 @@ void TriangleMesh::loadFromObj(std::istream &in) {
     faces.resize(std::min((size_t)cutSize, faces.size()));
     fixFaceNormal();
     boundingBox = AxisBox(vs.data() + 1, vs.size() - 1);
-    buildKDTree();
+//    buildKDTree();
+    buildAABBTree();
 }
 
 bool TriangleMesh::tryGetIntersectionPoint(Ray const &ray, float &t) const {
@@ -74,13 +75,20 @@ bool TriangleMesh::tryGetIntersectionPoint(Ray const &ray, float &t) const {
 }
 
 bool TriangleMesh::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const {
-    if(!tryIntersect(ray))
+    int face = 0;
+
+    // AABB
+    shared_ptr<Shape> shape;
+    aabbTree.tryGetIntersectionInfo(ray, t, shape);
+    face = int(dynamic_cast<Triangle*>(shape.get()) - triangles.data());
+
+    /*
+    // KDTree
+    if(fastIntersect(ray) == inf)
         return false;
     int faceCnt = 0;
-    int face = 0;
     t = inf;
-//    for(int i=1; i<faces.size(); ++i) // force
-    for(auto const& pair: kdTree.getIntersectSpaces(ray)) // use KDTree
+    for(auto const& pair: kdTree.getIntersectSpaces(ray))
     {
         if(pair.t > t + eps)
             continue;
@@ -95,6 +103,24 @@ bool TriangleMesh::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &po
         }
     }
 //    std::cerr << faceCnt << std::endl;
+    */
+
+
+    /*
+    // force
+    if(fastIntersect(ray) == inf)
+        return false;
+    t = inf;
+    for(int i=1; i<faces.size(); ++i) // force
+    {
+        float tt;
+        bool exist = triangles[i].tryGetIntersectionPoint(ray, tt);
+        if (exist && tt < t - eps)
+            t = tt, face = i;
+    }
+     */
+
+
     if(t == inf)    return false;
     point = ray.getEndPoint(t);
     if(normalInterpolation) {
@@ -152,11 +178,6 @@ TriangleMesh::TriangleMesh(std::string file)
     loadFromObj(file);
 }
 
-bool TriangleMesh::tryIntersect(Ray const &ray) const {
-    float t;
-    return boundingBox.tryGetIntersectionPoint(ray, t);
-}
-
 void TriangleMesh::buildKDTree() {
     kdTree = KDTree(vs.data() + 1, (int)vs.size() - 1);
     faceIdsInSpace.resize(vs.size());
@@ -184,6 +205,20 @@ void TriangleMesh::fixFaceNormal() {
             face.swap(0, 2);
     }
 
+}
+
+AxisBox TriangleMesh::getAABB() const {
+    return boundingBox;
+}
+
+void TriangleMesh::buildAABBTree() {
+    triangles.clear(); triangles.reserve(faces.size());
+    for(int i=0; i<faces.size(); ++i)
+        triangles.push_back(toTriangle(i));
+    std::vector<shared_ptr<Shape>> shapes(faces.size());
+    for(int i=0; i<faces.size(); ++i)
+        shapes[i] = shared_ptr<Shape>(&triangles[i]);
+    aabbTree.build(shapes);
 }
 
 std::ostream &operator<<(std::ostream &os, const TriangleMesh &mesh) {

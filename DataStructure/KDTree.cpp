@@ -7,8 +7,8 @@
 void KDTree::buildTree(KDTree::Iter begin, KDTree::Iter end, int d) {
     if(end - begin <= 1)
         return;
-    std::stable_sort(begin, end, [&](int const& i, int const& j){return cmp(i,j,d);});
     Iter mid = getMid(begin, end);
+    std::nth_element(begin, mid, end, [&](int const& i, int const& j){return cmp(i,j,d);});
 
     std::vector<Point> points;
     points.reserve(end - begin);
@@ -79,7 +79,7 @@ void
 KDTree::getIntersectSpaces(Ray const &ray, std::vector<KDTreeIntersect> &result, Iterc begin, Iterc end, int d) const {
     float t;
     Iterc mid = getMid(begin, end);
-    if(end - begin <= 1 || !boxs[mid - order.begin()].tryGetIntersectionPoint(ray, t))
+    if(end - begin <= 1 || boxs[mid - order.begin()].fastIntersect(ray) == inf)
         return;
     result.push_back(KDTreeIntersect{*mid, t});
     float midValue = ps[*mid].value(d);

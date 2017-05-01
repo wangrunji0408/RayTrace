@@ -11,7 +11,6 @@
 class IRayCastable {
 public:
     virtual bool tryGetIntersectionPoint(Ray const &ray, float& t) const = 0;
-    virtual bool tryGetIntersectionPoint(Ray const &ray, Vector3f &point) const;
 };
 
 #endif //INC_2RAYTRACE_IRAYCASTABLE_H
