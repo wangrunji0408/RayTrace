@@ -1,0 +1,207 @@
+{
+  "world": {
+    "name": "world",// 世界名
+    "env_color": 0, // 环境色
+    "objects": [    // 物体列表
+      {
+        "name": "plane0",   // 物体名
+        "enable": false,    // 是否可用（可选）：默认为true
+        "shape": {          // 形状
+          "type": "plane",      // 形状类型
+          "point": [ 0, 10, 0], // 属性
+          "normal": [ 0, -1, 0] // 属性
+        },
+        "material": "grid", // 材质：(1)可以是一个字符串表示材质名，具体定义在materials列表中
+        "uvmap": {          // UV映射（可选，如果不指定则用形状自带映射）
+          "type": "sphere",     // 映射类型：球坐标
+          "pos": [ 0, 0, 0]     // 属性：球心位置
+        }
+      },
+      {                     // 接下来介绍各种形状
+        "name": "plane",
+        "shape": {
+          "type": "plane",      // 【平面】
+          "point": [ 0, 10, 0], // 平面上一点
+          "normal": [ 0, -1, 0] // 过此点的法向量（不要求单位化）
+        },
+        "material": {       // 材质：(2)也可以定义匿名材质
+          "name": "green",
+          "diffuse": [0, 0.5, 0]
+        }
+      },
+      {
+        "name": "sphere",
+        "shape": {
+          "type": "sphere",     // 【球形】
+          "o": [ 0, 0, 0],      // 球心坐标
+          "r": 5                // 半径
+        },
+        "material": "grid"
+      },
+      {
+        "name": "triangle",
+        "shape": {
+          "type": "triangle",   // 【三角形】
+          "points": [           // 三个点的坐标
+            [1, 1, 1],          // 顺时针方向应用右手定则为法向量正方向
+            [2, 2, 2],
+            [1, 0, 2]
+          ]
+        },
+        "material": "trans"
+      },
+      {
+        "name": "axis_box",
+        "shape": {
+          "type": "axis_box",   // 【平行于坐标轴的长方体】（应用于包围盒）
+          "min": [1, 1, 1],     // 小端顶点坐标
+          "max": [2, 2, 2]      // 大端顶点坐标
+        },
+        "material": "trans"
+      },
+      {
+        "name": "bezier_curve",
+        "shape": {
+          "type": "bezier_curve", // 【bezier曲线】
+          "points": [             // 点列表
+            [1, 1, 1],
+            [2, 2, 2],
+            [1, 0, 2]
+          ]
+        },
+        "material": "trans"
+      },
+      {
+        "name": "bezier_surface",
+        "shape": {
+          "type": "bezier_surface", // 【bezier曲面】
+          "points": [               // 点矩阵
+            [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
+            [[2, 2, 2], [1, 1, 1], [1, 1, 1]],
+            [[1, 0, 2], [1, 1, 1], [1, 1, 1]]
+          ]
+        },
+        "material": "trans"
+      },
+      {
+        "name": "mesh",
+        "shape": {
+          "type": "mesh",                               // 【三角网格】
+          "obj_file": "../Scenes/dragon_vrip_res4.obj", // obj文件地址
+          "cut": 100000,                                // 最大面数（可选，默认为inf）
+          "normal_interpolation": true                  // 法向量插值（可选，默认为false）
+        },
+        "material": "trans"
+      }
+    ],
+    "materials": [          // 接下来介绍材质
+      {
+        "name": "trans",        // 材质名
+
+        "emission": 0.0,        // 自发光颜色（可选，默认为0）
+        "ambient": 0.0,         // 环境光反射颜色（可选，默认=diffuse）
+
+        "diffuse": [0, 0.5, 0], // 漫反射颜色（可选，默认为0）：(1)一个3维向量，分别代表RGB
+        "specular": 0.0,        // 漫反射高光（可选，默认为0）：(2)一个数，表示RGB均为这一个值
+        "shininess": 10,        // 漫反射高光系数（可选，默认为0）
+
+        "tdiffuse": 0,          // 漫透射颜色（可选，默认为0）
+        "tspecular": 0,         // 漫透射高光（可选，默认为0）
+        "tshininess": 0,        // 漫透射高光系数（可选，默认为0）
+
+        "reflection": 0.0,      // 镜面反射系数（可选，默认为0）
+        "refraction": 0.9,      // 透射系数（可选，默认为0）
+
+        "refractive_index": 1.05,   // 内部材质折射率（可选，默认为1）
+        "out_refractive_index": 1.0 // 外部材质折射率（可选，默认为1）
+      },
+      {                      // diffuse 支持纹理
+        "name": "grid",
+        "diffuse": {
+          "type": "grid",       // 【棋盘格】
+          "n": 2.0,             // 单位长度格子数（可以为正实数）：n越大网格越密集
+          "a": 0,               // 颜色a（可选，默认为0，即黑色）
+          "b": [0.5, 0, 0]      // 颜色b（可选，默认为1，即白色）
+        }
+      },
+      {
+        "name": "image",
+        "diffuse": {
+          "type": "image",      // 【图片】
+          "file": "1.png"       // 图片地址
+        }
+      },
+      {                       // 以下是一些具体材质样例
+        "name": "mirror",       // 【镜子】纯镜面反射
+        "diffuse": 0,
+        "reflection": 1
+      }
+    ],
+    "lights": [               // 光源
+      {
+        "name": "light_1",    // 光源名
+        "enable": true,       // 是否可用（可选，默认为true）
+        "shade": true,        // 是否阴影（可选，默认为true）
+        "color": 200,         // 颜色
+
+        "type": "point",      // 【点光源】
+        "pos": [5, 1, 2]      // 发光点
+      },
+      {
+        "name": "light_2",
+        "type": "spot",       // 【探照灯】
+        "pos": [ -5, 1, -2],  // 发光点
+        "dir": [1, 1, 1],     // 发光方向（与target二选一，优先）
+        "target": [2, 2, 2],  // 照明目标（与dir二选一）
+        "angle": 1,           // 照明范围张角（弧度）
+        "edge_angle": 0.2,    // 渐弱范围张角（弧度）
+        "color": 200          // 颜色
+      },
+      {
+        "name": "light_3",
+        "type": "parallel",   // 【平行光】
+        "pos": [ -5, 1, -2],  // 发光点
+        "r": 1,               // 发光半径（可选，默认为1）
+        "dir": [1, 1, 1],     // 发光方向（与target二选一，优先）
+        "target": [2, 2, 2],  // 照明目标（与dir二选一）
+        "color": 200          // 颜色
+      }
+    ],
+    "cameras": [            // 照相机
+      {
+        "name": "camera_1",
+        "pos": [ 0, -10, 0],
+        "target": [ 0, 0, 0],
+        "up": [ 0, 0, 1],
+        "resolution": [ 640, 480],
+        "realw": 20,
+        "orthographic": false
+      }
+    ]
+  },
+  "renderers": [            // 渲染器
+    {
+      "name": "renderer_1",   // 名称
+      "camera": "camera_1",   // 照相机名
+      "super": false,         // 超级采样抗锯齿（可选，默认为false）
+      "parallel": true,       // 并行计算（可选，默认为true）：使用OpenCV自带并行计算
+      "recolor": false,       // 重分配颜色（可选，默认为false）：将最亮点颜色设为1，其它线性缩放。可防止过曝光，但会造成整体变暗
+      "aperture_times": 0,    // 每像素采样次数（可选，默认为0）：实现光圈虚化，必须和camera配合
+      "type": "light_projection"  // 渲染算法【光线投射】
+                                  // （没有其它参数）
+    },
+    {
+      "name": "renderer_2",
+      "camera": "camera_1",
+      "type": "ray_tracer",   // 【光线追踪】
+      "depth": 10             // 递归深度（可选，默认为2）
+    },
+    {
+      "name": "renderer_2",
+      "camera": "camera_1",
+      "type": "path_tracer",  // 【路径追踪】
+      "depth": 10,            // 递归深度（可选，默认为2）
+      "times": 5              // 每像素采样次数（可选，默认为5）
+    }
+  ]
+}

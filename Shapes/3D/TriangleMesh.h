@@ -12,6 +12,7 @@
 #include "AxisBox.h"
 #include "../../DataStructure/KDTree.h"
 #include "../../DataStructure/AABBTree.h"
+#include "../2D/BezierSurface.h"
 #include <vector>
 #include <ostream>
 
@@ -21,6 +22,8 @@ public:
         int v[3] = {0};
         int vn[3] = {0};
         int vt[3] = {0};
+        TriFace(){}
+        TriFace(int i, int j, int k);
         void swap (int i, int j);
         friend std::ostream &operator<<(std::ostream &os, const TriFace &face);
     };
@@ -41,9 +44,12 @@ public:
 public:
     TriangleMesh(){}
     TriangleMesh(std::string file);
+    TriangleMesh(BezierSurface const& bs, int m, int n);
 
     void loadFromObj (std::istream& in);
     void loadFromObj (std::string file);
+    // 设置完点面后，进行建树等初始化操作
+    void init ();
     void buildKDTree ();
     void buildAABBTree ();
     void fixFaceNormal ();

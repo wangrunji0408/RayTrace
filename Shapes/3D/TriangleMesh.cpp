@@ -62,11 +62,7 @@ void TriangleMesh::loadFromObj(std::istream &in) {
             faces.push_back(face);
         }
     }
-    faces.resize(std::min((size_t)cutSize, faces.size()));
-    fixFaceNormal();
-    boundingBox = AxisBox(vs.data() + 1, vs.size() - 1);
-//    buildKDTree();
-    buildAABBTree();
+    init();
 }
 
 bool TriangleMesh::tryGetIntersectionPoint(Ray const &ray, float &t) const {
@@ -237,8 +233,62 @@ bool TriangleMesh::testRayBlocked(Ray const &ray, float tmin) const {
     return aabbTree.testRayBlocked(ray, tmin);
 }
 
+inline int getPointId (int i, int j, int n)
+{
+    return i * (n+1) + j + 1;
+}
+
+TriangleMesh::TriangleMesh(BezierSurface const &bs, int m, int n) {
+    vs.push_back(Point::zero);
+    vns.push_back(Point::zero);
+    vts.push_back(Point::zero);
+    faces.push_back(TriFace());
+    if(m < 1 || n < 1)
+        throw std::invalid_argument("BezierSurface to TriangleMesh: m, n must >= 1.");
+
+    // point
+    float u = 0, v = 0;
+    const float du = 1.0f / m, dv = 1.0f / n;
+    for(int i=0; i<=m; ++i, u += du, v = 0)
+        for (int j = 0; j <= n; ++j, v += dv) {
+            vs.push_back(bs.getPoint(u, v));
+            vns.push_back(bs.getNormalVector(u, v));
+            vts.push_back(Point(u, v, 0));
+        }
+
+    // face
+    for(int i=0; i<m; ++i)
+        for(int j=0; j<n; ++j)
+        {
+            // 0--1
+            // |  |
+            // 2--3
+            int id0 = getPointId(i, j, n);
+            int id1 = getPointId(i, j+1, n);
+            int id2 = getPointId(i+1, j, n);
+            int id3 = getPointId(i+1, j+1, n);
+            faces.push_back(TriFace(id0, id2, id1));
+            faces.push_back(TriFace(id1, id2, id3));
+        }
+    init();
+}
+
+void TriangleMesh::init() {
+    faces.resize(std::min((size_t)cutSize, faces.size()));
+    fixFaceNormal();
+    boundingBox = AxisBox(vs.data() + 1, vs.size() - 1);
+//    buildKDTree();
+    buildAABBTree();
+}
+
 void TriangleMesh::TriFace::swap(int i, int j) {
     std::swap(v[i], v[j]);
     std::swap(vn[i], vn[j]);
     std::swap(vt[i], vt[j]);
+}
+
+TriangleMesh::TriFace::TriFace(int i, int j, int k) {
+    v[0] = vt[0] = vn[0] = i;
+    v[1] = vt[1] = vn[1] = j;
+    v[2] = vt[2] = vn[2] = k;
 }

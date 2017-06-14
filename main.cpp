@@ -2,7 +2,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "Shapes/2D/Triangle.h"
-#include "Shapes/1D/BezierLine.h"
+#include "Shapes/1D/BezierCurve.h"
 #include "World/World.h"
 #include "Renderer/LightProjection.h"
 #include "Light/LightSource/PointLight.h"
@@ -16,7 +16,7 @@ void testBezier() {
     vector<Vector3f> points = {Vector3f(0, 0, 0),
                                Vector3f(1, 2, 3),
                                Vector3f(0, 1, 2)};
-    BezierLine bezier = BezierLine(points);
+    BezierCurve bezier = BezierCurve(points);
     cout << bezier.getPoint(0.25f) << endl;
     cout << bezier.getPoint(0.5f) << endl;
     cout << bezier.getPoint(0.75f) << endl;

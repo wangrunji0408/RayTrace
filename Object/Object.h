@@ -17,6 +17,7 @@ using std::string;
 class Object {
 public:
     string name;
+    bool enable; // TODO 暂未实现功能
 private:
     Transform transform, transform_i;   // Shape坐标系 相对 World坐标系 的变换矩阵，及逆
     shared_ptr<Shape> shape;

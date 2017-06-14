@@ -5,7 +5,7 @@
 #include "SceneParser.h"
 #include "../Light/LightSource/PointLight.h"
 #include "../Light/LightSource/ParallelLight.h"
-#include "../Shapes/1D/BezierLine.h"
+#include "../Shapes/1D/BezierCurve.h"
 #include "../Shapes/2D/Plane.h"
 #include "../Shapes/2D/Triangle.h"
 #include "../Shapes/3D/Sphere.h"
@@ -90,7 +90,9 @@ unique_ptr<Object> SceneParser::buildObject(Json::Value const &json) {
     auto material = buildMaterial(json["material"]);
     auto uvMap = buildUVMap(json["uvmap"]);
     auto name = json["name"].asString();
-    return unique_ptr<Object>(new Object(move(shape), move(material), move(uvMap), name));
+    auto ptr = unique_ptr<Object>(new Object(move(shape), move(material), move(uvMap), name));
+    ptr->enable = json.get("enable", true).asBool();
+    return ptr;
 }
 
 unique_ptr<LightSource> SceneParser::buildLight(Json::Value const &json) {
@@ -166,12 +168,22 @@ shared_ptr<ObjectMaterial> SceneParser::buildMaterial(Json::Value const &json) {
 
 unique_ptr<Shape> SceneParser::buildShape(Json::Value const &json) {
     Shape* shape = nullptr;
-    if(json["type"] == "bezier_line")
+    if(json["type"] == "bezier_curve")
     {
-        std::vector<Vector3f> points;
+        std::vector<Point> points;
         for(auto const& j: json["points"])
             points.push_back(parseVector3f(j));
-        shape = new BezierLine(points);
+        shape = new BezierCurve(points);
+    }
+    else if(json["type"] == "bezier_surface")
+    {
+        std::vector<Point> points;
+        int m = json["points"].size();
+        int n = json["points"][0].size();
+        for(auto const& array: json["points"])
+            for(auto const& j: array)
+                points.push_back(parseVector3f(j));
+        shape = new BezierSurface(m, n, points);
     }
     else if(json["type"] == "plane")
     {
