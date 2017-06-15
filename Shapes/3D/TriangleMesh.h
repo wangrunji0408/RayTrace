@@ -49,6 +49,7 @@ public:
 
     void loadFromObj (std::istream& in);
     void loadFromObj (std::string file);
+    void writeToObj (std::ostream& os) const;
     // 设置完点面后，进行建树等初始化操作
     void init ();
     void buildKDTree ();

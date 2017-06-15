@@ -10,7 +10,7 @@
 #include "../3D/TriangleMesh.h"
 
 class ParameterSurface: public Shape2D {
-protected:
+public:
     int meshm, meshn;
     TriangleMesh mesh;
 public:

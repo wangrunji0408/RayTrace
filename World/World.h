@@ -30,6 +30,7 @@ public:
     void addCamera(shared_ptr<Camera> camera);
     void removeCamera(shared_ptr<Camera> camera);
     shared_ptr<Camera> findCamera(std::string name) const;
+    shared_ptr<Object> findObject(std::string name) const;
 
     const Color &getEnvColor() const;
     void setEnvColor(const Color &envColor);

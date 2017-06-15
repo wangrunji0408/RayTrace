@@ -1,5 +1,6 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <fstream>
 
 #include "Shapes/2D/Triangle.h"
 #include "Shapes/1D/BezierCurve.h"
@@ -9,6 +10,7 @@
 #include "IO/SceneParser.h"
 #include "Renderer/RayTracer.h"
 #include "Shapes/3D/TriangleMesh.h"
+#include "Shapes/2D/BezierSurface.h"
 
 using namespace std;
 
@@ -79,6 +81,21 @@ void testLoadFromFile (const char* filePath)
     cv::waitKey(0);
 }
 
+void testBezierToMesh (const char* filePath)
+{
+    string name = "bezier";
+    string objPath = "../Scenes/" + name + ".obj";
+    std::ofstream fout(objPath);
+
+    auto parser = SceneParser();
+    auto world = parser.load(filePath);
+    auto shape = world->findObject(name)->getShape();
+    auto bs = dynamic_pointer_cast<BezierSurface>(shape);
+    if(bs == nullptr)
+        throw std::invalid_argument("Object shape type is not BezierSurface: " + name);
+    bs->mesh.writeToObj(fout);
+}
+
 int main (int argc, char** argv) {
 //    testKDTree();
     const char* filePath;
@@ -88,6 +105,7 @@ int main (int argc, char** argv) {
         filePath = argv[1];
     else
         return 0;
-    testLoadFromFile(filePath);
+//    testLoadFromFile(filePath);
+    testBezierToMesh(filePath);
     return 0;
 }

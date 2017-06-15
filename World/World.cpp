@@ -117,4 +117,10 @@ Vector3f World::calcReflectiveDir(Vector3f const &inDir, Vector3f const &normalD
     return n * 2 * n.dot(l) - l;
 }
 
+shared_ptr<Object> World::findObject(std::string name) const {
+    auto it = std::find_if(objects.begin(), objects.end(),
+                           [&](shared_ptr<Object> const& object){return object->name == name;});
+    return it == objects.end()? nullptr: *it;
+}
+
 
