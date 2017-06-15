@@ -20,17 +20,14 @@ bool ParameterSurface::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3
     param.x = (faceId/2 / meshn + param.x) / meshm;
     param.y = (faceId/2 % meshn + param.y) / meshn;
     Vector3f dir = ray.getUnitDir();
-    for(int i=0; i<5; ++i)
+    for(int i=0; i<iterTimes; ++i)
     {
         auto p = getPoint(param);
         auto f = ray.getEndPoint(t) - p;
         float f2 = f.len2();
-//        std::cerr << "u = " << param.x << " v = " << param.y << " t = " << t << " |f| = " << f2 << std::endl;
+//        std::cerr << "u = " << param.x << " v = " << param.y << " t = " << t << " |f|^2 = " << f2 << std::endl;
         if(f2 < eps)
-        {
-//            std::cerr << std::endl;
-            return true;
-        }
+            break;
         auto df = -f;
         auto pppu = getPartial(param, 0);
         auto pppv = getPartial(param, 1);
@@ -39,8 +36,9 @@ bool ParameterSurface::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3
         param.x += dir.dot(pppv.det(df)) / d;
         param.y -= dir.dot(pppu.det(df)) / d;
     }
-//    std::cerr << "failed" << std::endl;
-    return false;
+    bool succ =  Vector3f(0,0,-1) < param && param < Vector3f(1,1,1) && t > 0;
+//    std::cerr << (succ? "": "failed!!!") << std::endl;
+    return succ;
 }
 
 Point ParameterSurface::getPartial(Vector3f const &param, int id) const {
@@ -50,12 +48,16 @@ Point ParameterSurface::getPartial(Vector3f const &param, int id) const {
 }
 
 bool ParameterSurface::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const {
-    Vector3f param;
-    bool exist = tryGetIntersectionPoint(ray, t, param);
-    if(!exist)  return false;
-    point = getPoint(param);
-    normal = getNormalVector(param);
-    return true;
+    if(rendering == ITERATION) {
+        Vector3f param;
+        bool exist = tryGetIntersectionPoint(ray, t, param);
+        if (!exist) return false;
+        point = getPoint(param);
+        normal = getNormalVector(param);
+        return true;
+    }
+    else
+        return mesh.tryGetIntersectionInfo(ray, t, point, normal);
 }
 
 bool ParameterSurface::isOnSurface(Vector3f const &point) const {
@@ -76,4 +78,21 @@ Vector3f ParameterSurface::getUV(Vector3f const &point) const {
 
 bool ParameterSurface::testRayBlocked(Ray const &ray, float tmin) const {
     return mesh.testRayBlocked(ray, tmin);
+}
+
+void ParameterSurface::setRendering(std::string name) {
+    if(name == "mesh")
+    {
+        rendering = MESH;
+        mesh.normalInterpolation = false;
+    }
+    else if(name == "interpolation")
+    {
+        rendering = INTERPOLATION;
+        mesh.normalInterpolation = true;
+    }
+    else if(name == "iteration")
+        rendering = ITERATION;
+    else
+        throw std::invalid_argument("No such rendering type: " + name);
 }

@@ -191,6 +191,8 @@ unique_ptr<Shape> SceneParser::buildShape(Json::Value const &json) {
         auto bs = new BezierSurface(m, n, points);
         shape = bs;
         bs->makeMesh(mm, mn);
+        bs->setRendering(json.get("rendering", "iteration").asString());
+        bs->iterTimes = json.get("iter_times", 5).asInt();
     }
     else if(json["type"] == "plane")
     {

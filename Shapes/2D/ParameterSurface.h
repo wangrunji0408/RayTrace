@@ -13,8 +13,12 @@ class ParameterSurface: public Shape2D {
 public:
     int meshm, meshn;
     TriangleMesh mesh;
+    enum RenderType {MESH, INTERPOLATION, ITERATION};
+    RenderType rendering;
+    int iterTimes = 5;
 public:
     void makeMesh(int m, int n);
+    void setRendering(std::string name);
     Vector3f getUV(Vector3f const &point) const override;
     bool isOnSurface(Vector3f const &point) const override; // null
     Vector3f getNormalVectorOnSurface(Vector3f const &point) const override;    // null
