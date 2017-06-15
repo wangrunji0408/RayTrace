@@ -105,7 +105,7 @@ int main (int argc, char** argv) {
         filePath = argv[1];
     else
         return 0;
-//    testLoadFromFile(filePath);
-    testBezierToMesh(filePath);
+    testLoadFromFile(filePath);
+//    testBezierToMesh(filePath);
     return 0;
 }

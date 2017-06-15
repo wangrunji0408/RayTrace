@@ -33,7 +33,7 @@ bool Triangle::isOnSurface(Vector3f const &p) const {
     float z = detx(b-a, p-a);
     float x = detx(c-b, p-b);
     float y = detx(a-c, p-c);
-    return (x > 0 && y > 0 && z > 0) || (x < 0 && y < 0 && z < 0);
+    return (x > -eps && y > -eps && z > -eps) || (x < eps && y < eps && z < eps);
 }
 
 Vector3f Triangle::getNormalVectorOnSurface(Vector3f const &point) const {
@@ -41,21 +41,23 @@ Vector3f Triangle::getNormalVectorOnSurface(Vector3f const &point) const {
 }
 
 Vector3f Triangle::calcGravityCoordinate(Vector3f const &p) const {
-//    Vector3f detc = (b-a).det(p-a);
-//    Vector3f deta = (c-b).det(p-b);
-//    Vector3f detb = (a-c).det(p-c);
-//    Vector3f deti = deta + detb + detc;
-//    float ta = deta.dot(deti);
-//    float tb = detb.dot(deti);
-//    float tc = detc.dot(deti);
-//    Vector3f t = Vector3f(ta, tb, tc);
-//    return t / t.sum();
     // 注意到deta/detb/detc共线，因此只计算一个分量即可
     float z = detx(b-a, p-a);
     float x = detx(c-b, p-b);
     float y = detx(a-c, p-c);
     float sum = x + y + z;
-    return Vector3f(x, y, z) / sum;
+    if(fabs(sum) > eps)
+        return Vector3f(x, y, z) / sum;
+    // 如果sum为0，则用原方法计算
+    Vector3f detc = (b-a).det(p-a);
+    Vector3f deta = (c-b).det(p-b);
+    Vector3f detb = (a-c).det(p-c);
+    Vector3f deti = deta + detb + detc;
+    float ta = deta.dot(deti);
+    float tb = detb.dot(deti);
+    float tc = detc.dot(deti);
+    Vector3f t = Vector3f(ta, tb, tc);
+    return t / t.sum();
 }
 
 Triangle::Triangle(const Vector3f *points):

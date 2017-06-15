@@ -25,7 +25,7 @@ bool ParameterSurface::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3
         auto p = getPoint(param);
         auto f = ray.getEndPoint(t) - p;
         float f2 = f.len2();
-//        std::cerr << "u = " << u << " v = " << v << " t = " << t << " |f| = " << f2 << std::endl;
+//        std::cerr << "u = " << param.x << " v = " << param.y << " t = " << t << " |f| = " << f2 << std::endl;
         if(f2 < eps)
         {
 //            std::cerr << std::endl;
@@ -39,7 +39,7 @@ bool ParameterSurface::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3
         param.x += dir.dot(pppv.det(df)) / d;
         param.y -= dir.dot(pppu.det(df)) / d;
     }
-//    std::cerr << std::endl;
+//    std::cerr << "failed" << std::endl;
     return false;
 }
 
@@ -51,7 +51,7 @@ Point ParameterSurface::getPartial(Vector3f const &param, int id) const {
 
 bool ParameterSurface::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const {
     Vector3f param;
-    bool exist =tryGetIntersectionPoint(ray, t, param);
+    bool exist = tryGetIntersectionPoint(ray, t, param);
     if(!exist)  return false;
     point = getPoint(param);
     normal = getNormalVector(param);
