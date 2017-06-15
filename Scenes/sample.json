@@ -79,7 +79,8 @@
             [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
             [[2, 2, 2], [1, 1, 1], [1, 1, 1]],
             [[1, 0, 2], [1, 1, 1], [1, 1, 1]]
-          ]
+          ],
+          "mesh_size": [10, 10]     // 网格化大小：用于求交离散化
         },
         "material": "trans"
       },
@@ -115,7 +116,7 @@
         "refractive_index": 1.05,   // 内部材质折射率（可选，默认为1）
         "out_refractive_index": 1.0 // 外部材质折射率（可选，默认为1）
       },
-      {                      // diffuse 支持纹理
+      {                      // 纹理（仅diffuse支持）
         "name": "grid",
         "diffuse": {
           "type": "grid",       // 【棋盘格】
@@ -131,13 +132,13 @@
           "file": "1.png"       // 图片地址
         }
       },
-      {                       // 以下是一些具体材质样例
+      {                     // 以下是一些具体材质样例
         "name": "mirror",       // 【镜子】纯镜面反射
         "diffuse": 0,
         "reflection": 1
       }
     ],
-    "lights": [               // 光源
+    "lights": [             // 光源
       {
         "name": "light_1",    // 光源名
         "enable": true,       // 是否可用（可选，默认为true）
@@ -169,13 +170,15 @@
     ],
     "cameras": [            // 照相机
       {
-        "name": "camera_1",
-        "pos": [ 0, -10, 0],
-        "target": [ 0, 0, 0],
-        "up": [ 0, 0, 1],
-        "resolution": [ 640, 480],
-        "realw": 20,
-        "orthographic": false
+        "name": "camera_1",   // 名称
+        "pos": [ 0, -10, 0],  // 位置
+        "target": [ 0, 0, 0], // 目标点
+        "up": [ 0, 0, 1],     // 朝上方向
+        "resolution": [ 640, 480],  // 分辨率（水平，垂直）
+        "realw": 20,          // 对应世界坐标系中的宽度，基于目标点，用于调节视野大小
+        "orthographic": false,// 正交投影（可选，默认false）
+        "aperture": 0,        // 光圈大小（可选，默认为0，用于景深）
+        "focal": 0            // 焦距（可选，默认为0，用于景深）
       }
     ]
   },
@@ -186,7 +189,7 @@
       "super": false,         // 超级采样抗锯齿（可选，默认为false）
       "parallel": true,       // 并行计算（可选，默认为true）：使用OpenCV自带并行计算
       "recolor": false,       // 重分配颜色（可选，默认为false）：将最亮点颜色设为1，其它线性缩放。可防止过曝光，但会造成整体变暗
-      "aperture_times": 0,    // 每像素采样次数（可选，默认为0）：实现光圈虚化，必须和camera配合
+      "aperture_times": 0,    // 每像素采样次数（可选，默认为0，即关闭景深）：实现景深，必须和camera配合
       "type": "light_projection"  // 渲染算法【光线投射】
                                   // （没有其它参数）
     },
