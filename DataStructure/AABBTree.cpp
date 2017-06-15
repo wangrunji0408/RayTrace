@@ -120,11 +120,11 @@ bool AABBTree::testRayBlocked(Ray const &ray, float tmin, int begin, int end) co
     float leftT = leftAABB.fastIntersect(ray);
     float rightT = rightAABB.fastIntersect(ray);
     if(leftT < rightT)
-        return leftT < tmin && testRayBlocked(ray, tmin, begin + 1, rightBegin[begin])
-               || rightT < tmin && testRayBlocked(ray, tmin, rightBegin[begin], end);
+        return (leftT < tmin && testRayBlocked(ray, tmin, begin + 1, rightBegin[begin]))
+               || (rightT < tmin && testRayBlocked(ray, tmin, rightBegin[begin], end));
     else
-        return rightT < tmin && testRayBlocked(ray, tmin, rightBegin[begin], end)
-               || leftT < tmin && testRayBlocked(ray, tmin, begin + 1, rightBegin[begin]);
+        return (rightT < tmin && testRayBlocked(ray, tmin, rightBegin[begin], end))
+               || (leftT < tmin && testRayBlocked(ray, tmin, begin + 1, rightBegin[begin]));
 }
 
 bool AABBTree::testRayBlocked(Ray const &ray, float tmin) const {

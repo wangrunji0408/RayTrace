@@ -15,7 +15,7 @@
 #include <vector>
 #include <ostream>
 
-class BezierSurface;
+class ParameterSurface;
 
 class TriangleMesh: public Shape3D {
 public:
@@ -45,7 +45,7 @@ public:
 public:
     TriangleMesh(){}
     TriangleMesh(std::string file);
-    TriangleMesh(BezierSurface const& bs, int m, int n);
+    TriangleMesh(ParameterSurface const& bs, int m, int n);
 
     void loadFromObj (std::istream& in);
     void loadFromObj (std::string file);

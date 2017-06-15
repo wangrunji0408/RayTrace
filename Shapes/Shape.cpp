@@ -23,8 +23,8 @@ float Shape::fastIntersect(Ray const& ray) const {
 }
 
 float Shape::calcIntersect(Ray const &ray) const {
-    float t;
-    return tryGetIntersectionPoint(ray, t)? t: inf;
+    float t; Vector3f param;
+    return tryGetIntersectionPoint(ray, t, param)? t: inf;
 }
 
 bool Shape::testRayBlocked(Ray const &ray, float tmin) const {

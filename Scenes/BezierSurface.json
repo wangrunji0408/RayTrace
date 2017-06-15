@@ -15,7 +15,7 @@
           ],
           "mesh_size": [10, 10]
         },
-        "material": "green"
+        "material": "grid2"
       },
       {
         "name": "plane",
@@ -24,19 +24,24 @@
           "pos": [0, 0, 0],
           "normal": [0, 0, 1]
         },
-        "material": {
-          "name": "grid",
-          "diffuse": {"type": "grid", "n": 2}
-        }
+        "material": "grid1"
       }
     ],
     "materials": [
-    {
-      "name": "green",
-      "diffuse": [0, 0.5, 0],
-      "specular": 0.2,
-      "shininess": 10
-    }
+      {
+        "name": "green",
+        "diffuse": [0, 0.5, 0],
+        "specular": 0.2,
+        "shininess": 10
+      },
+      {
+        "name": "grid1",
+        "diffuse": {"type": "grid", "n": 2}
+      },
+      {
+        "name": "grid2",
+        "diffuse": {"type": "grid", "n": 10, "a": [0, 1, 0]}
+      }
   ],
     "lights": [
     {

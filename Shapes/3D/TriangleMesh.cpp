@@ -239,22 +239,23 @@ inline int getPointId (int i, int j, int n)
     return i * (n+1) + j + 1;
 }
 
-TriangleMesh::TriangleMesh(BezierSurface const &bs, int m, int n) {
+TriangleMesh::TriangleMesh(ParameterSurface const &bs, int m, int n) {
     vs.push_back(Point::zero);
     vns.push_back(Point::zero);
     vts.push_back(Point::zero);
     faces.push_back(TriFace());
     if(m < 1 || n < 1)
-        throw std::invalid_argument("BezierSurface to TriangleMesh: m, n must >= 1.");
+        throw std::invalid_argument("ParameterSurface to TriangleMesh: m, n must >= 1.");
 
     // point
     float u = 0, v = 0;
     const float du = 1.0f / m, dv = 1.0f / n;
     for(int i=0; i<=m; ++i, u += du, v = 0)
         for (int j = 0; j <= n; ++j, v += dv) {
-            vs.push_back(bs.getPoint(u, v));
-            vns.push_back(bs.getNormalVector(u, v));
-            vts.push_back(Point(u, v, 0));
+            auto param = Vector3f(u, v, 0);
+            vs.push_back(bs.getPoint(param));
+            vns.push_back(bs.getNormalVector(param));
+            vts.push_back(param);
         }
 
     // face
