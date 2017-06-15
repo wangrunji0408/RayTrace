@@ -1,0 +1,71 @@
+{
+  "world": {
+    "name": "world",
+    "env_color": 0,
+    "objects": [
+      {
+        "enable": true,
+        "name": "bezier",
+        "shape": {
+          "type": "bezier_surface",
+          "points": [
+            [[0, 2, 0], [1, 2, 1], [2, 2, 0]],
+            [[0, 1, 1], [1, 1, 2], [2, 1, 1]],
+            [[0, 0, 0], [1, 0, 1], [2, 0, 0]]
+          ],
+          "mesh_size": [10, 10]
+        },
+        "material": "green"
+      },
+      {
+        "name": "plane",
+        "shape": {
+          "type": "plane",
+          "pos": [0, 0, 0],
+          "normal": [0, 0, 1]
+        },
+        "material": {
+          "name": "grid",
+          "diffuse": {"type": "grid", "n": 2}
+        }
+      }
+    ],
+    "materials": [
+    {
+      "name": "green",
+      "diffuse": [0, 0.5, 0],
+      "specular": 0.2,
+      "shininess": 10
+    }
+  ],
+    "lights": [
+    {
+      "name": "point_light_1",
+      "type": "point",
+      "pos": [1, 1, 3],
+      "color": 5
+    }
+  ],
+    "cameras": [
+    {
+      "name": "camera_1",
+      "pos": [0, 0, 3],
+      "target": [1, 1, 0],
+      "up": [1, 1, 1],
+      "resolution": [640, 480],
+      "realw": 3,
+      "orthographic": false
+    }
+  ]
+  },
+  "renderers": [
+    {
+      "name": "ray_tracer_1",
+      "type": "ray_tracer",
+      "camera": "camera_1",
+      "depth": 2,
+      "refraction": false,
+      "parallel": true
+    }
+  ]
+}

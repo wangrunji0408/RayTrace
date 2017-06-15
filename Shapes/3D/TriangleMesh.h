@@ -12,9 +12,10 @@
 #include "AxisBox.h"
 #include "../../DataStructure/KDTree.h"
 #include "../../DataStructure/AABBTree.h"
-#include "../2D/BezierSurface.h"
 #include <vector>
 #include <ostream>
+
+class BezierSurface;
 
 class TriangleMesh: public Shape3D {
 public:
@@ -29,7 +30,7 @@ public:
     };
 public:
     int cutSize = 1 << 28;
-    bool normalInterpolation = true;
+    bool normalInterpolation = false;
     std::vector<Point> vs;
     std::vector<Point> vns;
     std::vector<Point> vts;
@@ -54,12 +55,11 @@ public:
     void buildAABBTree ();
     void fixFaceNormal ();
 
-    bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
-
     AxisBox getAABB() const override;
 
     bool testRayBlocked(Ray const &ray, float tmin) const override;
-
+    bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
+    bool tryGetIntersectionInfo(Ray const &ray, float &t, int &faceId, float &u, float &v) const;
     bool tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const override;
 
     bool isOnSurface(Vector3f const &point) const override;

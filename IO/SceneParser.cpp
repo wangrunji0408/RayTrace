@@ -8,6 +8,7 @@
 #include "../Shapes/1D/BezierCurve.h"
 #include "../Shapes/2D/Plane.h"
 #include "../Shapes/2D/Triangle.h"
+#include "../Shapes/2D/BezierSurface.h"
 #include "../Shapes/3D/Sphere.h"
 #include "../Shapes/3D/AxisBox.h"
 #include "../Renderer/RayTracer.h"
@@ -42,7 +43,9 @@ unique_ptr<World> SceneParser::buildWorld(Json::Value const &json) {
         materialDict[material->name] = std::move(material);
     }
     for(auto const& j: json["objects"]) {
-        world->addObject(buildObject(j));
+        auto object = buildObject(j);
+        if(object->enable)
+            world->addObject(std::move(object));
     }
     for(auto const& j: json["cameras"]) {
         world->addCamera(buildCamera(j));
@@ -180,10 +183,14 @@ unique_ptr<Shape> SceneParser::buildShape(Json::Value const &json) {
         std::vector<Point> points;
         int m = json["points"].size();
         int n = json["points"][0].size();
+        int mm = json["mesh_size"][0].asInt();
+        int mn = json["mesh_size"][1].asInt();
         for(auto const& array: json["points"])
             for(auto const& j: array)
                 points.push_back(parseVector3f(j));
-        shape = new BezierSurface(m, n, points);
+        auto bs = new BezierSurface(m, n, points);
+        shape = bs;
+        bs->makeMesh(mm, mn);
     }
     else if(json["type"] == "plane")
     {

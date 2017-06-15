@@ -3,6 +3,7 @@
 //
 
 #include "TriangleMesh.h"
+#include "../2D/BezierSurface.h"
 #include <fstream>
 
 using std::string;
@@ -268,7 +269,7 @@ TriangleMesh::TriangleMesh(BezierSurface const &bs, int m, int n) {
             int id2 = getPointId(i+1, j, n);
             int id3 = getPointId(i+1, j+1, n);
             faces.push_back(TriFace(id0, id2, id1));
-            faces.push_back(TriFace(id1, id2, id3));
+            faces.push_back(TriFace(id3, id1, id2));
         }
     init();
 }
@@ -279,6 +280,26 @@ void TriangleMesh::init() {
     boundingBox = AxisBox(vs.data() + 1, vs.size() - 1);
 //    buildKDTree();
     buildAABBTree();
+}
+
+bool TriangleMesh::tryGetIntersectionInfo(Ray const &ray, float &t, int &faceId, float &u, float &v) const {
+    shared_ptr<Shape> shape;
+    bool exist = aabbTree.tryGetIntersectionInfo(ray, t, shape);
+    if(!exist)  return false;
+    faceId = int(dynamic_cast<Triangle*>(shape.get()) - triangles.data());
+    auto point = ray.getEndPoint(t);
+    auto gravity = toTriangle(faceId).calcGravityCoordinate(point);
+    if(faceId & 1)  // 左上片
+    {
+        u = gravity.z;
+        v = gravity.y;
+    }
+    else    // 右下片
+    {
+        u = 1 - gravity.y;
+        v = 1 - gravity.z;
+    }
+    return true;
 }
 
 void TriangleMesh::TriFace::swap(int i, int j) {
