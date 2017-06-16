@@ -27,13 +27,22 @@ inline float detx (Vector3f const& a, Vector3f const& b)
     return a.y * b.z - a.z * b.y;
 }
 
+bool Triangle::edge = false;
+
 bool Triangle::isOnSurface(Vector3f const &p) const {
-//    Vector3f gc = calcGravityCoordinate(point);
+//    Vector3f gc = calcGravityCoordinate(p);
 //    return gc.x > -eps && gc.y > -eps && gc.z > -eps;
     float z = detx(b-a, p-a);
     float x = detx(c-b, p-b);
     float y = detx(a-c, p-c);
-    return (x > -eps && y > -eps && z > -eps) || (x < eps && y < eps && z < eps);
+    if(edge)
+        // 含边界，三角网格缝隙处会重合，使用法向插值时会出现花纹现象
+        return (x > -eps && y > -eps && z > -eps)
+               || (x < eps && y < eps && z < eps);
+    else
+        // 不含边界，三角网格缝隙处会漏过去，ParameterSurface出现黑点
+        return (x >= eps && y >= eps && z >= eps)
+               || (x <= -eps && y <= -eps && z <= -eps);
 }
 
 Vector3f Triangle::getNormalVector(Vector3f const &param) const {

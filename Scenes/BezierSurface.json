@@ -59,11 +59,11 @@
     "cameras": [
     {
       "name": "camera_1",
-      "pos": [0, 0, 2],
-      "target": [1, 1, 0],
-      "up": [1, 1, 1],
+      "pos": [0, 0, 4],
+      "target": [2, 2, 0],
+      "up": [0, 0, 5],
       "resolution": [640, 480],
-      "realw": 3,
+      "realw": 6,
       "orthographic": false
     }
   ]

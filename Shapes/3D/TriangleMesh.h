@@ -37,6 +37,7 @@ public:
     std::vector<TriFace> faces;
     std::vector<Triangle> triangles;
     std::vector<std::vector<int> > faceIdsInSpace;
+    bool edge = false;
     AxisBox boundingBox;
     KDTree kdTree;
     AABBTree aabbTree;

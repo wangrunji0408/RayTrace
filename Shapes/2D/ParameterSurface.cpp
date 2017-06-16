@@ -8,31 +8,20 @@ void ParameterSurface::makeMesh(int m, int n) {
     meshm = m;
     meshn = n;
     mesh = TriangleMesh(*this, m, n);
+    mesh.edge = true; // 开启三角面片边界碰撞
 }
 
 bool ParameterSurface::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3f& param) const {
-    Vector3f meshParam;
-    bool exist = mesh.tryGetIntersectionPoint(ray, t, meshParam);
-    if(!exist)
-        return false;
+    bool exist = mesh.tryGetIntersectionPoint(ray, t, param);
+    // 转换param格式
+    param = fromMeshParam(param);
+    Vector3f meshParam = param;
+    float &u = param.x, &v = param.y;
 
-    float &u = param.x;
-    float &v = param.y;
-    auto gravity = mesh.paramToGravity(meshParam);
-    int faceId = (int)meshParam.z - 1;
-    if((faceId & 1) == 0)  // 左上片
-    {
-        u = gravity.z;
-        v = gravity.y;
-    }
-    else    // 右下片
-    {
-        u = 1 - gravity.y;
-        v = 1 - gravity.z;
-    }
+    // 如果不需要迭代，在这里就可以结束了
+    if(!exist || rendering != ITERATION)
+        return exist;
 
-    u = (faceId/2 / meshn + u) / meshm;
-    v = (faceId/2 % meshn + v) / meshn;
     Vector3f dir = ray.getUnitDir();
     for(int i=0; i<iterTimes; ++i)
     {
@@ -92,4 +81,45 @@ void ParameterSurface::setRendering(std::string name) {
         rendering = ITERATION;
     else
         throw std::invalid_argument("No such rendering type: " + name);
+}
+
+void ParameterSurface::intersect(IntersectInfo &info) const {
+    if(info.testBlockT != 0) {
+        info.success = testRayBlocked(info.ray, info.testBlockT);
+        return;
+    }
+    if(rendering == ITERATION) {
+        info.success = tryGetIntersectionPoint(info.ray, info.t, info.param);
+        if(!info.success)   return;
+        if(info.needNormal)
+            info.normal = getNormalVector(info.param);
+        if(info.needUV)
+            info.uv = getUV(info.param);
+    } else { // mesh
+        mesh.intersect(info);
+        info.param = fromMeshParam(info.param);
+        info.uv = getUV(info.param);
+    }
+}
+
+Vector3f ParameterSurface::fromMeshParam(Vector3f const &meshParam) const {
+    Vector3f param;
+    float &u = param.x;
+    float &v = param.y;
+    param.z = 0;
+    auto gravity = mesh.paramToGravity(meshParam);
+    int faceId = (int)meshParam.z - 1;
+    if((faceId & 1) == 0)  // 左上片
+    {
+        u = gravity.z;
+        v = gravity.y;
+    }
+    else    // 右下片
+    {
+        u = 1 - gravity.y;
+        v = 1 - gravity.z;
+    }
+    u = (faceId/2 / meshn + u) / meshm;
+    v = (faceId/2 % meshn + v) / meshn;
+    return param;
 }

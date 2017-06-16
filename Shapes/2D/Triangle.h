@@ -13,6 +13,7 @@ class Triangle: public Shape2D {
 public:
     Vector3f a, b, c;
     static int intersectCount;
+    static bool edge;
 //    Plane plane;
 public:
     Triangle() {}

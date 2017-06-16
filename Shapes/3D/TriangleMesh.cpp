@@ -5,16 +5,10 @@
 #include "TriangleMesh.h"
 #include "../2D/BezierSurface.h"
 #include <fstream>
+#include <set>
 
 using std::string;
 using std::endl;
-
-inline int parseInt (const char* str)
-{
-    int x = 0;
-    sscanf(str, "%d", &x);
-    return x;
-}
 
 void TriangleMesh::loadFromObj(std::istream &in) {
     vs.push_back(Point::zero);
@@ -53,13 +47,13 @@ void TriangleMesh::loadFromObj(std::istream &in) {
             for(int i=0; i<3; ++i)
             {
                 string token; ss >> token;
-                face.v[i] = parseInt(token.c_str());
+                face.v[i] = atoi(token.c_str());
                 int p1 = (int)token.find_first_of('/');
                 int p2 = (int)token.find_last_of('/');
                 if(p1 == std::string::npos)
                     continue;
-                face.vt[i] = parseInt(token.c_str() + p1 + 1);
-                face.vn[i] = parseInt(token.c_str() + p2 + 1);
+                face.vt[i] = atoi(token.c_str() + p1 + 1);
+                face.vn[i] = atoi(token.c_str() + p2 + 1);
             }
             faces.push_back(face);
         }
@@ -72,6 +66,7 @@ bool TriangleMesh::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3f &p
 
     // AABB
     shared_ptr<Shape> shape;
+    Triangle::edge = edge; // TODO 存在多线程竞争问题
     aabbTree.tryGetIntersectionInfo(ray, t, shape);
     face = int(dynamic_cast<Triangle*>(shape.get()) - triangles.data());
 
@@ -104,9 +99,19 @@ Vector3f TriangleMesh::getNormalVector(Vector3f const &param) const {
     int face = int(param.z);
     if(normalInterpolation) {
         auto gravity = paramToGravity(param);
-        return vns[faces[face].vn[0]] * gravity.x
+        auto normal = vns[faces[face].vn[0]] * gravity.x
                  + vns[faces[face].vn[1]] * gravity.y
                  + vns[faces[face].vn[2]] * gravity.z;
+        if(normal == Point::zero) {
+            static std::set<int> warned;
+            if(warned.find(face) == warned.end()) {
+                warned.insert(face);
+                std::cerr << "Warning: normal = 0 face = " << face << "\n"
+                          << faces[face] << std::endl;
+            }
+            return toTriangle(face).getNormalVector(param);
+        }
+        return normal;
     }
     else
         return toTriangle(face).getNormalVector(param);

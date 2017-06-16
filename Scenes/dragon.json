@@ -118,10 +118,10 @@
        "name": "ray_tracer_1",
        "type": "ray_tracer",
        "camera": "camera_1",
-       "depth": 8,
+       "depth": 10,
        "parallel": true
        // "refraction": false,
      }
   ]
-  // "show_light": [63,252]
+//   "show_light": [301, 379]
 }
