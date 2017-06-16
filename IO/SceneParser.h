@@ -19,6 +19,7 @@ public:
 protected:
     static Vector3f parseVector3f (Json::Value const& json);
     static Vector3f parseVector3fCanBeSingle (Json::Value const& json);
+    static Transform parseTransform (Json::Value const& json);
     static Ray parseRay (Json::Value const& json);
     unique_ptr<Object> buildObject(Json::Value const &json);
     static unique_ptr<Shape> buildShape(Json::Value const &json);

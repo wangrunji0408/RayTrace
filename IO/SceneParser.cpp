@@ -96,6 +96,8 @@ unique_ptr<Object> SceneParser::buildObject(Json::Value const &json) {
     auto name = json["name"].asString();
     auto ptr = unique_ptr<Object>(new Object(move(shape), move(material), move(uvMap), name));
     ptr->enable = json.get("enable", true).asBool();
+    auto trans = parseTransform(json["transform"]);
+    ptr->applyTransform(trans);
     return ptr;
 }
 
@@ -324,4 +326,13 @@ unique_ptr<UVMap> SceneParser::buildUVMap(Json::Value const &json) {
     else
         throw std::invalid_argument("UVMap type wrong: " + json["name"].asString());
     return uvmap;
+}
+
+Transform SceneParser::parseTransform(Json::Value const& json) {
+    if(json.isNull())
+        return Transform();
+    auto pos = parseVector3f(json["pos"]);
+    auto angle = parseVector3f(json["angle"]);
+    // 先旋转，后移动
+    return Transform::move(pos) * Transform::rotate(angle);
 }

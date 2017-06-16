@@ -116,7 +116,7 @@ Transform Transform::inverse() const {
 }
 
 Ray Transform::operator*(Ray const &ray) const {
-    return Ray(operator*(ray.getStartPoint()), operator*(ray.getUnitDir()));
+    return Ray::fromTo(operator*(ray.getStartPoint()), operator*(ray.getEndPoint()));
 }
 
 Transform::Transform() {

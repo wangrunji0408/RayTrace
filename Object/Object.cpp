@@ -21,8 +21,12 @@ void Object::applyTransform(Transform const &t) {
 }
 
 void Object::intersect(IntersectInfo &info) const {
+    auto ray = info.ray;
+    info.ray = transform_i * info.ray;
     shape->intersect(info);
+    info.ray = ray;
     if(!info.success || info.testBlockT != 0)    return;
+    info.normal = transform * info.normal;
     if(info.needUV && uvMap != nullptr)
         info.uv = uvMap->getUV(info.getPoint());
 }
