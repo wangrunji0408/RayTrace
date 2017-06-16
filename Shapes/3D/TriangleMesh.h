@@ -57,11 +57,10 @@ public:
     void fixFaceNormal ();
 
     AxisBox getAABB() const override;
-
+    Vector3f paramToGravity (Vector3f const& param) const;
     bool testRayBlocked(Ray const &ray, float tmin) const override;
-    bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
-    bool tryGetIntersectionInfo(Ray const &ray, float &t, int &faceId, float &u, float &v) const;
-    bool tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const override;
+    // param: (gravity.x, gravity.y, faceId)
+    bool tryGetIntersectionPoint(Ray const &ray, float &t, Vector3f &param) const override;
 
     bool isOnSurface(Vector3f const &point) const override;
     int getFaceId(Vector3f const &point) const;

@@ -11,21 +11,35 @@ void ParameterSurface::makeMesh(int m, int n) {
 }
 
 bool ParameterSurface::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3f& param) const {
-    int faceId;
-    bool exist = mesh.tryGetIntersectionInfo(ray, t, faceId, param.x, param.y);
+    Vector3f meshParam;
+    bool exist = mesh.tryGetIntersectionPoint(ray, t, meshParam);
     if(!exist)
         return false;
 
-    faceId--;
-    param.x = (faceId/2 / meshn + param.x) / meshm;
-    param.y = (faceId/2 % meshn + param.y) / meshn;
+    float &u = param.x;
+    float &v = param.y;
+    auto gravity = mesh.paramToGravity(meshParam);
+    int faceId = (int)meshParam.z - 1;
+    if((faceId & 1) == 0)  // 左上片
+    {
+        u = gravity.z;
+        v = gravity.y;
+    }
+    else    // 右下片
+    {
+        u = 1 - gravity.y;
+        v = 1 - gravity.z;
+    }
+
+    u = (faceId/2 / meshn + u) / meshm;
+    v = (faceId/2 % meshn + v) / meshn;
     Vector3f dir = ray.getUnitDir();
     for(int i=0; i<iterTimes; ++i)
     {
         auto p = getPoint(param);
         auto f = ray.getEndPoint(t) - p;
         float f2 = f.len2();
-//        std::cerr << "u = " << param.x << " v = " << param.y << " t = " << t << " |f|^2 = " << f2 << std::endl;
+//        std::cerr << "u = " << u << " v = " << v << " t = " << t << " |f|^2 = " << f2 << std::endl;
         if(f2 < eps)
             break;
         auto df = -f;
@@ -33,8 +47,8 @@ bool ParameterSurface::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3
         auto pppv = getPartial(param, 1);
         auto d = dir.dot(pppu.det(pppv));
         t += pppu.dot(pppv.det(df)) / d;
-        param.x += dir.dot(pppv.det(df)) / d;
-        param.y -= dir.dot(pppu.det(df)) / d;
+        u += dir.dot(pppv.det(df)) / d;
+        v -= dir.dot(pppu.det(df)) / d;
     }
     bool succ =  Vector3f(0,0,-1) < param && param < Vector3f(1,1,1) && t > 0;
 //    std::cerr << (succ? "": "failed!!!") << std::endl;
@@ -45,17 +59,6 @@ Point ParameterSurface::getPartial(Vector3f const &param, int id) const {
     float d = 1e-3;
     auto p1 = param; p1.value(id) += d;
     return (getPoint(p1) - getPoint(param)) / d;
-}
-
-bool ParameterSurface::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &param, Vector3f &normal) const {
-    if(rendering == ITERATION) {
-        bool exist = tryGetIntersectionPoint(ray, t, param);
-        if (!exist) return false;
-        normal = getNormalVector(param);
-        return true;
-    }
-    else
-        return mesh.tryGetIntersectionInfo(ray, t, param, normal);
 }
 
 bool ParameterSurface::isOnSurface(Vector3f const &point) const {

@@ -14,7 +14,7 @@
 
 using std::string;
 
-class Object {
+class Object: public IRayCastable {
 public:
     string name;
     bool enable = true;
@@ -26,8 +26,10 @@ private:
 public:
     Object(shared_ptr<Shape> shape, shared_ptr<ObjectMaterial> material, shared_ptr<UVMap> uvMap = nullptr,
            string name = "object");
+
+    void intersect(IntersectInfo &info) const override;
     shared_ptr<Shape> getShape() const;
-    Material getMaterialAt(Vector3f const& param) const;
+    Material getMaterialAt(Vector3f const& uv) const;
     void applyTransform (Transform const& t);
 };
 

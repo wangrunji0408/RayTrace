@@ -8,17 +8,17 @@ LightProjection::LightProjection(shared_ptr<World> world, shared_ptr<Camera> cam
 
 Color LightProjection::renderRay(Ray const &ray) const {
     auto result = world->tryGetFirstIntersectionPoint(ray);
-    if(!result.isSuccess())
+    if(!result.success)
         return world->getEnvColor();
-    auto obj = result.getObject();
+    auto obj = result.object;
     auto point = result.getPoint();
-    auto material = obj->getMaterialAt(result.getParam());
+    auto material = obj->getMaterialAt(result.param);
     Color color = world->getEnvColor() * material.ambient;
     for(auto light : world->getLights())
     {
         Light l = light->illuminate(point);
         if(world->testLightBlocked(l))  continue;
-        Color f = material.calcF(-l.getUnitDir(), ray.getStartPoint() - point, result.getNormal());
+        Color f = material.calcF(-l.getUnitDir(), ray.getStartPoint() - point, result.normal);
         color += l.color * f;
     }
     return color;

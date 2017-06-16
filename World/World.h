@@ -9,7 +9,7 @@
 #include "../Light/Light.h"
 #include "../Object/Object.h"
 #include "../Light/LightSource/LightSource.h"
-#include "../Object/IntersectResult.h"
+#include "../Geometry/IntersectInfo.h"
 #include "../Camera/Camera.h"
 
 class World {
@@ -34,8 +34,7 @@ public:
 
     const Color &getEnvColor() const;
     void setEnvColor(const Color &envColor);
-    // 如果有比t小的直接返回
-    IntersectResult tryGetFirstIntersectionPoint (Ray const& ray, float tmin = 0) const;
+    IntersectInfo tryGetFirstIntersectionPoint (Ray const& ray) const;
     bool testLightBlocked(Light const& light) const;
 
     static Vector3f calcRefractiveDir (Vector3f const &inDir, Vector3f const &normalDir, float indexInside, float indexOutside);

@@ -11,5 +11,17 @@ bool IRayCastable::tryGetIntersectionPoint(const Ray &ray, float &t, Vector3f &p
 }
 
 bool IRayCastable::tryGetIntersectionPoint(Ray const &ray, float &t) const {
-    throw std::invalid_argument("Function tryGetIntersectionPoint not implemented.");
+    throw std::invalid_argument("Function tryGetIntersectionPoint is not implemented.");
+}
+
+void IRayCastable::intersect(IntersectInfo &info) const {
+    info.success = tryGetIntersectionPoint(info.ray, info.t, info.param);
+    if(!info.success)   return;
+    if(info.testBlockT != 0)
+    {
+        info.success = info.t < info.testBlockT;
+        return;
+    }
+    if(info.needNormal || info.needParam || info.needObject)
+        throw std::runtime_error("Function intersect is not implemented. Needs can not be satisfied.");
 }

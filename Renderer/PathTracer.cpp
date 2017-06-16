@@ -17,13 +17,13 @@ PathTracer::PathTracer(shared_ptr<World> world, shared_ptr<Camera> camera) : Ray
 Color PathTracer::renderRay(Ray const &ray, int depth, Color weight) const {
     if(depth == 0 || weight < epsColor)  return Color::zero;
     auto result = world->tryGetFirstIntersectionPoint(ray);
-    if(!result.isSuccess())
+    if(!result.success)
         return world->getEnvColor();
-    auto obj = result.getObject();
+    auto obj = result.object;
     auto point = result.getPoint();
-    auto material = obj->getMaterialAt(result.getParam());
+    auto material = obj->getMaterialAt(result.param);
     auto v = ray.getStartPoint() - point;
-    auto n = result.getNormal();
+    auto n = result.normal;
     Color color = material.calcEmission(v, n);
     for(auto const& light : world->getLights())
     {

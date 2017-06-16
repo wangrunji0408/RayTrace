@@ -5,28 +5,19 @@
 #include "World.h"
 #include "../Shapes/2D/Shape2D.h"
 
-IntersectResult World::tryGetFirstIntersectionPoint(Ray const &ray, float tmin) const {
-    std::vector<float> ts(objects.size(), inf);
-    std::vector<Vector3f> normals(objects.size());
-    std::vector<Vector3f> params(objects.size());
-    int index = -1;
+IntersectInfo World::tryGetFirstIntersectionPoint(Ray const &ray) const {
+    auto mintInfo = IntersectInfo(Ray());
     for(int i=0; i<objects.size(); ++i) {
-        auto shape = std::static_pointer_cast<Shape2D>(objects[i]->getShape());
-        if(shape == nullptr)
-            continue;
-        bool exist = shape->tryGetIntersectionInfo(ray, ts[i], params[i], normals[i]);
-        if(!exist)
-            ts[i] = inf;
-        else if(ts[i] < tmin) {
-            index = i;
-            break;
-        }
+        auto info = IntersectInfo(ray);
+        info.needNormal = true;
+        info.needUV = true;
+        info.needParam = true;
+        info.object = objects[i];
+        objects[i]->intersect(info);
+        if(info.success && info.t < mintInfo.t)
+            mintInfo = info;
     }
-    if(index == -1)
-        index = int(std::min_element(ts.begin(), ts.end()) - ts.begin());
-    if(ts[index] == inf)
-        return IntersectResult::miss;
-    return IntersectResult(ray, objects[index], ts[index], normals[index], params[index]);
+    return mintInfo;
 }
 
 void World::addObject(shared_ptr<Object> obj) {
@@ -68,13 +59,12 @@ shared_ptr<Camera> World::findCamera(std::string name) const {
 }
 
 bool World::testLightBlocked(Light const &light) const {
-    Ray const& ray = light.getRay();
     float tmin = light.len() * 0.99f;
+    auto info = IntersectInfo(light.getRay());
+    info.testBlockT = tmin;
     for(int i=0; i<objects.size(); ++i) {
-        auto shape = std::static_pointer_cast<Shape2D>(objects[i]->getShape());
-        if(shape == nullptr)
-            continue;
-        if(shape->testRayBlocked(ray, tmin))
+        objects[i]->intersect(info);
+        if(info.success)
             return true;
     }
     return false;

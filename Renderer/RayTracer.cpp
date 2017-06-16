@@ -9,14 +9,13 @@ RayTracer::RayTracer(shared_ptr<World> world, shared_ptr<Camera> camera) : Rende
 Color RayTracer::renderRay(Ray const &ray, int depth, Color weight) const {
     if(depth == 0 || weight < epsColor)  return Color::zero;
     auto result = world->tryGetFirstIntersectionPoint(ray);
-    if(!result.isSuccess())
+    if(!result.success)
         return world->getEnvColor();
-    auto obj = result.getObject();
+    auto obj = result.object;
     auto point = result.getPoint();
-    auto param = result.getParam();
-    auto material = obj->getMaterialAt(param);
+    auto material = obj->getMaterialAt(result.uv);
     auto v = ray.getStartPoint() - point;
-    auto n = result.getNormal();
+    auto n = result.normal;
     Color color = Color::zero;
     color += world->getEnvColor() * material.ambient;
     color += material.calcEmission(v, n);

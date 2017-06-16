@@ -21,11 +21,10 @@ public:
     void setRendering(std::string name);
     Vector3f getUV(Vector3f const &point) const override;
     bool isOnSurface(Vector3f const &point) const override; // null
-    Vector3f getNormalVector(Vector3f const &param) const override;    // null
+    Vector3f getNormalVector(Vector3f const &param) const override;
 
     bool testRayBlocked(Ray const &ray, float tmin) const override; // 直接调用mesh
     bool tryGetIntersectionPoint(Ray const &ray, float &t, Vector3f &param) const override;
-    bool tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &param, Vector3f &normal) const override;
 
     virtual Point getPoint(Vector3f const& param) const = 0;
     virtual Point getPartial(Vector3f const& param, int id) const;
