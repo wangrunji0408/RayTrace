@@ -26,7 +26,7 @@ bool Plane::isOnSurface(Vector3f const &point) const {
     return isZero(dist(point));
 }
 
-Vector3f Plane::getNormalVectorOnSurface(Vector3f const &point) const {
+Vector3f Plane::getNormalVector(Vector3f const &param) const {
     return normal.getUnitDir();
 }
 

@@ -11,8 +11,8 @@ shared_ptr<Shape> Object::getShape() const {
 Object::Object(shared_ptr<Shape> shape, shared_ptr<ObjectMaterial> material, shared_ptr<UVMap> uvMap, string name) :
         shape(shape), material(material), uvMap(uvMap), name(name) {}
 
-Material Object::getMaterialAt(Vector3f const &point) const {
-    Point uv = uvMap == nullptr? shape->getUV(point): uvMap->getUV(point);
+Material Object::getMaterialAt(Vector3f const &param) const {
+    Point uv = uvMap == nullptr? shape->getUV(param): uvMap->getUV(param);
     return material->getMaterial(uv);
 }
 

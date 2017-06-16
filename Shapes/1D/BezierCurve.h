@@ -8,17 +8,15 @@
 
 #include <vector>
 #include "Shape1D.h"
+#include "ParameterCurve.h"
 
-class BezierCurve: public Shape1D {
-private:
+class BezierCurve: public ParameterCurve {
     std::vector<Vector3f> points;
 public:
     BezierCurve(const std::vector<Vector3f> &points);
     Point getControlPoint (int i) const;
-    Point getPoint (float t) const;
-    bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
-
     AxisBox getAABB() const override;
+    Point getPoint(float t) const override;
 };
 
 

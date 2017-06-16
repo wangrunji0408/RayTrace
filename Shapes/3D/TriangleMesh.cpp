@@ -72,7 +72,7 @@ bool TriangleMesh::tryGetIntersectionPoint(Ray const &ray, float &t) const {
     return tryGetIntersectionInfo(ray, t, point, normal);
 }
 
-bool TriangleMesh::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const {
+bool TriangleMesh::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &param, Vector3f &normal) const {
     int face = 0;
 
     // AABB
@@ -120,7 +120,7 @@ bool TriangleMesh::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &po
 
 
     if(t == inf)    return false;
-    point = ray.getEndPoint(t);
+    auto point = ray.getEndPoint(t);
     if(normalInterpolation) {
         auto gravity = toTriangle(face).calcGravityCoordinate(point);
         normal = vns[faces[face].vn[0]] * gravity.x
@@ -128,7 +128,7 @@ bool TriangleMesh::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &po
                  + vns[faces[face].vn[2]] * gravity.z;
     }
     else
-        normal = toTriangle(face).getNormalVectorOnSurface(point);
+        normal = toTriangle(face).getNormalVector(point);
     return true;
 }
 
@@ -136,12 +136,12 @@ bool TriangleMesh::isOnSurface(Vector3f const &point) const {
     return getFaceId(point) != 0;
 }
 
-Vector3f TriangleMesh::getNormalVectorOnSurface(Vector3f const &point) const {
+Vector3f TriangleMesh::getNormalVector(Vector3f const &param) const {
     for(int i=1; i<faces.size(); ++i)
     {
         auto triangle = toTriangle(i);
-        if(triangle.isOnSurface(point))
-            return triangle.getNormalVectorOnSurface(point);
+        if(triangle.isOnSurface(param))
+            return triangle.getNormalVector(param);
     }
     throw std::exception();
 }

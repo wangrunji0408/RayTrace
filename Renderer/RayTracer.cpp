@@ -13,7 +13,8 @@ Color RayTracer::renderRay(Ray const &ray, int depth, Color weight) const {
         return world->getEnvColor();
     auto obj = result.getObject();
     auto point = result.getPoint();
-    auto material = obj->getMaterialAt(point);
+    auto param = result.getParam();
+    auto material = obj->getMaterialAt(param);
     auto v = ray.getStartPoint() - point;
     auto n = result.getNormal();
     Color color = Color::zero;

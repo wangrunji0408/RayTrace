@@ -36,7 +36,7 @@ bool Triangle::isOnSurface(Vector3f const &p) const {
     return (x > -eps && y > -eps && z > -eps) || (x < eps && y < eps && z < eps);
 }
 
-Vector3f Triangle::getNormalVectorOnSurface(Vector3f const &point) const {
+Vector3f Triangle::getNormalVector(Vector3f const &param) const {
     return getPlane().normal.getUnitDir();
 }
 

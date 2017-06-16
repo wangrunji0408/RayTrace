@@ -47,25 +47,19 @@ Point ParameterSurface::getPartial(Vector3f const &param, int id) const {
     return (getPoint(p1) - getPoint(param)) / d;
 }
 
-bool ParameterSurface::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &point, Vector3f &normal) const {
+bool ParameterSurface::tryGetIntersectionInfo(Ray const &ray, float &t, Vector3f &param, Vector3f &normal) const {
     if(rendering == ITERATION) {
-        Vector3f param;
         bool exist = tryGetIntersectionPoint(ray, t, param);
         if (!exist) return false;
-        point = getPoint(param);
         normal = getNormalVector(param);
         return true;
     }
     else
-        return mesh.tryGetIntersectionInfo(ray, t, point, normal);
+        return mesh.tryGetIntersectionInfo(ray, t, param, normal);
 }
 
 bool ParameterSurface::isOnSurface(Vector3f const &point) const {
     return false;
-}
-
-Vector3f ParameterSurface::getNormalVectorOnSurface(Vector3f const &point) const {
-    return Point::zero;
 }
 
 Point ParameterSurface::getNormalVector(Vector3f const &param) const {

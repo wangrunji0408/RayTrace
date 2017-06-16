@@ -23,7 +23,7 @@ public:
     Triangle(const Vector3f points[]);
 
     bool isOnSurface(Vector3f const &point) const override;
-    Vector3f getNormalVectorOnSurface(Vector3f const &point) const override;
+    Vector3f getNormalVector(Vector3f const &param) const override;
     bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
 
     Plane getPlane() const;

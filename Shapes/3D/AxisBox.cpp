@@ -40,7 +40,7 @@ bool AxisBox::isOnSurface(Vector3f const &p) const {
     return isNotOutside && !isInside;
 }
 
-Vector3f AxisBox::getNormalVectorOnSurface(Vector3f const &p) const {
+Vector3f AxisBox::getNormalVector(Vector3f const &p) const {
     bool xb = isBetweenOrEqual(p.x, minp.x, maxp.x);
     bool yb = isBetweenOrEqual(p.y, minp.y, maxp.y);
     bool zb = isBetweenOrEqual(p.z, minp.z, maxp.z);

@@ -81,18 +81,18 @@ void testLoadFromFile (const char* filePath)
     cv::waitKey(0);
 }
 
-void testBezierToMesh (const char* filePath)
+void testParameterSurfaceToMesh (const char* filePath)
 {
-    string name = "bezier";
+    string name = "spindle";
     string objPath = "../Scenes/" + name + ".obj";
     std::ofstream fout(objPath);
 
     auto parser = SceneParser();
     auto world = parser.load(filePath);
     auto shape = world->findObject(name)->getShape();
-    auto bs = dynamic_pointer_cast<BezierSurface>(shape);
+    auto bs = dynamic_pointer_cast<ParameterSurface>(shape);
     if(bs == nullptr)
-        throw std::invalid_argument("Object shape type is not BezierSurface: " + name);
+        throw std::invalid_argument("Object shape type is not ParameterSurface: " + name);
     bs->mesh.writeToObj(fout);
 }
 
@@ -106,6 +106,6 @@ int main (int argc, char** argv) {
     else
         return 0;
     testLoadFromFile(filePath);
-//    testBezierToMesh(filePath);
+//    testParameterSurfaceToMesh(filePath);
     return 0;
 }

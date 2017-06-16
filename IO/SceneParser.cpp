@@ -20,6 +20,7 @@
 #include "../Texture/GridTexture.h"
 #include "../Texture/ConstTexture.h"
 #include "../UVMaps/SphereMap.h"
+#include "../Shapes/2D/Lathe.h"
 #include <fstream>
 
 using namespace Json;
@@ -171,28 +172,44 @@ shared_ptr<ObjectMaterial> SceneParser::buildMaterial(Json::Value const &json) {
 
 unique_ptr<Shape> SceneParser::buildShape(Json::Value const &json) {
     Shape* shape = nullptr;
-    if(json["type"] == "bezier_curve")
+    if(json["type"] == "lathe" || json["type"] == "bezier_surface")
+    {
+        ParameterSurface* ps;
+        if(json["type"] == "lathe")
+        {
+            auto ray0 = parseVector3f(json["axis"][0]);
+            auto ray1 = parseVector3f(json["axis"][1]);
+            Ray axis(ray0, ray1);
+            auto curve = std::dynamic_pointer_cast<ParameterCurve>(
+                    shared_ptr<Shape>(buildShape(json["curve"])));
+            if(curve == nullptr)
+                throw std::invalid_argument("Lathe's curve is not a ParameterCurve.");
+            ps = new Lathe(curve, axis);
+        }
+        else// if (json["type"] == "bezier_surface")
+        {
+            std::vector<Point> points;
+            int m = json["points"].size();
+            int n = json["points"][0].size();
+
+            for(auto const& array: json["points"])
+                for(auto const& j: array)
+                    points.push_back(parseVector3f(j));
+            ps = new BezierSurface(m, n, points);
+        }
+        shape = ps;
+        int mm = json["mesh_size"][0].asInt();
+        int mn = json["mesh_size"][1].asInt();
+        ps->makeMesh(mm, mn);
+        ps->setRendering(json.get("rendering", "iteration").asString());
+        ps->iterTimes = json.get("iter_times", 5).asInt();
+    }
+    else if(json["type"] == "bezier_curve")
     {
         std::vector<Point> points;
         for(auto const& j: json["points"])
             points.push_back(parseVector3f(j));
         shape = new BezierCurve(points);
-    }
-    else if(json["type"] == "bezier_surface")
-    {
-        std::vector<Point> points;
-        int m = json["points"].size();
-        int n = json["points"][0].size();
-        int mm = json["mesh_size"][0].asInt();
-        int mn = json["mesh_size"][1].asInt();
-        for(auto const& array: json["points"])
-            for(auto const& j: array)
-                points.push_back(parseVector3f(j));
-        auto bs = new BezierSurface(m, n, points);
-        shape = bs;
-        bs->makeMesh(mm, mn);
-        bs->setRendering(json.get("rendering", "iteration").asString());
-        bs->iterTimes = json.get("iter_times", 5).asInt();
     }
     else if(json["type"] == "plane")
     {

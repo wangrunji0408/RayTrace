@@ -5,19 +5,16 @@
     "objects": [
       {
         "enable": true,
-        "name": "bezier",
+        "name": "spindle",
         "shape": {
-          "type": "bezier_surface",
-          "points": [
-            [[0, 4, 0], [1, 4, 2], [2, 4, 1], [3, 4, 0], [4, 4, 2]],
-            [[0, 3, -1], [1, 3, 3], [2, 3, 0], [3, 3, 1], [4, 3, 0]],
-            [[0, 2, 3], [1, 2, 0], [2, 2, -5], [3, 2, 0], [4, 2, 2]],
-            [[0, 1, 0], [1, 1, 3], [2, 1, 0], [3, 1, 3], [4, 1, 0]],
-            [[0, 0, 0], [1, 0, 0], [2, 0, 0], [3, 0, 0], [4, 0, 0]]
-          ],
-          "mesh_size": [50, 50],
-          "rendering": "iteration",
-          "iter_times": 5
+          "type": "lathe",
+          "axis": [[0,0,0], [0,0,1]],
+          "curve": {
+            "type": "bezier_curve",
+            "points": [[0, 0, 0], [1, 0, 1], [0, 0, 2]]
+          },
+          "mesh_size": [20, 20],
+          "rendering": "iteration"
         },
         "material": "grid2"
       },
@@ -47,23 +44,29 @@
         "name": "grid2",
         "diffuse": {"type": "grid", "n": 10, "a": [0, 1, 0]}
       }
-  ],
+    ],
     "lights": [
-    {
-      "name": "point_light_1",
-      "type": "point",
-      "pos": [1, 1, 3],
-      "color": 5
-    }
-  ],
+      {
+        "name": "point_light_1",
+        "type": "point",
+        "pos": [-2, 0, 2],
+        "color": 5
+      },
+      {
+        "name": "point_light_1",
+        "type": "point",
+        "pos": [2, 0, 2],
+        "color": 5
+      }
+    ],
     "cameras": [
     {
       "name": "camera_1",
-      "pos": [0, 0, 2],
-      "target": [1, 1, 0],
-      "up": [1, 1, 1],
+      "pos": [-1, -1, 1],
+      "target": [0, 0, 1],
+      "up": [0, 0, 5],
       "resolution": [640, 480],
-      "realw": 3,
+      "realw": 4,
       "orthographic": false
     }
   ]

@@ -21,7 +21,7 @@ Color PathTracer::renderRay(Ray const &ray, int depth, Color weight) const {
         return world->getEnvColor();
     auto obj = result.getObject();
     auto point = result.getPoint();
-    auto material = obj->getMaterialAt(point);
+    auto material = obj->getMaterialAt(result.getParam());
     auto v = ray.getStartPoint() - point;
     auto n = result.getNormal();
     Color color = material.calcEmission(v, n);

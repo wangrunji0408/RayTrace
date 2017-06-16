@@ -12,7 +12,7 @@ Color LightProjection::renderRay(Ray const &ray) const {
         return world->getEnvColor();
     auto obj = result.getObject();
     auto point = result.getPoint();
-    auto material = obj->getMaterialAt(point);
+    auto material = obj->getMaterialAt(result.getParam());
     Color color = world->getEnvColor() * material.ambient;
     for(auto light : world->getLights())
     {

@@ -27,7 +27,7 @@ public:
     Object(shared_ptr<Shape> shape, shared_ptr<ObjectMaterial> material, shared_ptr<UVMap> uvMap = nullptr,
            string name = "object");
     shared_ptr<Shape> getShape() const;
-    Material getMaterialAt(Vector3f const& point) const;
+    Material getMaterialAt(Vector3f const& param) const;
     void applyTransform (Transform const& t);
 };
 

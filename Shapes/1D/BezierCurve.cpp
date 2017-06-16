@@ -15,11 +15,6 @@ Point BezierCurve::getPoint(float t) const {
 
 BezierCurve::BezierCurve(const std::vector<Vector3f> &points) : points(points) {}
 
-bool BezierCurve::tryGetIntersectionPoint(Ray const &ray, float &t) const {
-    // TODO
-    return false;
-}
-
 AxisBox BezierCurve::getAABB() const {
     return AxisBox(points.data(), points.size());
 }

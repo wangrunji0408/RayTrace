@@ -17,7 +17,7 @@ public:
     AxisBox();
     AxisBox(const Vector3f &minp, const Vector3f &maxp);
     AxisBox(const Vector3f *points, size_t n);
-    Vector3f getNormalVectorOnSurface(Vector3f const &point) const override;
+    Vector3f getNormalVector(Vector3f const &param) const override;
     float getSurfaceArea () const;
     AxisBox merge (AxisBox const& other);
     Vector3f getMidPoint () const;

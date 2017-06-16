@@ -28,8 +28,8 @@ bool Sphere::isOnSurface(Vector3f const &point) const {
     return isZero((point - o).len() - r);
 }
 
-Vector3f Sphere::getNormalVectorOnSurface(Vector3f const &point) const {
-    return (point - o).norm();
+Vector3f Sphere::getNormalVector(Vector3f const &param) const {
+    return (param - o).norm();
 }
 
 Sphere::Sphere(): o(Vector3f::zero), r(1) {

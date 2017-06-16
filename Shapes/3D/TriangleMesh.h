@@ -65,7 +65,7 @@ public:
 
     bool isOnSurface(Vector3f const &point) const override;
     int getFaceId(Vector3f const &point) const;
-    Vector3f getNormalVectorOnSurface(Vector3f const &point) const override;
+    Vector3f getNormalVector(Vector3f const &param) const override;
     bool isInside(Vector3f const &point) const override;
 
     friend std::ostream &operator<<(std::ostream &os, const TriangleMesh &mesh);

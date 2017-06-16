@@ -8,27 +8,25 @@
 IntersectResult World::tryGetFirstIntersectionPoint(Ray const &ray, float tmin) const {
     std::vector<float> ts(objects.size(), inf);
     std::vector<Vector3f> normals(objects.size());
+    std::vector<Vector3f> params(objects.size());
+    int index = -1;
     for(int i=0; i<objects.size(); ++i) {
         auto shape = std::static_pointer_cast<Shape2D>(objects[i]->getShape());
         if(shape == nullptr)
             continue;
-        Point point;
-        bool exist = shape->tryGetIntersectionInfo(ray, ts[i], point, normals[i]);
+        bool exist = shape->tryGetIntersectionInfo(ray, ts[i], params[i], normals[i]);
         if(!exist)
             ts[i] = inf;
-        else if(ts[i] < tmin)
-            return IntersectResult(ray, objects[i], ts[i], normals[i]);
+        else if(ts[i] < tmin) {
+            index = i;
+            break;
+        }
     }
-    auto it = std::min_element(ts.begin(), ts.end());
-    if(*it == inf)
+    if(index == -1)
+        index = int(std::min_element(ts.begin(), ts.end()) - ts.begin());
+    if(ts[index] == inf)
         return IntersectResult::miss;
-
-    int index = (int)(it - ts.begin());
-    auto object = objects[index];
-    float t = *it;
-    auto point = ray.getEndPoint(t);
-    auto normal = normals[index];
-    return IntersectResult(ray, object, t, normal);
+    return IntersectResult(ray, objects[index], ts[index], normals[index], params[index]);
 }
 
 void World::addObject(shared_ptr<Object> obj) {

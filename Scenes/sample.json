@@ -80,6 +80,7 @@
             [[2, 2, 2], [1, 1, 1], [1, 1, 1]],
             [[1, 0, 2], [1, 1, 1], [1, 1, 1]]
           ],
+                                  // 以下为参数曲面的公共属性
           "mesh_size": [10, 10],    // 网格化大小：用于求交离散化
           "rendering": "iteration", // 渲染方法（可选，默认为iteration）
                                     //   1. mesh: 网格
@@ -98,6 +99,24 @@
           "normal_interpolation": true                  // 法向量插值（可选，默认为false）
         },
         "material": "trans"
+      },
+      {
+        "name": "spindle",
+        "shape": {
+          "type": "lathe",          // 【绕轴旋转】
+          "axis": [                 // 旋转轴（起点，方向）
+            [0,0,0], [0,0,1]
+          ],
+          "curve": {                // 被旋转参数曲线
+            "type": "bezier_curve",
+            "points": [[0, 0, 0], [1, 0, 1], [0, 0, 2]]
+          },
+                                    // 以下为参数曲面的公共属性
+          "mesh_size": [20, 20],
+          "rendering": "iteration",
+          "iter_times": 5
+        },
+        "material": "grid"
       }
     ],
     "materials": [          // 接下来介绍材质

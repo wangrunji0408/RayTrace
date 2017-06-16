@@ -5,10 +5,9 @@
 #include "../../Geometry/Ray.h"
 #include "Shape2D.h"
 
-bool Shape2D::tryGetIntersectionInfo(const Ray &ray, float &t, Vector3f &point, Vector3f &normal) const {
-    if(!tryGetIntersectionPoint(ray, t))
+bool Shape2D::tryGetIntersectionInfo(const Ray &ray, float &t, Vector3f &param, Vector3f &normal) const {
+    if(!tryGetIntersectionPoint(ray, t, param))
         return false;
-    point = ray.getEndPoint(t);
-    normal = getNormalVectorOnSurface(point);
+    normal = getNormalVector(param);
     return true;
 }

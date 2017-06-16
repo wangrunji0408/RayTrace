@@ -23,7 +23,7 @@ public:
 
     Vector3f getUV(Vector3f const &point) const override;
 
-    Vector3f getNormalVectorOnSurface(Vector3f const &point) const override;
+    Vector3f getNormalVector(Vector3f const &param) const override;
 
     virtual AxisBox getAABB() const override ;
 };

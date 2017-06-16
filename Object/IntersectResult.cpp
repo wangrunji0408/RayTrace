@@ -8,8 +8,8 @@ IntersectResult IntersectResult::miss;
 
 IntersectResult::IntersectResult(): success(false) {}
 
-IntersectResult::IntersectResult(const Ray &ray, shared_ptr<Object> object, float t, Vector3f const &normal):
-        ray(ray), face(Ray(ray.getEndPoint(t), normal)), t(t), object(object), success(true) {}
+IntersectResult::IntersectResult(const Ray &ray, shared_ptr<Object> object, float t, Vector3f const &normal, Vector3f const &param)
+        : ray(ray), face(Ray(ray.getEndPoint(t), normal)), t(t), object(object), param(param), success(true) {}
 
 bool IntersectResult::isSuccess() const {
     return success;
@@ -37,6 +37,10 @@ shared_ptr<Object> IntersectResult::getObject() const {
 
 Vector3f IntersectResult::getNormal() const {
     return face.getUnitDir();
+}
+
+const Vector3f &IntersectResult::getParam() const {
+    return param;
 }
 
 std::ostream &operator<<(std::ostream &os, const IntersectResult &result) {
