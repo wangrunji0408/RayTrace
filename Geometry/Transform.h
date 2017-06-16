@@ -6,6 +6,7 @@
 #define INC_2RAYTRACE_TRANSFORM_H
 
 
+#include <ostream>
 #include "Vector3.h"
 #include "Ray.h"
 
@@ -15,6 +16,9 @@ public:
     float v[N][N];
 private:
     void clear ();
+    void addLine (int i1, int i2, float k);
+    void mulLine (int i, float k);
+    void swapLine (int i1, int i2);
 public:
     Transform ();
     Transform transpose () const;
@@ -23,8 +27,11 @@ public:
     Vector3f operator* (Vector3f const& vec) const;
     Ray operator* (Ray const& ray) const;
     static Transform move (Vector3f const& p);
-    static Transform rotate (int axis, float angle);
+    static Transform rotate (int axis, float angle); // 以坐标轴正方向右手螺旋为旋转方向
     static Transform rotate (Vector3f const& angle);
+    static Transform scale (Vector3f const& scale);
+    static Transform toZ01 (Vector3f const& a0, Vector3f const& a1);
+    friend std::ostream &operator<<(std::ostream &os, const Transform &transform);
 };
 
 
