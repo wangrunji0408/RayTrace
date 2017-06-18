@@ -31,12 +31,14 @@ public:
 private:
     void buildTree (int begin, int end, int d);
     void updateIntersectionInfo(Ray const &ray, float &t, int &shape, int begin, int end) const;
+    void getAllPotential(Ray const &ray, std::vector<shared_ptr<Shape>> &shapes, int begin, int end) const;
     bool testRayBlocked(Ray const &ray, float tmin, int begin, int end) const;
     int devide (int begin, int end, int d); // 返回右子树begin位置，若为begin则不分割
     int nextd (int d) const;
 public:
     void build (std::vector<shared_ptr<Shape> > const& shapes);
     bool tryGetIntersectionInfo (Ray const& ray, float &t, shared_ptr<Shape> &shape) const;
+    std::vector<shared_ptr<Shape>> getAllPotential (Ray const& ray) const;
     bool testRayBlocked (Ray const& ray, float tmin) const;
 };
 

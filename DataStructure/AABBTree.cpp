@@ -127,6 +127,25 @@ bool AABBTree::testRayBlocked(Ray const &ray, float tmin, int begin, int end) co
                || (leftT < tmin && testRayBlocked(ray, tmin, begin + 1, rightBegin[begin]));
 }
 
+void AABBTree::getAllPotential(Ray const &ray, std::vector<shared_ptr<Shape>> &vec, int begin, int end) const {
+    if(end - begin <= 0)
+        return;
+    if(subtreeAABBs[begin].fastIntersect(ray) == inf)
+        return;
+    if(shapeAABBs[order[begin]].fastIntersect(ray) != inf)
+        vec.push_back(shapes[order[begin]]);
+    if(end - begin == 1)
+        return;
+    getAllPotential(ray, vec, begin + 1, rightBegin[begin]);
+    getAllPotential(ray, vec, rightBegin[begin], end);
+}
+
 bool AABBTree::testRayBlocked(Ray const &ray, float tmin) const {
     return testRayBlocked(ray, tmin, 0, n);
+}
+
+std::vector<shared_ptr<Shape>> AABBTree::getAllPotential(Ray const &ray) const {
+    auto vec = std::vector<shared_ptr<Shape>>();
+    getAllPotential(ray, vec, 0, n);
+    return vec;
 }
