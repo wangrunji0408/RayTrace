@@ -33,11 +33,16 @@
         "shape":
         {
           "type": "mesh",
-          "obj_file": "../Scenes/dragon_vrip_res4.obj",
-          "cut": 100000,
+          "obj_file": "../Scenes/obj/dragon_vrip_res2.obj",
+          "cut": 1000000,
           "normal_interpolation": true
         },
-        "material": "trans"
+        "material": "trans",
+        "transform": {
+          "pos": [0,0,0],
+          "angle": [0, 0, 0],
+          "scale": 1
+        }
       }
 //      {
 //        "name": "sphere",
@@ -119,7 +124,7 @@
        "type": "ray_tracer",
        "camera": "camera_1",
        "depth": 10,
-       "parallel": true
+       "parallel": false
        // "refraction": false,
      }
   ]

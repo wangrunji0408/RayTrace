@@ -41,8 +41,8 @@ bool Triangle::isOnSurface(Vector3f const &p) const {
                || (x < eps && y < eps && z < eps);
     else
         // 不含边界，三角网格缝隙处会漏过去，ParameterSurface出现黑点
-        return (x >= eps && y >= eps && z >= eps)
-               || (x <= -eps && y <= -eps && z <= -eps);
+        return (x >= 0 && y >= 0 && z >= 0)
+               || (x <= 0 && y <= 0 && z <= 0);
 }
 
 Vector3f Triangle::getNormalVector(Vector3f const &param) const {

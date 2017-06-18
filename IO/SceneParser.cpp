@@ -332,7 +332,8 @@ Transform SceneParser::parseTransform(Json::Value const& json) {
     if(json.isNull())
         return Transform();
     auto pos = parseVector3f(json["pos"]);
-    auto angle = parseVector3f(json["angle"]);
-    // 先旋转，后移动
-    return Transform::move(pos) * Transform::rotate(angle);
+    auto angle = parseVector3f(json["angle"]) / 360 * 2 * M_PI;
+    auto scale = json.get("scale", 1).asFloat();
+    // 先缩放，再旋转，后移动
+    return Transform::move(pos) * Transform::rotate(angle) * Transform::scale(Vector3f(scale));
 }
