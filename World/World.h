@@ -39,6 +39,7 @@ public:
 
     static Vector3f calcRefractiveDir (Vector3f const &inDir, Vector3f const &normalDir, float indexInside, float indexOutside);
     static Vector3f calcReflectiveDir (Vector3f const &inDir, Vector3f const &normalDir);
+    static float calcG (Ray const& face1, Ray const& face2);
 };
 
 

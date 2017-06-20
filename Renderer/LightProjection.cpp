@@ -18,7 +18,7 @@ Color LightProjection::renderRay(Ray const &ray) const {
     {
         Light l = light->illuminate(point);
         if(world->testLightBlocked(l))  continue;
-        Color f = material.calcF(-l.getUnitDir(), ray.getStartPoint() - point, result.normal);
+        Color f = material.calcCosBRDF(-l.getUnitDir(), ray.getStartPoint() - point, result.normal);
         color += l.color * f;
     }
     return color;

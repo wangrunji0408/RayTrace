@@ -1,0 +1,134 @@
+{
+  "world": {
+    "name": "rainbow",
+    "env_color": 0.0,
+    "objects": [
+      {
+        "name": "sphere_mirror",
+        "shape": {"type": "sphere", "o": [0, 6, 17], "r": 15},
+        "material": {"reflection": 1}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [-6, 0, 0], "r": 0.5},
+        "material": {"diffuse": [1, 0, 0.55]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [-5, 0, 0], "r": 0.5},
+        "material": {"diffuse": [1, 0, 0]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [-4, 0, 0], "r": 0.5},
+        "material": {"diffuse": [1, 0.5, 0.5]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [-3, 0, 0], "r": 0.5},
+        "material": {"diffuse": [0, 1, 0]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [-2, 0, 0], "r": 0.5},
+        "material": {"diffuse": [0, 1, 1]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [-1, 0, 0], "r": 0.5},
+        "material": {"diffuse": [0, 0.65, 1]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [0, 0, 0], "r": 0.5},
+        "material": {"diffuse": [0, 0, 1]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [6, 0, 0], "r": 0.5},
+        "material": {"diffuse": [1, 0, 0.55]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [5, 0, 0], "r": 0.5},
+        "material": {"diffuse": [1, 0, 0]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [4, 0, 0], "r": 0.5},
+        "material": {"diffuse": [1, 0.5, 0.5]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [3, 0, 0], "r": 0.5},
+        "material": {"diffuse": [0, 1, 0]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [2, 0, 0], "r": 0.5},
+        "material": {"diffuse": [0, 1, 1]}
+      },
+      {
+        "name": "sphere",
+        "shape": {"type": "sphere", "o": [1, 0, 0], "r": 0.5},
+        "material": {"diffuse": [0, 0.65, 1]}
+      },
+      {
+        "enable": false,
+        "name": "light",
+        "shape": {"type": "sphere", "o": [0, 16, 0], "r": 10},
+        "material": {"emission": 3}
+      },
+      {
+        "name": "plane",
+        "shape": {"type": "plane", "point": [0, 0, -0.5], "normal": [0,0,1]},
+        "material": {"diffuse": 1}
+      }
+    ],
+    "materials": [
+
+    ],
+    "lights": [
+      {
+        "enable": true,
+        "name": "light_1",
+        "type": "point",
+        "pos": [3, 3, 0],
+        "color": 100
+      },
+      {
+        "enable": true,
+        "name": "light_2",
+        "type": "point",
+        "pos": [-3, 3, 0],
+        "color": 100
+      }
+    ],
+    "cameras": [
+      {
+        "name": "camera_1",
+        "pos": [0, -10, 3],
+        "target": [0, 0, 2],
+        "up": [0, 0, 10],
+        "resolution": [640, 480],
+        "realw": 10,
+        "orthographic": false
+  //      "focal": 20,
+  //      "aperture": 1
+      }
+    ]
+  },
+  "renderers": [
+    {
+      "name": "ray_tracer_1",
+      "type": "path_tracer",
+      "camera": "camera_1",
+      "super": false,
+      "parallel": true,
+      "depth": 5
+//      "aperture_times": 50
+      // "refraction": false,
+    }
+  ]
+  // "show_light": [63,252]
+}

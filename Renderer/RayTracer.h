@@ -12,9 +12,9 @@ class RayTracer: public Renderer {
 protected:
     bool saveLights = false;
     std::vector<Light>* lights = new std::vector<Light>();
-protected:
-    int maxDepth = 2;
     Color epsColor = Color(1e-3f, 1e-3f, 1e-3f);
+public:
+    int maxDepth = 2;
 protected:
     virtual Color renderRay (Ray const& ray, int depth, Color weight) const;
 public:
@@ -22,9 +22,6 @@ public:
     std::vector<Light> renderPixelGetLights(int x, int y);
 
     virtual Color renderRay(Ray const &ray) const;
-
-    int getMaxDepth() const;
-    void setMaxDepth(int maxDepth);
 };
 
 

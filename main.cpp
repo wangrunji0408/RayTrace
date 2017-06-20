@@ -11,6 +11,7 @@
 #include "Renderer/RayTracer.h"
 #include "Shapes/3D/TriangleMesh.h"
 #include "Shapes/2D/BezierSurface.h"
+#include "Renderer/PathTracer.h"
 
 using namespace std;
 
@@ -75,7 +76,11 @@ void testLoadFromFile (const char* filePath)
     cerr << "Intersect Count:\n" << "Triangle: " << Triangle::intersectCount
                                  << "\nAxisBox: " << AxisBox::intersectCount << endl;
     char file[100];
-    sprintf(file, "./image/render(%s)_%d.png", renderer->name.c_str(), (int)clock());
+    auto pathTracer = dynamic_pointer_cast<PathTracer>(renderer);
+    if(pathTracer)
+        sprintf(file, "./image/render(%s)_%d_times=%d.png", renderer->name.c_str(), (int)clock(), pathTracer->times);
+    else
+        sprintf(file, "./image/render(%s)_%d.png", renderer->name.c_str(), (int)clock());
     cv::imwrite(file, mat);
     cv::imshow("image", mat);
     cv::waitKey(0);
@@ -96,9 +101,44 @@ void testParameterSurfaceToMesh (const char* filePath)
     bs->mesh.writeToObj(fout);
 }
 
+cv::Mat3b imageMerge (vector<string> const& paths)
+{
+    cv::Mat3i rst;
+    bool first = true;
+    int totalSample = 0;
+    for(auto const& path: paths)
+    {
+        auto image = cv::imread(path);
+        image = cv::Mat3i(image);
+        if(first)
+        {
+            rst = cv::Mat3i::zeros(image.size[0], image.size[1]);
+            first = false;
+        }
+        if(image.size != rst.size)
+            throw std::invalid_argument("Image size is different: " + path);
+
+        int sample = 1;
+        rst += image * sample;
+        totalSample += sample;
+    }
+    rst /= totalSample;
+    return cv::Mat3b(rst);
+}
+
 int main (int argc, char** argv) {
 //    testKDTree();
     const char* filePath;
+    if(argc >= 2 && string(argv[1]) == "merge")
+    {
+        vector<string> paths;
+        for(int i=2; i<argc; ++i)
+            paths.push_back(string(argv[i]));
+        auto image = imageMerge(paths);
+        char file[100];
+        sprintf(file, "./image/merge_%d.png", (int)clock());
+        cv::imwrite(file, image);
+    }
     if(argc == 1)
         filePath = "scene.json";
     else if(argc == 2)

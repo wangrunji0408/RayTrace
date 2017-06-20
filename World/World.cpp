@@ -111,4 +111,10 @@ shared_ptr<Object> World::findObject(std::string name) const {
     return it == objects.end()? nullptr: *it;
 }
 
+float World::calcG(Ray const &face1, Ray const &face2) {
+    auto dp = face2.getStartPoint() - face1.getStartPoint();
+    auto d2 = dp.len2();
+    return fabsf(face1.getUnitDir().dot(dp) * face2.getUnitDir().dot(dp)) / d2 / d2;
+}
+
 

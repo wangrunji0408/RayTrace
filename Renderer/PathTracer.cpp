@@ -14,38 +14,52 @@ Color PathTracer::renderPixel(int x, int y) const {
 
 PathTracer::PathTracer(shared_ptr<World> world, shared_ptr<Camera> camera) : RayTracer(world, camera) {}
 
-Color PathTracer::renderRay(Ray const &ray, int depth, Color weight) const {
-    if(depth == 0 || weight < epsColor)  return Color::zero;
-    auto result = world->tryGetFirstIntersectionPoint(ray);
-    if(!result.success)
-        return world->getEnvColor();
-    auto obj = result.object;
-    auto point = result.getPoint();
-    auto material = obj->getMaterialAt(result.param);
-    auto v = ray.getStartPoint() - point;
-    auto n = result.normal;
-    Color color = material.calcEmission(v, n);
-    for(auto const& light : world->getLights())
+Color PathTracer::renderRay(Ray const &ray0, int depth, Color weight) const {
+    Ray ray = ray0;
+    Color color = Color::zero;
+//    Ray lastFace = ray0;
+    while(depth-- && !(weight < epsColor))
     {
-        Light l = light->illuminate(point);
-        if(world->testLightBlocked(l))  continue;
-        if(saveLights) lights->push_back(l);
-        Color f = material.calcF(-l.getUnitDir(), v, n);
-        color += l.color * f;
+        auto result = world->tryGetFirstIntersectionPoint(ray);
+        if(!result.success) {
+            color += weight * world->getEnvColor();
+            break;
+        }
+        auto obj = result.object;
+        auto point = result.getPoint();
+        auto material = obj->getMaterialAt(result.param);
+        auto v = ray.getStartPoint() - point;
+        auto n = result.normal;
+//        auto face = Ray(point, n);
+//        weight *= World::calcG(lastFace, face);
+        color += weight * material.calcEmission(v, n);
+        for(auto const& light : world->getLights())
+        {
+            Light l = light->illuminate(point);
+            if(world->testLightBlocked(l))  continue;
+            if(saveLights) lights->push_back(l);
+            auto brdf = material.calcCosBRDF(-l.getUnitDir(), v, n);
+            color += weight * brdf * l.color;
+        }
+        Color brdf; Vector3f l;
+        if(!(material.reflection < epsColor))
+        {
+            l = World::calcReflectiveDir(v, n);
+            brdf = material.reflection;
+        }
+        else if(!(material.refraction < epsColor))
+        {
+            l = World::calcRefractiveDir(v, n, material.refractiveIndex, material.outRefractiveIndex);
+            brdf = material.refraction;
+        }
+        else
+        {
+            l = Vector3f::getRandUnit();
+            brdf = material.calcCosBRDF(l, v, n);
+        }
+        ray = Ray(point + l * 1e-4, l);
+        weight *= brdf;
+//        lastFace = face;
     }
-    {
-//        auto reflect = Ray(point, World::calcReflectiveDir(v, n));
-//        reflect = Ray(reflect.getEndPoint(1e-4f), reflect.getUnitDir());    // 防止自相交
-//        auto refract = Ray(point, World::calcRefractiveDir(v, n,
-//                                                           material->refractiveIndex,
-//                                                           material->outRefractiveIndex));
-//        refract = Ray(refract.getEndPoint(1e-4f), refract.getUnitDir());
-        auto l = Vector3f::getRandUnit();
-        auto ray = Ray(point + l * 1e-4f, l);
-        Color f = material.calcF(l, v, n);
-        color += f * renderRay(ray, depth - 1, weight * f);
-    }
-    if(saveLights)
-        lights->push_back(Light(point, ray.getStartPoint(), color));
     return color;
 }

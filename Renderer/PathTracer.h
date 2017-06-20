@@ -12,6 +12,7 @@
 class PathTracer: public RayTracer {
 public:
     int times = 10;
+    int saveInterval = 10; // TODO 实现功能
 protected:
     Color renderRay(Ray const &ray, int depth, Color weight) const override;
 public:

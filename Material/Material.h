@@ -30,10 +30,10 @@ public:
     Color reflection = Color::zero; // 反射系数
     Color refraction = Color::zero; // 折射系数（透明度）
 protected:
-    virtual Color calcBRDF(Vector3f const &lUnit, Vector3f const &vUnit, Vector3f const &nUnit) const;
+    virtual Color calcCosBRDFUnit(Vector3f const &lUnit, Vector3f const &vUnit, Vector3f const &nUnit) const;
 public:
-    Color calcF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const;
-    Color calcFByPoint(Vector3f const &inPoint, Vector3f const &outPoint, Ray const &face) const;
+    Color calcCosBRDF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const;
+    Color calcBRDF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const;
     Color calcAttenuation (float dist) const;
     Color calcEmission (Vector3f const &outDir, Vector3f const &normalDir) const;
 };

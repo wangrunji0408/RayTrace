@@ -154,6 +154,11 @@ void Vector3<T>::operator+=(Vector3<T> const &b) {
 }
 
 template <class T>
+void Vector3<T>::operator*=(Vector3<T> const &b) {
+    *this = operator*(b);
+}
+
+template <class T>
 float Vector3<T>::cos(Vector3<T> const &b) const {
     return dot(b) / b.len() / len();
 }
@@ -161,13 +166,15 @@ float Vector3<T>::cos(Vector3<T> const &b) const {
 template <>
 Vector3f Vector3f::getRandUnit() {
     Vector3f p;
+    float l2;
     do{
         p.x = rand01() * 2 - 1;
         p.y = rand01() * 2 - 1;
         p.z = rand01() * 2 - 1;
+        l2 = p.len2();
     }
-    while(p.len2() > 1 || p.len2() < eps);
-    return p.norm();
+    while(l2 > 1 || l2 < eps);
+    return p / sqrtf(l2);
 }
 
 template <class T>

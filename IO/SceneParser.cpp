@@ -258,23 +258,27 @@ unique_ptr<Shape> SceneParser::buildShape(Json::Value const &json) {
 unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
     unique_ptr<Renderer> renderer = nullptr;
     auto camera = world->findCamera(json["camera"].asString());
-    if(json["type"] == "light_projection")
+    auto type = json["type"].asString();
+    if(type == "light_projection")
     {
         renderer.reset(new LightProjection(world, camera));
     }
-    else if(json["type"] == "ray_tracer")
+    else if(type == "ray_tracer")
     {
         auto rt = new RayTracer(world, camera);
-        rt->setMaxDepth(json.get("depth", 2).asInt());
+        rt->maxDepth = json.get("depth", 2).asInt();
         renderer.reset(rt);
     }
-    else if(json["type"] == "path_tracer")
+    else if(type == "path_tracer")
     {
         auto rt = new PathTracer(world, camera);
-        rt->setMaxDepth(json.get("depth", 2).asInt());
+        rt->maxDepth = json.get("depth", 2).asInt();
         rt->times = json.get("times", 5).asInt();
+        rt->saveInterval = json.get("save_interval", 60).asInt();
         renderer.reset(rt);
     }
+    else
+        throw std::invalid_argument("No such renderer type: " + type);
     renderer->super = json["super"].asBool();
     renderer->enableParallel = json.get("parallel", true).asBool();
     renderer->enableRecolor = json["recolor"].asBool();

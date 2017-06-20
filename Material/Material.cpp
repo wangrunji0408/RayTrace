@@ -5,19 +5,18 @@
 #include <cmath>
 #include "Material.h"
 
-Color Material::calcFByPoint(Vector3f const &inPoint, Vector3f const &outPoint, Ray const &face) const {
-    Vector3f const& o = face.getStartPoint();
-    Vector3f const& n = face.getUnitDir();
-    Vector3f l = inPoint - o;
-    Vector3f r = outPoint - o;
-    return calcF(l, r, n);
-}
-
-Color Material::calcF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const {
+Color Material::calcCosBRDF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const {
     auto i = inDir.norm();
     auto o = outDir.norm();
     auto n = normalDir.norm();
-    return calcBRDF(i, o, n);
+    return calcCosBRDFUnit(i, o, n);
+}
+
+Color Material::calcBRDF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const {
+    auto i = inDir.norm();
+    auto o = outDir.norm();
+    auto n = normalDir.norm();
+    return calcCosBRDFUnit(i, o, n) / i.dot(n);
 }
 
 Color Material::calcAttenuation(float dist) const {
@@ -25,7 +24,7 @@ Color Material::calcAttenuation(float dist) const {
     return Color(expf(t.x), expf(t.y), expf(t.z));
 }
 
-Color Material::calcBRDF(Vector3f const &l, Vector3f const &v, Vector3f const &n) const {
+Color Material::calcCosBRDFUnit(Vector3f const &l, Vector3f const &v, Vector3f const &n) const {
     float dotnl = n.dot(l), dotnv = n.dot(v);
     if(dotnl < -eps && dotnv < -eps)    // 背面反射
     {

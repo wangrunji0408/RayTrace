@@ -31,6 +31,7 @@ public:
     Vector3 operator* (T const& k) const;
     Vector3 operator/ (T const& k) const;
     void operator += (Vector3 const& b);
+    void operator *= (Vector3 const& b);
     bool operator<(const Vector3 &rhs) const;
     bool operator==(const Vector3 &rhs) const;
     bool operator!=(const Vector3 &rhs) const;

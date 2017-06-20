@@ -16,7 +16,7 @@
     {
       "name": "buttom_plane",
       "shape": {"type": "plane", "point": [0,0,0], "normal": [0,0,1]},
-      "material": "grid"
+      "material": "white"
     },
     {
       "name": "up_plane",
@@ -26,7 +26,7 @@
     {
       "name": "back_plane",
       "shape": {"type": "plane", "point": [0,5,0], "normal": [0,-1,0]},
-      "material": "image"
+      "material": "white"
     },
      {
        "name": "sphere1",
@@ -42,18 +42,18 @@
     "materials": [
     {
       "name": "red",
-      "diffuse": [0, 0, 0.5],
-      "reflection": 0.05
+      "diffuse": [0, 0, 0.5]
+//      "reflection": 0.05
     },
     {
       "name": "blue",
-      "diffuse": [0.5, 0, 0],
-      "reflection": 0.05
+      "diffuse": [0.5, 0, 0]
+//      "reflection": 0.05
     },
     {
       "name": "white",
-      "diffuse": 0.5,
-      "reflection": 0.05
+      "diffuse": 0.5
+//      "reflection": 0.05
     },
     {
       "name": "mirror",
@@ -97,21 +97,23 @@
       "up": [0,0,10],
       "resolution": [640, 480],
       "realw": 18,
-      "orthographic": false,
-      "focal": 20,
-      "aperture": 1
+      "orthographic": false
+//      "focal": 20,
+//      "aperture": 1
     }
   ]
   },
   "renderers": [
     {
       "name": "ray_tracer_1",
-      "type": "ray_tracer",
+      "type": "path_tracer",
+//      "type": "ray_tracer",
       "camera": "camera_1",
       "super": false,
       "parallel": true,
       "depth": 5,
-      "aperture_times": 50
+      "times": 10
+//      "aperture_times": 50
       // "refraction": false,
     }
   ]
