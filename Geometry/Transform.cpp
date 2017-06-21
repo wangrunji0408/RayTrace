@@ -53,6 +53,7 @@ Transform Transform::move(Vector3f const &p) {
     auto a = Transform();
     for(int i=0; i<3; ++i)
         a.v[i][3] = p.value(i);
+    a.updateEyeFlag();
     return a;
 }
 
@@ -72,6 +73,7 @@ Transform Transform::rotate(int axis, float angle) {
     a.v[i2][i2] = cos;
     a.v[i1][i2] = -sin;
     a.v[i2][i1] = sin;
+    a.updateEyeFlag();
     return a;
 }
 
