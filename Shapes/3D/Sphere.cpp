@@ -48,3 +48,11 @@ AxisBox Sphere::getAABB() const {
     return AxisBox(o - dr, o + dr);
 }
 
+bool Sphere::testRayBlocked(Ray const &ray, float tmin) const {
+    return Shape3D::testRayBlocked(ray, tmin);
+    if(tmin * tmin < (ray.getStartPoint() - o).len2())
+        return false;
+    float t;
+    return tryGetIntersectionPoint(ray, t) && t < tmin;
+}
+

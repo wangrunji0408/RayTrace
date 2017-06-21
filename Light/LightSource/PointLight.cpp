@@ -40,6 +40,6 @@ std::ostream &operator<<(std::ostream &os, const PointLight &light) {
     return os;
 }
 
-Light PointLight::sample() const {
-    return Light(pos, pos + Vector3f::getRandUnit(), color);
+Ray PointLight::sample() const {
+    return Ray(pos, Vector3f::getRandUnit());
 }

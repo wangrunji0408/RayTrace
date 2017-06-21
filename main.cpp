@@ -78,9 +78,9 @@ void testLoadFromFile (const char* filePath)
     char file[100];
     auto pathTracer = dynamic_pointer_cast<PathTracer>(renderer);
     if(pathTracer)
-        sprintf(file, "./image/render(%s)_%d_times=%d.png", renderer->name.c_str(), (int)clock(), pathTracer->times);
+        sprintf(file, "../image/render(%s)_%d_times=%d.png", renderer->name.c_str(), (int)clock(), pathTracer->times);
     else
-        sprintf(file, "./image/render(%s)_%d.png", renderer->name.c_str(), (int)clock());
+        sprintf(file, "../image/render(%s)_%d.png", renderer->name.c_str(), (int)clock());
     cv::imwrite(file, mat);
     cv::imshow("image", mat);
     cv::waitKey(0);
@@ -136,7 +136,7 @@ int main (int argc, char** argv) {
             paths.push_back(string(argv[i]));
         auto image = imageMerge(paths);
         char file[100];
-        sprintf(file, "./image/merge_%d.png", (int)clock());
+        sprintf(file, "../image/merge_%d.png", (int)clock());
         cv::imwrite(file, image);
     }
     if(argc == 1)

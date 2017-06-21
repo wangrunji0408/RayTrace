@@ -5,7 +5,6 @@
 #ifndef INC_2RAYTRACE_MATERTIAL_H
 #define INC_2RAYTRACE_MATERTIAL_H
 
-#include "../Light/Light.h"
 #include "../Geometry/Geometry.h"
 #include "../Texture/Texture.h"
 

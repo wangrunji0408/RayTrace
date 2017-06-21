@@ -6,7 +6,7 @@
 #define INC_2RAYTRACE_TEXTURE_H
 
 #include <cmath>
-#include "../Light/Light.h"
+#include "../Geometry/Geometry.h"
 
 class Texture {
 public:

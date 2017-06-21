@@ -17,7 +17,10 @@ bool Plane::tryGetIntersectionPoint(Ray const &ray, float &t) const {
     return t > eps;
 }
 
-Plane::Plane(const Ray &normal) : normal(normal) {}
+Plane::Plane(const Ray &normal) : normal(normal)
+{
+    trans = Transform::toZ01(normal.getStartPoint(), normal.getEndPoint());
+}
 
 Plane::Plane(Vector3f const &a, Vector3f const &b, Vector3f const &c) :
         normal(Ray(a, (b - a).det(c - a))) {}
@@ -31,11 +34,6 @@ Vector3f Plane::getNormalVector(Vector3f const &param) const {
 }
 
 Vector3f Plane::getUV(Vector3f const &point) const {
-    Point const& p = normal.getStartPoint();
-    Ray rayu = Ray(p, normal.getUnitDir().det(Vector3f(1,0,0)));
-    Ray rayv = Ray(p, normal.getUnitDir().det(rayu.getUnitDir()));
-    float u = rayu.calcProjectionT(point - p);
-    float v = rayv.calcProjectionT(point - p);
-    return Vector3f(u,v,0);
+    return trans.apply_xy(point);
 }
 

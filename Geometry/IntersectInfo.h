@@ -9,6 +9,7 @@
 #include "Ray.h"
 
 class Object;
+class Material;
 
 struct IntersectInfo {
     // Request
@@ -23,12 +24,16 @@ struct IntersectInfo {
     bool success = false;
     float t = std::numeric_limits<float>::max() / 8;
     Vector3f normal, param, uv;
-    std::shared_ptr<Object> object;
+    Object* object;
+
+    // temp
+    Vector3f weight;
 
     // Methods
     IntersectInfo(const Ray &ray);
     bool isOuter () const;
     Vector3f getPoint() const;
+    Material getMaterial () const;
     friend std::ostream &operator<<(std::ostream &os, const IntersectInfo &info);
 };
 

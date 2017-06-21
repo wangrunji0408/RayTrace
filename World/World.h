@@ -36,6 +36,8 @@ public:
     void setEnvColor(const Color &envColor);
     IntersectInfo tryGetFirstIntersectionPoint (Ray const& ray) const;
     bool testLightBlocked(Light const& light) const;
+    bool testLightBlocked(Point const& p1, Point const& p2) const;
+    bool testLightBlocked(Ray const& ray, float t) const;
 
     static Vector3f calcRefractiveDir (Vector3f const &inDir, Vector3f const &normalDir, float indexInside, float indexOutside);
     static Vector3f calcReflectiveDir (Vector3f const &inDir, Vector3f const &normalDir);

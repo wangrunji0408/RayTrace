@@ -8,8 +8,6 @@
 #include <ostream>
 #include "../Geometry/Geometry.h"
 
-typedef Vector3f Color;
-
 class Light {
 public:
     Vector3f begin, end;

@@ -55,6 +55,10 @@ Color PathTracer::renderRay(Ray const &ray0, int depth, Color weight) const {
         else
         {
             l = Vector3f::getRandUnit();
+            if(material.tdiffuse < epsColor && material.tspecular < epsColor) {
+                v = v.forcePositiveBy(n);
+                weight *= 0.5;
+            }
             brdf = material.calcCosBRDF(l, v, n);
         }
         ray = Ray(point + l * 1e-4, l);

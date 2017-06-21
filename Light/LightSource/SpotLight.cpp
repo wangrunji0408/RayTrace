@@ -25,11 +25,11 @@ bool SpotLight::inRange(Vector3f const &point) const {
     return ray.getUnitDir().cos(point - ray.getStartPoint()) > cosf(angle + edgeAngle) - eps;
 }
 
-Light SpotLight::sample() const {
+Ray SpotLight::sample() const {
     auto const& pos = ray.getStartPoint();
     auto const& main = ray.getUnitDir();
     Vector3f dir;
     do {dir = Vector3f::getRandUnit();}
     while(main.angle(dir) > angle + edgeAngle);
-    return Light(pos, pos + dir, color);
+    return Ray(pos, dir);
 }

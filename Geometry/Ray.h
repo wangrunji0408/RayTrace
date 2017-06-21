@@ -15,6 +15,7 @@ public:
     Ray();
     Ray(const Vector3f &start, const Vector3f &direction);
     static Ray fromTo (Vector3f const& from, Vector3f const& to);
+    static Ray raw (Vector3f const& start, Vector3f const& unitdir);
     Vector3f getStartPoint() const;
     Vector3f getEndPoint(float t) const;
     Vector3f getEndPoint() const;

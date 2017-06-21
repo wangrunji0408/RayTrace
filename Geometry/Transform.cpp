@@ -9,19 +9,24 @@
 using std::endl;
 
 Transform Transform::operator*(Transform const &b) const {
+    if(isEye)   return b;
+    if(b.isEye) return *this;
     Transform c; c.clear();
     for(int i=0; i<N; ++i)
         for(int j=0; j<N; ++j)
             for(int k=0; k<N; ++k)
                 c.v[i][j] += v[i][k] * b.v[k][j];
+    c.updateEyeFlag();
     return c;
 }
 
 void Transform::clear() {
     memset(v, 0, sizeof(v));
+    isEye = false;
 }
 
 Vector3f Transform::operator*(Vector3f const &vec) const {
+    if(isEye)   return vec;
     Vector3f c;
     for(int i=0; i<3; ++i) {
         for (int j = 0; j < 3; ++j)
@@ -30,6 +35,19 @@ Vector3f Transform::operator*(Vector3f const &vec) const {
     }
     return c;
 }
+
+Vector3f Transform::apply_xy(Vector3f const &vec) const {
+    if(isEye)   return vec;
+    Vector3f c;
+    for(int i=0; i<2; ++i) {
+        for (int j = 0; j < 3; ++j)
+            c.value(i) += v[i][j] * vec.value(j);
+        c.value(i) += v[i][3] * 1;
+    }
+    c.z = 0;
+    return c;
+}
+
 
 Transform Transform::move(Vector3f const &p) {
     auto a = Transform();
@@ -58,6 +76,7 @@ Transform Transform::rotate(int axis, float angle) {
 }
 
 Transform Transform::transpose() const {
+    if(isEye)   return *this;
     auto a = Transform();
     for(int i=0; i<N; ++i)
         for(int j=0; j<N; ++j)
@@ -81,6 +100,8 @@ void Transform::swapLine(int i1, int i2) {
 }
 
 Transform Transform::inverse() const {
+    if(isEye)
+        return *this;
     auto mat = *this, inv = Transform();
     for(int i=0; i<N-1; ++i) {
         int ii = i;
@@ -111,11 +132,12 @@ Transform Transform::inverse() const {
         }
 //    std::cerr << mat << inv << endl;
     }
-
+    inv.updateEyeFlag();
     return inv;
 }
 
 Ray Transform::operator*(Ray const &ray) const {
+    if(isEye)   return ray;
     return Ray::fromTo(operator*(ray.getStartPoint()), operator*(ray.getEndPoint()));
 }
 
@@ -123,6 +145,7 @@ Transform::Transform() {
     clear();
     for(int i=0; i<N; ++i)
         v[i][i] = 1;
+    isEye = true;
 }
 
 Transform Transform::toZ01(Vector3f const &a0, Vector3f const &a1) {
@@ -139,7 +162,21 @@ Transform Transform::scale(Vector3f const &scale) {
     t.v[0][0] = scale.x;
     t.v[1][1] = scale.y;
     t.v[2][2] = scale.z;
+    t.updateEyeFlag();
     return t;
+}
+
+bool Transform::operator==(Transform const &b) const {
+    for(int i=0; i<N; ++i)
+        for(int j=0; j<N; ++j)
+            if(!isEqual(v[i][j],b.v[i][j]))
+                return false;
+    return true;
+}
+
+void Transform::updateEyeFlag() {
+    static const auto eye = Transform();
+    isEye = *this == eye;
 }
 
 std::ostream &operator<<(std::ostream &os, const Transform &transform) {

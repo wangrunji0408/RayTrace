@@ -5,6 +5,7 @@
 #include "IntersectInfo.h"
 #include "Geometry.h"
 #include "../Object/Object.h"
+#include "../Material/Material.h"
 
 using std::endl;
 
@@ -19,6 +20,10 @@ Vector3f IntersectInfo::getPoint() const {
 }
 
 IntersectInfo::IntersectInfo(const Ray &ray) : ray(ray) {}
+
+Material IntersectInfo::getMaterial() const {
+    return object->getMaterialAt(uv);
+}
 
 std::ostream &operator<<(std::ostream &os, const IntersectInfo &info) {
     os << "[IntersectInfo ray: " << info.ray << " testBlockT: " << info.testBlockT << endl;

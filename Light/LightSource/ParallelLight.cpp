@@ -32,7 +32,7 @@ void ParallelLight::setColor(const Color &color) {
     ParallelLight::color = color;
 }
 
-Light ParallelLight::sample() const {
+Ray ParallelLight::sample() const {
     // TODO
     throw std::exception();
 }

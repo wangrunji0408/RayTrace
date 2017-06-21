@@ -35,7 +35,7 @@
      },
      {
        "name": "sphere2",
-       "shape": {"type": "sphere", "o": [3, 1, 2], "r": 2},
+       "shape": {"type": "sphere", "o": [3, 0, 2], "r": 2},
        "material": "trans"
      }
   ],
@@ -85,7 +85,7 @@
       "enable": true,
       "name": "light_1",
       "type": "point",
-      "pos": [0,0,9],
+      "pos": [0, 1, 9],
       "color": 100
     }
   ],
@@ -106,7 +106,7 @@
   "renderers": [
     {
       "name": "ray_tracer_1",
-      "type": "path_tracer",
+      "type": "bi_path_tracer",
 //      "type": "ray_tracer",
       "camera": "camera_1",
       "super": false,

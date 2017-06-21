@@ -21,6 +21,7 @@
 #include "../Texture/ConstTexture.h"
 #include "../UVMaps/SphereMap.h"
 #include "../Shapes/2D/Lathe.h"
+#include "../Renderer/BiPathTracer.h"
 #include <fstream>
 
 using namespace Json;
@@ -256,18 +257,18 @@ unique_ptr<Shape> SceneParser::buildShape(Json::Value const &json) {
 }
 
 unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
-    unique_ptr<Renderer> renderer = nullptr;
+    Renderer* renderer;
     auto camera = world->findCamera(json["camera"].asString());
     auto type = json["type"].asString();
     if(type == "light_projection")
     {
-        renderer.reset(new LightProjection(world, camera));
+        renderer = new LightProjection(world, camera);
     }
     else if(type == "ray_tracer")
     {
         auto rt = new RayTracer(world, camera);
         rt->maxDepth = json.get("depth", 2).asInt();
-        renderer.reset(rt);
+        renderer = rt;
     }
     else if(type == "path_tracer")
     {
@@ -275,7 +276,15 @@ unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
         rt->maxDepth = json.get("depth", 2).asInt();
         rt->times = json.get("times", 5).asInt();
         rt->saveInterval = json.get("save_interval", 60).asInt();
-        renderer.reset(rt);
+        renderer = rt;
+    }
+    else if(type == "bi_path_tracer")
+    {
+        auto rt = new BiPathTracer(world, camera);
+        rt->maxDepth = json.get("depth", 2).asInt();
+        rt->times = json.get("times", 5).asInt();
+        rt->saveInterval = json.get("save_interval", 60).asInt();
+        renderer = rt;
     }
     else
         throw std::invalid_argument("No such renderer type: " + type);
@@ -284,7 +293,7 @@ unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
     renderer->enableRecolor = json["recolor"].asBool();
     renderer->apertureTimes = json["aperture_times"].asInt();
     renderer->name = json["name"].asString();
-    return renderer;
+    return unique_ptr<Renderer>(renderer);
 }
 
 unique_ptr<Texture> SceneParser::buildTexture(Json::Value const &json) {

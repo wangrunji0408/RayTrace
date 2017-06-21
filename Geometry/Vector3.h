@@ -44,6 +44,7 @@ public:
     float angle (Vector3 const& b) const;
     float cos (Vector3 const& b) const;
     bool isVertical (Vector3 const& b) const;
+    Vector3 forcePositiveBy(Vector3 const& n) const;
 //    float getProjection (Vector3 const& b) const;
 
     static float angle (Vector3 const& a, Vector3 const& b);

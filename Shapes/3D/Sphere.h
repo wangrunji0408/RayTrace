@@ -19,6 +19,8 @@ public:
 
     bool isOnSurface(Vector3f const &point) const override;
 
+    bool testRayBlocked(Ray const &ray, float tmin) const override;
+
     bool tryGetIntersectionPoint(Ray const &ray, float &t) const override;
 
     Vector3f getUV(Vector3f const &point) const override;

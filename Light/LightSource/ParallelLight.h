@@ -25,7 +25,7 @@ public:
 
     Light illuminate(Vector3f const &point) const override;
 
-    Light sample() const override;
+    Ray sample() const override;
 };
 
 

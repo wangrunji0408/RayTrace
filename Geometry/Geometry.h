@@ -16,6 +16,7 @@ using std::shared_ptr;
 using std::make_shared;
 
 typedef Vector3f Point;
+typedef Vector3f Color;
 
 const float eps = std::numeric_limits<float>::epsilon() * 8;
 const float inf = std::numeric_limits<float>::max() / 8;

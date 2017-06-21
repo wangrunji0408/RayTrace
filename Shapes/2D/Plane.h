@@ -6,10 +6,12 @@
 #define INC_2RAYTRACE_PLANE_H
 
 #include "Shape2D.h"
+#include "../../Geometry/Transform.h"
 
 class Plane : public Shape2D {
 public:
     Ray normal;
+    Transform trans;
 public:
     Plane() {}
 

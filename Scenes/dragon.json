@@ -124,7 +124,7 @@
        "type": "ray_tracer",
        "camera": "camera_1",
        "depth": 10,
-       "parallel": false
+       "parallel": true
        // "refraction": false,
      }
   ]

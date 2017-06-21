@@ -51,5 +51,6 @@ Color Material::calcCosBRDFUnit(Vector3f const &l, Vector3f const &v, Vector3f c
 }
 
 Color Material::calcEmission(Vector3f const &outDir, Vector3f const &normalDir) const {
+    if(emission == 0)   return Color::zero;
     return emission * normalDir.norm().dot(outDir.norm());
 }

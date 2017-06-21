@@ -182,6 +182,14 @@ Vector3<T>::operator cv::Scalar() const {
     return cv::Scalar(x, y, z);
 }
 
+template <>
+Vector3f Vector3f::forcePositiveBy(Vector3f const &n) const {
+    float dotn = dot(n);
+    if(dotn >= 0)
+        return *this;
+    return *this + n * (-2 * dotn);
+}
+
 template<class T>
 Vector3<T>::operator cv::Vec<T, 3>() const {
     return cv::Vec<T, 3>(x, y, z);

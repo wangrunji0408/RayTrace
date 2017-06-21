@@ -12,7 +12,7 @@ IntersectInfo World::tryGetFirstIntersectionPoint(Ray const &ray) const {
         info.needNormal = true;
         info.needUV = true;
         info.needParam = true;
-        info.object = objects[i];
+        info.object = objects[i].get();
         objects[i]->intersect(info);
         if(info.success && info.t < mintInfo.t)
             mintInfo = info;
@@ -56,18 +56,6 @@ shared_ptr<Camera> World::findCamera(std::string name) const {
     auto it = std::find_if(cameras.begin(), cameras.end(),
                         [&](shared_ptr<Camera> const& camera){return camera->name == name;});
     return it == cameras.end()? nullptr: *it;
-}
-
-bool World::testLightBlocked(Light const &light) const {
-    float tmin = light.len() * 0.99f;
-    auto info = IntersectInfo(light.getRay());
-    info.testBlockT = tmin;
-    for(int i=0; i<objects.size(); ++i) {
-        objects[i]->intersect(info);
-        if(info.success)
-            return true;
-    }
-    return false;
 }
 
 const Color &World::getEnvColor() const {
@@ -115,6 +103,27 @@ float World::calcG(Ray const &face1, Ray const &face2) {
     auto dp = face2.getStartPoint() - face1.getStartPoint();
     auto d2 = dp.len2();
     return fabsf(face1.getUnitDir().dot(dp) * face2.getUnitDir().dot(dp)) / d2 / d2;
+}
+
+bool World::testLightBlocked(Light const &light) const {
+    return testLightBlocked(light.begin, light.end);
+}
+
+bool World::testLightBlocked(Point const &p1, Point const &p2) const {
+    auto dp = p2 - p1;
+    float d = dp.len();
+    return testLightBlocked(Ray::raw(p1, dp / d), d);
+}
+
+bool World::testLightBlocked(const Ray &ray, float t) const {
+    auto info = IntersectInfo(ray);
+    info.testBlockT = t * 0.99f;
+    for(int i=0; i<objects.size(); ++i) {
+        objects[i]->intersect(info);
+        if(info.success)
+            return true;
+    }
+    return false;
 }
 
 
