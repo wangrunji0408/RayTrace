@@ -84,6 +84,10 @@ void BiPathTracer::sampleBackwardPath(Ray const& ray0, std::vector<IntersectInfo
         else
         {
             l = Vector3f::getRandUnit();
+            if(material.tdiffuse < epsColor && material.tspecular < epsColor) {
+                l = l.forcePositiveBy(n);
+                weight *= 0.5;
+            }
             brdf = material.calcCosBRDF(l, v, n);
         }
         ray = Ray(point + l * 1e-4, l);

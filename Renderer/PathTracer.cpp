@@ -27,7 +27,7 @@ Color PathTracer::renderRay(Ray const &ray0, int depth, Color weight) const {
         }
         auto obj = result.object;
         auto point = result.getPoint();
-        auto material = obj->getMaterialAt(result.param);
+        auto material = obj->getMaterialAt(result.uv);
         auto v = ray.getStartPoint() - point;
         auto n = result.normal;
 //        auto face = Ray(point, n);

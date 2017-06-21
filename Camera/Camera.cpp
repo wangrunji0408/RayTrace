@@ -30,7 +30,7 @@ void Camera::setPosition(Vector3f const &pos, Vector3f const &target, Vector3f c
     this->pos = pos;
     this->target = target;
     Ray ray = Ray::fromTo(pos, target);
-    up = (upPoint - ray.calcProjectionPoint(upPoint)).norm();
+    up = upPoint.norm();
     right = ray.getUnitDir().det(up);
 }
 

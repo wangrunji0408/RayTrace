@@ -14,10 +14,10 @@ ImageTexture::ImageTexture(std::string filePath) {
 }
 
 Color ImageTexture::operator()(Point const &uv) const {
-    int x = int(to01(uv.x) * image.size[0]);
-    int y = int(to01(uv.y) * image.size[1]);
+    int x = int(to01(uv.x / scale.x) * image.size[0]);
+    int y = int(to01(uv.y / scale.y) * image.size[1]);
     cv::Vec3b pixel = image.at<cv::Vec3b>(x, y);
 //    std::cerr << uv << std::endl;
 //    std::cerr << Color(pixel[0], pixel[1], pixel[2]) / 255 << std::endl;
-    return Color(pixel[0], pixel[1], pixel[2]) / 255;
+    return Color(pixel[0], pixel[1], pixel[2]) * (k / 255);
 }

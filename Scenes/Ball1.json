@@ -1,0 +1,96 @@
+{
+  "world": {
+    "name": "ball1",
+    "env_color": 0.05,
+    "objects": [
+      {
+        "name": "sphere1",
+        "shape": {"type": "sphere", "o": [-0.5, 5.14, -1.8], "r": 0.2},
+        "material": {
+          "refraction": [1, 0, 0],
+          "refractive_index": 1.7
+        }
+      },
+      {
+        "name": "sphere2",
+        "shape": {"type": "sphere", "o": [0, 5, -1.8], "r": 0.2},
+        "material": {
+          "refraction": [0, 1, 0],
+          "refractive_index": 1.7
+        }
+      },
+      {
+        "name": "sphere3",
+        "shape": {"type": "sphere", "o": [0.5, 5.14, -1.8], "r": 0.2},
+        "material": {
+          "refraction": [0, 0, 1],
+          "refractive_index": 1.7
+        }
+      },
+      {
+        "name": "sphere_refl",
+        "shape": {"type": "sphere", "o": [1.5, 6.3, -1.6], "r": 0.4},
+        "material": {
+          "reflection": [0.5, 0.5, 1]
+        }
+      },
+      {
+        "name": "sphere_marble",
+        "shape": {"type": "sphere", "o": [0, 6, -1.5], "r": 0.5},
+        "material": {
+          "diffuse": {"type": "image", "file": "../Scenes/texture/marble.png"},
+          "reflection": 0.3
+        }
+      },
+      {
+        "name": "plane",
+        "shape": {"type": "plane", "point": [0, 0, -2], "normal": [0,0,1]},
+        "material": {
+          "diffuse": {
+            "type": "image",
+            "file": "../Scenes/texture/floor.bmp",
+            "scale": [8, 8],
+            "k": 0.5
+          },
+          "reflection": 0.3
+        }
+      }
+    ],
+    "materials": [
+
+    ],
+    "lights": [
+      {
+        "enable": true,
+        "name": "light_1",
+        "type": "point",
+        "pos": [3, 3, 3],
+        "color": 25
+      }
+    ],
+    "cameras": [
+      {
+        "name": "camera_1",
+        "pos": [-2, 2, 0.5],
+        "target": [-1.4, 3, -0.1],
+        "up": [0, 0, 1],
+        "resolution": [640, 480],
+        "realw": 1,
+        "orthographic": false
+      }
+    ]
+  },
+  "renderers": [
+    {
+      "name": "ray_tracer_1",
+      "type": "ray_tracer",
+//      "type": "bi_path_tracer",
+      "camera": "camera_1",
+      "super": false,
+      "parallel": true,
+      "depth": 5,
+      "times": 5
+    }
+  ]
+  // "show_light": [63,252]
+}

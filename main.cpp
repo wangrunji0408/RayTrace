@@ -128,6 +128,7 @@ cv::Mat3b imageMerge (vector<string> const& paths)
 
 int main (int argc, char** argv) {
 //    testKDTree();
+    srand((unsigned int) time(0));
     const char* filePath;
     if(argc >= 2 && string(argv[1]) == "merge")
     {

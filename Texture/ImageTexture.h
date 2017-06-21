@@ -12,6 +12,8 @@
 class ImageTexture: public Texture {
     cv::Mat image;
 public:
+    Vector3f scale = 1;
+    float k = 1;
     ImageTexture(const cv::Mat &image);
     ImageTexture(std::string filePath);
     Color operator()(Point const &uv) const override;

@@ -156,10 +156,8 @@ shared_ptr<ObjectMaterial> SceneParser::buildMaterial(Json::Value const &json) {
     }
     auto material = make_shared<ObjectMaterial>();
     material->m.emission = parseVector3fCanBeSingle(json["emission"]);
-//    material->m.ambient = parseVector3fCanBeSingle(json["diffuse"]);
-    if(!json["ambient"].isNull())   // 若不设置，ambient = diffuse
-        material->m.ambient = parseVector3fCanBeSingle(json["ambient"]);
     material->diffuse = buildTexture(json["diffuse"]);
+    material->ambient = json["ambient"].isNull()? material->diffuse: buildTexture(json["ambient"]); // 若不设置，ambient = diffuse
     material->m.specular = parseVector3fCanBeSingle(json["specular"]);
     material->m.shininess = json["shininess"].asFloat();
     material->m.tdiffuse = parseVector3fCanBeSingle(json["tdiffuse"]);
@@ -297,17 +295,19 @@ unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
 }
 
 unique_ptr<Texture> SceneParser::buildTexture(Json::Value const &json) {
-    unique_ptr<Texture> texture = nullptr;
+    Texture* texture = nullptr;
     if(!json.isObject())
     {
         Color c = parseVector3fCanBeSingle(json);
-        texture.reset(new ConstTexture(c));
-        return texture;
+        texture = new ConstTexture(c);
     }
     else if(json["type"] == "image")
     {
         auto file = json["file"].asString();
-        texture.reset(new ImageTexture(file));
+        auto t = new ImageTexture(file);
+        t->k = json.get("k", 1).asFloat();
+        t->scale = json["scale"].isNull()? Vector3f(1,1,0): parseVector3fCanBeSingle(json["scale"]);
+        texture = t;
     }
     else if(json["type"] == "grid")
     {
@@ -318,12 +318,12 @@ unique_ptr<Texture> SceneParser::buildTexture(Json::Value const &json) {
             a = parseVector3fCanBeSingle(json["a"]);
         if(!json["b"].isNull())
             b = parseVector3fCanBeSingle(json["b"]);
-        texture.reset(new GridTexture(n, a, b));
+        texture = new GridTexture(n, a, b);
     }
     else
         throw std::invalid_argument("Texture type wrong: " + json["name"].asString());
     texture->name = json["name"].asString();
-    return texture;
+    return unique_ptr<Texture>(texture);
 }
 
 unique_ptr<UVMap> SceneParser::buildUVMap(Json::Value const &json) {

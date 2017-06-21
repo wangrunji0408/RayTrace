@@ -8,5 +8,7 @@ Material ObjectMaterial::getMaterial(Vector3f const &uv) const {
     Material mm = m;
     if(diffuse != nullptr)
         mm.diffuse = (*diffuse)(uv);
+    if(ambient != nullptr)
+        mm.ambient = (*ambient)(uv);
     return mm;
 }
