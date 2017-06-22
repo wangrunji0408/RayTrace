@@ -69,9 +69,10 @@ bool TriangleMesh::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3f &p
     aabbTree.intersect(info);
     if(!info.success)
         return false;
-    int face = int(dynamic_cast<const Triangle*>(info.object) - triangles.data());
+    auto tri = dynamic_cast<const Triangle*>(info.object);
+    int face = int(tri - triangles.data());
     t = info.t;
-    param = info.param;
+    param = tri->calcGravityCoordinate(info.getPoint());
     param.z = face;
     return true;
 
