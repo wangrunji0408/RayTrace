@@ -102,14 +102,14 @@ void BiPathTracer::sampleForwardPath(std::vector<IntersectInfo> &path, LightSour
         path.push_back(result);
         if(!result.success)
             break;
-        auto obj = result.object;
+
         auto point = result.getPoint();
-        auto material = obj->getMaterialAt(result.uv);
+        auto material = result.getMaterial();
         auto l = ray.getStartPoint() - point;
         auto n = result.normal;
 
         Color brdf; Vector3f v; int times;
-        weight *= randChoice(result.getMaterial(), n, l, v, false);
+        weight *= randChoice(material, n, l, v, false);
         ray = Ray(point + v * 1e-4, v);
     }
 }

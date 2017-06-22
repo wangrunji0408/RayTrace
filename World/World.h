@@ -11,6 +11,7 @@
 #include "../Light/LightSource/LightSource.h"
 #include "../Geometry/IntersectInfo.h"
 #include "../Camera/Camera.h"
+#include "../DataStructure/AABBTree.h"
 
 class World {
 public:
@@ -21,6 +22,7 @@ private:
     std::vector<shared_ptr<LightSource>> lights;
     std::vector<shared_ptr<LightSource>> enabledLights;
     std::vector<shared_ptr<Camera>> cameras;
+    AABBTree aabbTree;
 public:
     const std::vector<shared_ptr<LightSource>> &getLights() const;
     void addObject(shared_ptr<Object> obj);
@@ -32,6 +34,7 @@ public:
     shared_ptr<Camera> findCamera(std::string name) const;
     shared_ptr<Object> findObject(std::string name) const;
 
+    void makeAABBTree ();
     const Color &getEnvColor() const;
     void setEnvColor(const Color &envColor);
     IntersectInfo tryGetFirstIntersectionPoint (Ray const& ray) const;

@@ -10,6 +10,7 @@ void Shape2D::intersect(IntersectInfo &info) const {
         info.success = testRayBlocked(info.ray, info.testBlockT);
         return;
     }
+    info.object = this;
     info.success = tryGetIntersectionPoint(info.ray, info.t, info.param);
     if(!info.success)   return;
     if(info.needNormal) {

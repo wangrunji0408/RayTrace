@@ -16,9 +16,8 @@ Color PathTracer::renderRay(Ray const &ray0, int depth, Color weight) const {
             color += weight * world->getEnvColor();
             break;
         }
-        auto obj = result.object;
         auto point = result.getPoint();
-        auto material = obj->getMaterialAt(result.uv);
+        auto material = result.getMaterial();
         auto v = ray.getStartPoint() - point;
         auto n = result.normal;
 

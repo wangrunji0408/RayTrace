@@ -55,7 +55,7 @@ void testLoadFromFile (const char* filePath)
 {
     auto parser = SceneParser();
     auto world = parser.load(filePath);
-    auto renderer = parser.rendererDict.begin()->second;
+    auto renderer = parser.getRenderer();
 
     char str[100];
     string savePath = "../image/";
@@ -68,10 +68,8 @@ void testLoadFromFile (const char* filePath)
         finish = renderer->render();
         mat = renderer->getResult();
 
-        if(finish) {
-            sprintf(str, "%s%s_round=%d.png", savePath.c_str(), fileName.c_str(), renderer->getRenderTimes());
-            cv::imwrite(str, mat);
-        }
+        sprintf(str, "%s%s.png", savePath.c_str(), fileName.c_str(), renderer->getRenderTimes());
+        cv::imwrite(str, mat);
         cv::imshow("render", mat);
         cv::waitKey(1);
     }

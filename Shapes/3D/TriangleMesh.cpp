@@ -62,13 +62,18 @@ void TriangleMesh::loadFromObj(std::istream &in) {
 }
 
 bool TriangleMesh::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3f &param) const {
-    int face = 0;
 
     // AABB
-    shared_ptr<Shape> shape;
     Triangle::edge = edge; // TODO 存在多线程竞争问题
-    aabbTree.tryGetIntersectionInfo(ray, t, shape);
-    face = int(dynamic_cast<Triangle*>(shape.get()) - triangles.data());
+    auto info = IntersectInfo(ray);
+    aabbTree.intersect(info);
+    if(!info.success)
+        return false;
+    int face = int(dynamic_cast<const Triangle*>(info.object) - triangles.data());
+    t = info.t;
+    param = info.param;
+    param.z = face;
+    return true;
 
     /*
     // force
@@ -83,12 +88,6 @@ bool TriangleMesh::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3f &p
             t = tt, face = i;
     }
      */
-
-    if(t == inf)    return false;
-    auto point = ray.getEndPoint(t);
-    param = toTriangle(face).calcGravityCoordinate(point);
-    param.z = face;
-    return true;
 }
 
 bool TriangleMesh::isOnSurface(Vector3f const &point) const {
@@ -184,9 +183,9 @@ void TriangleMesh::buildAABBTree() {
     triangles.clear(); triangles.reserve(faces.size());
     for(int i=0; i<faces.size(); ++i)
         triangles.push_back(toTriangle(i));
-    std::vector<shared_ptr<Shape>> shapes(faces.size());
+    std::vector<shared_ptr<IRayCastable>> shapes(faces.size());
     for(int i=0; i<faces.size(); ++i)
-        shapes[i] = shared_ptr<Shape>(&triangles[i]);
+        shapes[i] = shared_ptr<IRayCastable>(&triangles[i]);
     aabbTree.build(shapes);
 }
 

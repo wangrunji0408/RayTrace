@@ -31,10 +31,8 @@ shared_ptr<World> SceneParser::load(const char *filePath) {
     fin >> json;
     fin.close();
     world = buildWorld(json["world"]);
-    for(auto const& j: json["renderers"]) {
-        auto renderer = buildRenderer(j);
-        rendererDict[renderer->name] = move(renderer);
-    }
+    for(auto const& j: json["renderers"])
+        rendererList.push_back(buildRenderer(j));
     return world;
 }
 
@@ -57,6 +55,7 @@ unique_ptr<World> SceneParser::buildWorld(Json::Value const &json) {
     }
     world->setEnvColor(parseVector3fCanBeSingle(json["env_color"]));
     world->name = json["name"].asString();
+    world->makeAABBTree();
     return world;
 }
 
@@ -284,6 +283,7 @@ unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
     }
     else
         throw std::invalid_argument("No such renderer type: " + type);
+    renderer->enable = json["enable"].asBool();
     renderer->super = json["super"].asBool();
     renderer->enableParallel = json.get("parallel", true).asBool();
     renderer->enableRecolor = json["recolor"].asBool();
@@ -351,4 +351,11 @@ Transform SceneParser::parseTransform(Json::Value const& json) {
     auto scale = json.get("scale", 1).asFloat();
     // 先缩放，再旋转，后移动
     return Transform::move(pos) * Transform::rotate(angle) * Transform::scale(Vector3f(scale));
+}
+
+shared_ptr<Renderer> SceneParser::getRenderer() const {
+    auto it = std::find_if(rendererList.begin(), rendererList.end(), [](shared_ptr<Renderer> const& r){return r->enable;});
+    if(it == rendererList.end())
+        throw std::invalid_argument("No enabled renderer.");
+    return *it;
 }

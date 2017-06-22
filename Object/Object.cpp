@@ -25,6 +25,7 @@ void Object::intersect(IntersectInfo &info) const {
     info.ray = transform_i * info.ray;
     shape->intersect(info);
     info.ray = ray;
+    info.object = this;
     if(!info.success || info.testBlockT != 0)    return;
     info.normal = transform * info.normal;
     if(info.needUV && uvMap != nullptr)

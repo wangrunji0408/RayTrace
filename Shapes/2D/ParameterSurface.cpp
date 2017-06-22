@@ -84,6 +84,7 @@ void ParameterSurface::setRendering(std::string name) {
 }
 
 void ParameterSurface::intersect(IntersectInfo &info) const {
+    info.object = this;
     if(info.testBlockT != 0) {
         info.success = testRayBlocked(info.ray, info.testBlockT);
         return;

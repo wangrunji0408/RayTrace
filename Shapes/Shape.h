@@ -13,10 +13,6 @@ class AxisBox;
 class Shape: public IRayCastable, public UVMap {
 public:
     Vector3f getUV(Vector3f const &point) const override;
-    virtual float fastIntersect (Ray const& ray) const;
-    float calcIntersect (Ray const& ray) const;
-    virtual bool testRayBlocked (Ray const& ray, float tmin) const;
-    virtual AxisBox getAABB() const;
 public:
     std::string name;
 };

@@ -22,7 +22,7 @@ Vector3f IntersectInfo::getPoint() const {
 IntersectInfo::IntersectInfo(const Ray &ray) : ray(ray) {}
 
 Material IntersectInfo::getMaterial() const {
-    return object->getMaterialAt(uv);
+    return getObject()->getMaterialAt(uv);
 }
 
 std::ostream &operator<<(std::ostream &os, const IntersectInfo &info) {
@@ -37,11 +37,29 @@ std::ostream &operator<<(std::ostream &os, const IntersectInfo &info) {
             os << "\tuv: " << info.param << endl;
         if(info.needUV)
             os << "\tparam: " << info.uv << endl;
-        if(info.needObject)
-            os << "\tobject: " << info.object->name << endl;
+        auto shape = info.getShape();
+        if(shape != nullptr)
+            os << "\tshape: " << shape->name << endl;
+        auto obj = info.getObject();
+        if(obj != nullptr)
+            os << "\tobject: " << obj->name << endl;
     }
     else
         os << "\tfailed" << endl;
     return os << "]";
+}
+
+Object *IntersectInfo::getObject() const {
+    auto obj = dynamic_cast<const Object*>(object);
+    if(obj == nullptr)
+        throw std::runtime_error("Try to getObject, but IRayCastable is not Object.");
+    return (Object *)obj;
+}
+
+Shape *IntersectInfo::getShape() const {
+    auto obj = dynamic_cast<const Shape*>(object);
+    if(obj == nullptr)
+        throw std::runtime_error("Try to getShape, but IRayCastable is not Shape.");
+    return (Shape *)obj;
 }
 

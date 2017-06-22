@@ -5,7 +5,7 @@
 #include "AABBTree.h"
 #include "../Shapes/3D/AxisBox.h"
 
-void AABBTree::build(std::vector<shared_ptr<Shape> > const &shapes) {
+void AABBTree::build(std::vector<shared_ptr<IRayCastable> > const &shapes) {
     size_t n = shapes.size();
     this->n = (int)n;
     this->shapes = shapes;
@@ -61,50 +61,38 @@ int AABBTree::devide(int begin, int end, int d) {
     return mid + 1;
 }
 
-bool AABBTree::tryGetIntersectionInfo(Ray const &ray, float &t, shared_ptr<Shape> &shape) const {
-    t = inf, shape = nullptr;
-    (*aabbCount)++, (*total)++;
-    if(subtreeAABBs[0].fastIntersect(ray) == inf)
-        return false;
-    int shapeId = -1;
-    updateIntersectionInfo(ray, t, shapeId, 0, n);
-    shape = shapeId == -1? nullptr: shapes[shapeId];
-//    if((*total & 0xFFFF) == 0)
-//        std::cerr << *total << ' ' << (float)(*aabbCount)/(*total) << ' ' << (float)(*shapeCount)/(*total) << std::endl;
-    return t != inf;
-}
-
-void AABBTree::updateIntersectionInfo(Ray const &ray, float &t, int &shape, int begin, int end) const {
+void AABBTree::intersect(IntersectInfo &info, int begin, int end) const {
     if(end - begin <= 0)
         return;
-    if(shapeAABBs[order[begin]].fastIntersect(ray) < t)
+    if(shapeAABBs[order[begin]].fastIntersect(info.ray) < info.t)
     {
         (*shapeCount)++, (*aabbCount)++;
         auto nodeShape = shapes[order[begin]].get();
-        float t1 = nodeShape->calcIntersect(ray);
-        if(t1 < t)
-            t = t1, shape = order[begin];
+        auto info1 = info;
+        nodeShape->intersect(info1);
+        if(info1.success && info1.t < info.t)
+            info = info1;
     }
     if(end - begin == 1)
         return;
     auto const& leftAABB = subtreeAABBs[begin+1];
     auto const& rightAABB = subtreeAABBs[rightBegin[begin]];
     *aabbCount += 2;
-    float leftT = leftAABB.fastIntersect(ray);
-    float rightT = rightAABB.fastIntersect(ray);
+    float leftT = leftAABB.fastIntersect(info.ray);
+    float rightT = rightAABB.fastIntersect(info.ray);
     if(leftT < rightT)
     {
-        if(leftT < t) updateIntersectionInfo(ray, t, shape, begin + 1, rightBegin[begin]);
-        if(rightT < t) updateIntersectionInfo(ray, t, shape, rightBegin[begin], end);
+        if(leftT < info.t) intersect(info, begin + 1, rightBegin[begin]);
+        if(rightT < info.t) intersect(info, rightBegin[begin], end);
     }
     else
     {
-        if(rightT < t) updateIntersectionInfo(ray, t, shape, rightBegin[begin], end);
-        if(leftT < t) updateIntersectionInfo(ray, t, shape, begin + 1, rightBegin[begin]);
+        if(rightT < info.t) intersect(info, rightBegin[begin], end);
+        if(leftT < info.t) intersect(info, begin + 1, rightBegin[begin]);
     }
 }
 
-bool AABBTree::testRayBlocked(Ray const &ray, float tmin, int begin, int end) const {
+bool AABBTree::testRayBlocked0(Ray const &ray, float tmin, int begin, int end) const {
     if(end - begin <= 0)
         return false;
     if(shapeAABBs[order[begin]].fastIntersect(ray) < tmin)
@@ -120,14 +108,14 @@ bool AABBTree::testRayBlocked(Ray const &ray, float tmin, int begin, int end) co
     float leftT = leftAABB.fastIntersect(ray);
     float rightT = rightAABB.fastIntersect(ray);
     if(leftT < rightT)
-        return (leftT < tmin && testRayBlocked(ray, tmin, begin + 1, rightBegin[begin]))
-               || (rightT < tmin && testRayBlocked(ray, tmin, rightBegin[begin], end));
+        return (leftT < tmin && testRayBlocked0(ray, tmin, begin + 1, rightBegin[begin]))
+               || (rightT < tmin && testRayBlocked0(ray, tmin, rightBegin[begin], end));
     else
-        return (rightT < tmin && testRayBlocked(ray, tmin, rightBegin[begin], end))
-               || (leftT < tmin && testRayBlocked(ray, tmin, begin + 1, rightBegin[begin]));
+        return (rightT < tmin && testRayBlocked0(ray, tmin, rightBegin[begin], end))
+               || (leftT < tmin && testRayBlocked0(ray, tmin, begin + 1, rightBegin[begin]));
 }
 
-void AABBTree::getAllPotential(Ray const &ray, std::vector<shared_ptr<Shape>> &vec, int begin, int end) const {
+void AABBTree::getAllPotential(Ray const &ray, std::vector<shared_ptr<IRayCastable>> &vec, int begin, int end) const {
     if(end - begin <= 0)
         return;
     if(subtreeAABBs[begin].fastIntersect(ray) == inf)
@@ -140,12 +128,23 @@ void AABBTree::getAllPotential(Ray const &ray, std::vector<shared_ptr<Shape>> &v
     getAllPotential(ray, vec, rightBegin[begin], end);
 }
 
-bool AABBTree::testRayBlocked(Ray const &ray, float tmin) const {
-    return testRayBlocked(ray, tmin, 0, n);
-}
-
-std::vector<shared_ptr<Shape>> AABBTree::getAllPotential(Ray const &ray) const {
-    auto vec = std::vector<shared_ptr<Shape>>();
+std::vector<shared_ptr<IRayCastable>> AABBTree::getAllPotential(Ray const &ray) const {
+    auto vec = std::vector<shared_ptr<IRayCastable>>();
     getAllPotential(ray, vec, 0, n);
     return vec;
+}
+
+void AABBTree::intersect(IntersectInfo &info) const {
+    if(n == 0)
+        throw std::runtime_error("AABBTree is empty.");
+    (*aabbCount)++, (*total)++;
+    if(subtreeAABBs[0].fastIntersect(info.ray) == inf) {
+        info.success = false;
+        return;
+    }
+    if(info.testBlockT != 0) {
+        info.success = testRayBlocked0(info.ray, info.testBlockT, 0, n);
+        return;
+    }
+    intersect(info, 0, n);
 }

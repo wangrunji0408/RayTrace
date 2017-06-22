@@ -214,6 +214,7 @@
   "renderers": [            // 渲染器
     {
       "name": "renderer_1",   // 名称
+      "enable": true,         // 是否可用（可选，默认为false）：实际选择任一个进行渲染
       "camera": "camera_1",   // 照相机名
       "super": false,         // 超级采样抗锯齿（可选，默认为false）
       "parallel": true,       // 并行计算（可选，默认为true）：使用OpenCV自带并行计算

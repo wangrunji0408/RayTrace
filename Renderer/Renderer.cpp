@@ -82,7 +82,7 @@ Color Renderer::renderPixel(int x, int y) const {
     auto sum = Color::zero;
     auto sum2 = Color::zero;
     int t = 0;
-    for(; t <= maxSampleTimes;) {
+    for(; t < maxSampleTimes;) {
         ++t;
         auto ray = camera->getRandRay(x, y);
         auto color = renderRay(ray);

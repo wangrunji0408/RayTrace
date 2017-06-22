@@ -11,6 +11,7 @@
 
 class Renderer {
 public:
+    bool enable = false;
     string name = "renderer";
     bool enableRecolor = false;
     bool enableParallel = true;

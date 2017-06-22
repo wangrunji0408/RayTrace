@@ -8,8 +8,10 @@
 #include <iostream>
 #include "Ray.h"
 
-class Object;
 class Material;
+class IRayCastable;
+class Shape;
+class Object;
 
 struct IntersectInfo {
     // Request
@@ -17,14 +19,13 @@ struct IntersectInfo {
     float testBlockT = 0; // 若此数不为0，则直接给success赋值：是否存在交点使得 t < testBlockT
     bool needNormal = false;
     bool needParam = false;
-    bool needObject = false;
     bool needUV = false;
 
     // Response
     bool success = false;
     float t = std::numeric_limits<float>::max() / 8;
     Vector3f normal, param, uv;
-    Object* object;
+    const IRayCastable* object = nullptr;
 
     // temp
     Vector3f weight;
@@ -34,6 +35,8 @@ struct IntersectInfo {
     bool isOuter () const;
     Vector3f getPoint() const;
     Material getMaterial () const;
+    Object* getObject() const;
+    Shape* getShape() const;
     friend std::ostream &operator<<(std::ostream &os, const IntersectInfo &info);
 };
 

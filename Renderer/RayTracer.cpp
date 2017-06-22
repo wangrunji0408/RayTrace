@@ -11,9 +11,8 @@ Color RayTracer::renderRay(Ray const &ray, int depth, Color weight) const {
     auto result = world->tryGetFirstIntersectionPoint(ray);
     if(!result.success)
         return world->getEnvColor();
-    auto obj = result.object;
     auto point = result.getPoint();
-    auto material = obj->getMaterialAt(result.uv);
+    auto material = result.getMaterial();
     auto v = ray.getStartPoint() - point;
     auto n = result.normal;
     Color color = Color::zero;

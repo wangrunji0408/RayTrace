@@ -10,7 +10,7 @@ Color LightProjection::renderRay(Ray const &ray) const {
     auto result = world->tryGetFirstIntersectionPoint(ray);
     if(!result.success)
         return world->getEnvColor();
-    auto obj = result.object;
+    auto obj = result.getObject();
     auto point = result.getPoint();
     auto material = obj->getMaterialAt(result.param);
     Color color = world->getEnvColor() * material.ambient;

@@ -13,7 +13,7 @@
 class SceneParser {
 public:
     std::map<std::string, shared_ptr<ObjectMaterial>> materialDict;
-    std::map<std::string, shared_ptr<Renderer>> rendererDict;
+    std::vector<shared_ptr<Renderer>> rendererList;
     shared_ptr<World> world;
     Json::Value json;
 protected:
@@ -32,6 +32,7 @@ protected:
     unique_ptr<Renderer> buildRenderer(Json::Value const &json);
 public:
     shared_ptr<World> load(const char *filePath);
+    shared_ptr<Renderer> getRenderer () const;
 };
 
 

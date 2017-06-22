@@ -39,9 +39,16 @@
        "material": "trans"
      },
       {
-        "name": "sphere_light",
+        "enable": false,
+        "name": "light_big_sphere",
         "shape": {"type": "sphere", "o": [0, 1, 109.98], "r": 100},
         "material": {"emission": 25}
+      },
+      {
+        "enable": false,
+        "name": "light_point_sphere",
+        "shape": {"type": "sphere", "o": [0, 1, 9], "r": 1},
+        "material": {"emission": 1}
       }
   ],
     "materials": [
@@ -82,11 +89,11 @@
   ],
     "lights": [
     {
-      "enable": false,
+      "enable": true,
       "name": "light_1",
       "type": "point",
       "pos": [0, 1, 9],
-      "color": 50
+      "color": 1
     }
   ],
     "cameras": [
@@ -105,9 +112,18 @@
   },
   "renderers": [
     {
+      "enable": true,
+      "name": "ray_tracer",
+      "type": "ray_tracer",
+      "camera": "camera_1",
+      "super": false,
+      "parallel": true,
+      "depth": 5
+    },
+    {
+      "enable": false,
       "name": "path_tracer_1",
       "type": "path_tracer",
-//      "type": "ray_tracer",
       "camera": "camera_1",
       "super": false,
       "parallel": true,

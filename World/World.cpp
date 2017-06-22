@@ -6,7 +6,16 @@
 #include "../Shapes/2D/Shape2D.h"
 
 IntersectInfo World::tryGetFirstIntersectionPoint(Ray const &ray) const {
-    auto mintInfo = IntersectInfo(Ray());
+    auto info = IntersectInfo(ray);
+    info.needNormal = true;
+    info.needParam = true;
+    info.needUV = true;
+    aabbTree.intersect(info);
+    return info;
+
+    // force
+    /*
+    auto mintInfo = IntersectInfo(ray);
     for(int i=0; i<objects.size(); ++i) {
         auto info = IntersectInfo(ray);
         info.needNormal = true;
@@ -18,6 +27,7 @@ IntersectInfo World::tryGetFirstIntersectionPoint(Ray const &ray) const {
             mintInfo = info;
     }
     return mintInfo;
+     */
 }
 
 void World::addObject(shared_ptr<Object> obj) {
@@ -124,6 +134,14 @@ bool World::testLightBlocked(const Ray &ray, float t) const {
             return true;
     }
     return false;
+}
+
+void World::makeAABBTree() {
+    auto objs = std::vector<shared_ptr<IRayCastable>>();
+    objs.reserve(objects.size());
+    for(auto const& obj: objects)
+        objs.push_back(obj);
+    aabbTree.build(objs);
 }
 
 

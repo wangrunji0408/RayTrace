@@ -113,13 +113,14 @@
     ]
   },
   "renderers": [
-//    {
-//      "name": "light_projection",
-//      "type": "light_projection",
-//      "camera": "camera_1",
-//      "parallel": true
-//    }
+    {
+      "name": "light_projection",
+      "type": "light_projection",
+      "camera": "camera_1",
+      "parallel": true
+    },
      {
+       "enable": true,
        "name": "ray_tracer_1",
        "type": "ray_tracer",
        "camera": "camera_1",
