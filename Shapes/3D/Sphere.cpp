@@ -6,9 +6,12 @@
 #include "Sphere.h"
 #include "AxisBox.h"
 
+int Sphere::intersectCount = 0;
+
 Sphere::Sphere(const Vector3f &o, float r) : o(o), r(r) {}
 
 bool Sphere::tryGetIntersectionPoint(Ray const &ray, float &t) const {
+    intersectCount++;
     float d = ray.calcDist(o);
     if(d > r + eps)
         return false;

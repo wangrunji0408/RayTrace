@@ -11,14 +11,15 @@
           "axis": [[0,0,0], [0,0,1]],
           "curve": {
             "type": "bezier_curve",
-            "points": [[0, 0, 0], [1, 0, 1], [0, 0, 2]]
+            "points": [[0, 0, 0], [3, 0, 1], [-2, 0, 2], [3, 0, 3], [0, 0, 4]]
           },
-          "mesh_size": [20, 20],
-          "rendering": "iteration"
+          "mesh_size": [20, 100],
+          "rendering": "iteration",
+          "flip": true
         },
         "transform": {
-          "pos": [0.5, 0.5, 0],
-          "angle": [0.2, 0.2, 0]
+          "pos": [0, 0, 0],
+          "angle": [-20, 20, 0]
         },
         "material": "grid2"
       },
@@ -53,30 +54,43 @@
       {
         "name": "point_light_1",
         "type": "point",
-        "pos": [-2, 0, 2],
-        "color": 5
+        "pos": [-4, 0, 4],
+        "color": 0.5
       },
       {
         "name": "point_light_1",
         "type": "point",
-        "pos": [2, 0, 2],
-        "color": 5
+        "pos": [4, 0, 4],
+        "color": 0.5
+      },
+      {
+        "name": "point_light_1",
+        "type": "point",
+        "pos": [0, 4, 4],
+        "color": 0.5
+      },
+      {
+        "name": "point_light_1",
+        "type": "point",
+        "pos": [0, -4, 4],
+        "color": 0.5
       }
     ],
     "cameras": [
     {
       "name": "camera_1",
-      "pos": [-1, -1, 1],
-      "target": [0, 0, 1],
+      "pos": [-5, -5, 3],
+      "target": [0, 0, 2],
       "up": [0, 0, 5],
       "resolution": [640, 480],
-      "realw": 4,
+      "realw": 6,
       "orthographic": false
     }
   ]
   },
   "renderers": [
     {
+      "enable": true,
       "name": "ray_tracer_1",
       "type": "ray_tracer",
       "camera": "camera_1",

@@ -31,6 +31,8 @@ public:
     shared_ptr<Shape> getShape() const;
     Material getMaterialAt(Vector3f const& uv) const;
     void applyTransform (Transform const& t);
+
+    AxisBox getAABB() const override;
 };
 
 

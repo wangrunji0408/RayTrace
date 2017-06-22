@@ -47,6 +47,14 @@
         }
       },
       {
+        "enable": false,
+        "name": "sphere_light",
+        "shape": {"type": "sphere", "o": [3, 3, 3], "r": 1},
+        "material": {
+          "emission": 50
+        }
+      },
+      {
         "name": "plane",
         "shape": {"type": "plane", "point": [0, 0, -2], "normal": [0,0,1]},
         "material": {
@@ -69,7 +77,7 @@
         "name": "light_1",
         "type": "point",
         "pos": [3, 3, 3],
-        "color": 50
+        "color": 1
       }
     ],
     "cameras": [
@@ -86,14 +94,22 @@
   },
   "renderers": [
     {
+      "enable": false,
       "name": "path_tracer_1",
-//      "type": "ray_tracer",
       "type": "path_tracer",
       "camera": "camera_1",
       "super": false,
       "parallel": true,
       "depth": 5,
       "times": 1000
+    },
+    {
+      "enable": true,
+      "name": "ray_tracer_1",
+      "type": "ray_tracer",
+      "camera": "camera_1",
+      "parallel": true,
+      "depth": 5
     }
   ]
   // "show_light": [63,252]

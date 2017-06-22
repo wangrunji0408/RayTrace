@@ -3,6 +3,7 @@
 //
 
 #include "Object.h"
+#include "../Shapes/3D/AxisBox.h"
 
 shared_ptr<Shape> Object::getShape() const {
     return shape;
@@ -27,7 +28,11 @@ void Object::intersect(IntersectInfo &info) const {
     info.ray = ray;
     info.object = this;
     if(!info.success || info.testBlockT != 0)    return;
-    info.normal = transform * info.normal;
+    info.normal = (transform * info.normal).norm();
     if(info.needUV && uvMap != nullptr)
         info.uv = uvMap->getUV(info.getPoint());
+}
+
+AxisBox Object::getAABB() const {
+    return transform * shape->getAABB();
 }

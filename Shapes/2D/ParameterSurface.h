@@ -16,6 +16,7 @@ public:
     enum RenderType {MESH, INTERPOLATION, ITERATION};
     RenderType rendering;
     int iterTimes = 5;
+    bool flip = false;
 public:
     void makeMesh(int m, int n);
     void setRendering(std::string name);

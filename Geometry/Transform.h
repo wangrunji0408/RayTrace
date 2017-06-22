@@ -10,6 +10,8 @@
 #include "Vector3.h"
 #include "Ray.h"
 
+class AxisBox;
+
 class Transform {
 public:
     static const int N = 4;
@@ -27,6 +29,7 @@ public:
     Transform inverse () const;
     bool operator== (Transform const& b) const;
     Transform operator* (Transform const& b) const;
+    AxisBox operator* (AxisBox const& aabb) const;
     Vector3f operator* (Vector3f const& vec) const;
     Vector3f apply_xy (Vector3f const& vec) const;
     Ray operator* (Ray const& ray) const;

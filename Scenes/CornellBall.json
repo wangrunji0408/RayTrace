@@ -5,27 +5,27 @@
     "objects": [
     {
       "name": "left_plane",
-      "shape": {"type": "plane", "point": [-6,0,0], "normal": [1,0,0]},
+      "shape": {"type": "plane", "point": [-6,0,0], "normal": [1,0,0], "size": 100},
       "material": "red"
     },
     {
       "name": "right_plane",
-      "shape": {"type": "plane", "point": [6,0,0], "normal": [-1,0,0]},
+      "shape": {"type": "plane", "point": [6,0,0], "normal": [-1,0,0], "size": 100},
       "material": "blue"
     },
     {
       "name": "buttom_plane",
-      "shape": {"type": "plane", "point": [0,0,0], "normal": [0,0,1]},
+      "shape": {"type": "plane", "point": [0,0,0], "normal": [0,0,1], "size": 100},
       "material": "white"
     },
     {
       "name": "up_plane",
-      "shape": {"type": "plane", "point": [0,0,10], "normal": [0,0,-1]},
+      "shape": {"type": "plane", "point": [0,0,10], "normal": [0,0,-1], "size": 100},
       "material": "white"
     },
     {
       "name": "back_plane",
-      "shape": {"type": "plane", "point": [0,5,0], "normal": [0,-1,0]},
+      "shape": {"type": "plane", "point": [0,5,0], "normal": [0,-1,0], "size": 10},
       "material": "white"
     },
      {
@@ -131,7 +131,7 @@
       "times": 100,
       "min_times": 100,
       "s2": 0,
-      "round": 10
+      "round": 1
     }
   ]
   // "show_light": [63,252]

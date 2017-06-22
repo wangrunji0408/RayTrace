@@ -89,8 +89,10 @@ void testLoadFromFile (const char* filePath)
         }
     }
 
-    cerr << "Intersect Count:\n" << "Triangle: " << Triangle::intersectCount
-                                 << "\nAxisBox: " << AxisBox::intersectCount << endl;
+    cerr << "Intersect Count:\n" << "Triangle: " << Triangle::intersectCount << endl
+                                 << "AxisBox: " << AxisBox::intersectCount << endl
+                                 << "Sphere: " << Sphere::intersectCount << endl
+                                 << "Plane: " << Plane::intersectCount << endl;
     cv::waitKey(0);
 }
 

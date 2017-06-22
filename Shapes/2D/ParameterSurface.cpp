@@ -55,7 +55,8 @@ bool ParameterSurface::isOnSurface(Vector3f const &point) const {
 }
 
 Point ParameterSurface::getNormalVector(Vector3f const &param) const {
-    return getPartial(param, 0).det(getPartial(param, 1));
+    auto n = getPartial(param, 0).det(getPartial(param, 1));
+    return flip? -n: n;
 }
 
 Vector3f ParameterSurface::getUV(Vector3f const &point) const {

@@ -202,6 +202,7 @@ unique_ptr<Shape> SceneParser::buildShape(Json::Value const &json) {
         shape = ps;
         int mm = json["mesh_size"][0].asInt();
         int mn = json["mesh_size"][1].asInt();
+        ps->flip = json["flip"].asBool();
         ps->makeMesh(mm, mn);
         ps->setRendering(json.get("rendering", "iteration").asString());
         ps->iterTimes = json.get("iter_times", 5).asInt();
@@ -217,7 +218,9 @@ unique_ptr<Shape> SceneParser::buildShape(Json::Value const &json) {
     {
         auto point = parseVector3f(json["point"]);
         auto normal = parseVector3f(json["normal"]);
-        shape = new Plane(Ray(point, normal));
+        auto plane = new Plane(Ray(point, normal));
+        plane->size = json.get("size", inf).asFloat();
+        shape = plane;
     }
     else if(json["type"] == "triangle")
     {

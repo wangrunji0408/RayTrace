@@ -5,6 +5,7 @@
 #include <cstring>
 #include "Transform.h"
 #include "Geometry.h"
+#include "../Shapes/3D/AxisBox.h"
 
 using std::endl;
 
@@ -65,7 +66,6 @@ Transform Transform::rotate(int axis, float angle) {
     if(axis < 0 || axis >= 3)
         throw std::invalid_argument("axis id");
     auto a = Transform();
-    angle = -angle;
     float cos = cosf(angle), sin = sinf(angle);
     int i1 = (axis + 1) % 3, i2 = (axis + 2) % 3;
     a.v[axis][axis] = 1;
@@ -189,4 +189,15 @@ std::ostream &operator<<(std::ostream &os, const Transform &transform) {
         os << endl;
     }
     return os << "]" << endl;
+}
+
+AxisBox Transform::operator*(AxisBox const &aabb) const {
+    if(isEye)   return aabb;
+    Vector3f ps[8];
+    for(int i=0; i<8; ++i)
+        for(int k=0; k<3; ++k)
+            ps[i].value(k) = i & (1 << k)? aabb.maxp.value(k): aabb.minp.value(k);
+    for(int i=0; i<8; ++i)
+        ps[i] = operator*(ps[i]);
+    return AxisBox(ps, 8);
 }

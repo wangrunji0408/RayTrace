@@ -220,6 +220,7 @@ TriangleMesh::TriangleMesh(ParameterSurface const &bs, int m, int n) {
         throw std::invalid_argument("ParameterSurface to TriangleMesh: m, n must >= 1.");
 
     // point
+    // TODO 自适应均匀采样
     float u = 0, v = 0;
     const float du = 1.0f / m, dv = 1.0f / n;
     for(int i=0; i<=m; ++i, u += du, v = 0)
