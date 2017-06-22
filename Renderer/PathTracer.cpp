@@ -4,21 +4,12 @@
 
 #include "PathTracer.h"
 
-Color PathTracer::renderPixel(int x, int y) const {
-    auto ray = camera->getRay(x, y);
-    auto color = Color::zero;
-    for(int i=0; i<times; ++i)
-        color += renderRay(ray, maxDepth, Color(1,1,1));
-    return color / times;
-}
-
 PathTracer::PathTracer(shared_ptr<World> world, shared_ptr<Camera> camera) : RayTracer(world, camera) {}
 
 Color PathTracer::renderRay(Ray const &ray0, int depth, Color weight) const {
     Ray ray = ray0;
     Color color = Color::zero;
-//    Ray lastFace = ray0;
-    while(depth-- && !(weight < epsColor))
+    while(depth-- && !(weight == 0))
     {
         auto result = world->tryGetFirstIntersectionPoint(ray);
         if(!result.success) {
@@ -30,8 +21,7 @@ Color PathTracer::renderRay(Ray const &ray0, int depth, Color weight) const {
         auto material = obj->getMaterialAt(result.uv);
         auto v = ray.getStartPoint() - point;
         auto n = result.normal;
-//        auto face = Ray(point, n);
-//        weight *= World::calcG(lastFace, face);
+
         color += weight * material.calcEmission(v, n);
         for(auto const& light : world->getLights())
         {
@@ -41,29 +31,47 @@ Color PathTracer::renderRay(Ray const &ray0, int depth, Color weight) const {
             auto brdf = material.calcCosBRDF(-l.getUnitDir(), v, n);
             color += weight * brdf * l.color;
         }
-        Color brdf; Vector3f l;
-        if(!(material.reflection < epsColor))
-        {
-            l = World::calcReflectiveDir(v, n);
-            brdf = material.reflection;
-        }
-        else if(!(material.refraction < epsColor))
-        {
-            l = World::calcRefractiveDir(v, n, material.refractiveIndex, material.outRefractiveIndex);
-            brdf = material.refraction;
-        }
-        else
-        {
-            l = Vector3f::getRandUnit();
-            if(material.tdiffuse < epsColor && material.tspecular < epsColor) {
-                v = v.forcePositiveBy(n);
-                weight *= 0.5;
-            }
-            brdf = material.calcCosBRDF(l, v, n);
-        }
+        Color brdf; Vector3f l; int times;
+        weight *= randChoice(material, n, v, l, true);
         ray = Ray(point + l * 1e-4, l);
-        weight *= brdf;
-//        lastFace = face;
     }
     return color;
+}
+
+Vector3f PathTracer::randChoice(Material const &material, Vector3f const &n, Vector3f const &v,
+                    Vector3f &l, bool reverse) const {
+    Vector3f w;
+    for(int times = 1; times < 10; times++)
+    {
+        switch(rand() & 3)
+        {
+            case 0: // 漫反射
+                if(material.diffuse < epsColor && material.specular < epsColor)
+                    break;
+                l = Vector3f::getRandUnit().forcePositiveBy(n);
+                w = reverse? material.calcCosBRDF(l, v, n): material.calcCosBRDF(v, l, n);
+                return w * (4 / times);
+            case 1: // 漫透射
+                if(material.tdiffuse < epsColor && material.tspecular < epsColor)
+                    break;
+                l = Vector3f::getRandUnit().forcePositiveBy(-n);
+                w = reverse? material.calcCosBRDF(l, v, n): material.calcCosBRDF(v, l, n);
+                return w * (4 / times);
+            case 2: // 镜面反射
+                if(material.reflection < epsColor)
+                    break;
+                l = World::calcReflectiveDir(v, n);
+                w = material.reflection;
+                return w * (4 / times);
+            case 3: // 折射
+                if(material.refraction < epsColor)
+                    break;
+                l = World::calcRefractiveDir(v, n, material.refractiveIndex, material.outRefractiveIndex);
+                w = material.refraction;
+                return w * (4 / times);
+            default:
+                assert(false);
+        }
+    }
+    return 0;
 }

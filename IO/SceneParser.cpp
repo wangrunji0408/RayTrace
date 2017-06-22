@@ -154,6 +154,8 @@ shared_ptr<ObjectMaterial> SceneParser::buildMaterial(Json::Value const &json) {
             throw std::invalid_argument("Can not find material: " + json.asString());
         return m;
     }
+    if(!json.isObject())
+        throw std::invalid_argument("Material is not a string or object.");
     auto material = make_shared<ObjectMaterial>();
     material->m.emission = parseVector3fCanBeSingle(json["emission"]);
     material->diffuse = buildTexture(json["diffuse"]);
@@ -272,16 +274,12 @@ unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
     {
         auto rt = new PathTracer(world, camera);
         rt->maxDepth = json.get("depth", 2).asInt();
-        rt->times = json.get("times", 5).asInt();
-        rt->saveInterval = json.get("save_interval", 60).asInt();
         renderer = rt;
     }
     else if(type == "bi_path_tracer")
     {
         auto rt = new BiPathTracer(world, camera);
         rt->maxDepth = json.get("depth", 2).asInt();
-        rt->times = json.get("times", 5).asInt();
-        rt->saveInterval = json.get("save_interval", 60).asInt();
         renderer = rt;
     }
     else
@@ -289,7 +287,10 @@ unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
     renderer->super = json["super"].asBool();
     renderer->enableParallel = json.get("parallel", true).asBool();
     renderer->enableRecolor = json["recolor"].asBool();
-    renderer->apertureTimes = json["aperture_times"].asInt();
+    renderer->maxSampleTimes = json.get("times", 1).asInt();
+    renderer->minSampleTimes = json.get("min_times", renderer->maxSampleTimes).asInt();
+    renderer->s2 = json["s2"].asFloat();
+    renderer->round = json.get("round", 1).asInt();
     renderer->name = json["name"].asString();
     return unique_ptr<Renderer>(renderer);
 }
@@ -300,6 +301,7 @@ unique_ptr<Texture> SceneParser::buildTexture(Json::Value const &json) {
     {
         Color c = parseVector3fCanBeSingle(json);
         texture = new ConstTexture(c);
+        return unique_ptr<Texture>(texture);
     }
     else if(json["type"] == "image")
     {

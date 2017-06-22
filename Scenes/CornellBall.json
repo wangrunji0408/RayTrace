@@ -37,22 +37,27 @@
        "name": "sphere2",
        "shape": {"type": "sphere", "o": [3, 0, 2], "r": 2},
        "material": "trans"
-     }
+     },
+      {
+        "name": "sphere_light",
+        "shape": {"type": "sphere", "o": [0, 1, 109.98], "r": 100},
+        "material": {"emission": 25}
+      }
   ],
     "materials": [
     {
       "name": "red",
-      "diffuse": [0, 0, 0.5]
+      "diffuse": [0.25, 0.25, 0.75]
 //      "reflection": 0.05
     },
     {
       "name": "blue",
-      "diffuse": [0.5, 0, 0]
+      "diffuse": [0.75, 0.25, 0.25]
 //      "reflection": 0.05
     },
     {
       "name": "white",
-      "diffuse": 0.5
+      "diffuse": 0.75
 //      "reflection": 0.05
     },
     {
@@ -68,25 +73,20 @@
     },
     {
       "name": "image",
-      "diffuse": {"type": "image", "file": "../Scenes/marble.png"}
+      "diffuse": {"type": "image", "file": "../Scenes/texture/marble.png"}
     },
     {
       "name": "grid",
       "diffuse": {"type": "grid", "n": 1, "a": 0.2}
-    },
-    {
-      "name": "light",
-      "emission": 100
-//        "diffuse": [0.8, 0, 0]
     }
   ],
     "lights": [
     {
-      "enable": true,
+      "enable": false,
       "name": "light_1",
       "type": "point",
       "pos": [0, 1, 9],
-      "color": 100
+      "color": 50
     }
   ],
     "cameras": [
@@ -105,16 +105,17 @@
   },
   "renderers": [
     {
-      "name": "ray_tracer_1",
-      "type": "bi_path_tracer",
+      "name": "path_tracer_1",
+      "type": "path_tracer",
 //      "type": "ray_tracer",
       "camera": "camera_1",
       "super": false,
       "parallel": true,
       "depth": 5,
-      "times": 10
-//      "aperture_times": 50
-      // "refraction": false,
+      "times": 100,
+      "min_times": 100,
+      "s2": 0,
+      "round": 10
     }
   ]
   // "show_light": [63,252]

@@ -56,7 +56,25 @@ void testLoadFromFile (const char* filePath)
     auto parser = SceneParser();
     auto world = parser.load(filePath);
     auto renderer = parser.rendererDict.begin()->second;
-    auto mat = renderer->render8U3C();
+
+    char str[100];
+    string savePath = "../image/";
+    sprintf(str, "render(%s)_%d", renderer->name.c_str(), (int)time(0));
+    string fileName = str;
+
+    cv::Mat mat;
+    for(bool finish = false; !finish; )
+    {
+        finish = renderer->render();
+        mat = renderer->getResult();
+
+        if(finish) {
+            sprintf(str, "%s%s_round=%d.png", savePath.c_str(), fileName.c_str(), renderer->getRenderTimes());
+            cv::imwrite(str, mat);
+        }
+        cv::imshow("render", mat);
+        cv::waitKey(1);
+    }
 
     auto rr = dynamic_pointer_cast<RayTracer>(renderer);
     auto camera = renderer->getCamera();
@@ -75,14 +93,6 @@ void testLoadFromFile (const char* filePath)
 
     cerr << "Intersect Count:\n" << "Triangle: " << Triangle::intersectCount
                                  << "\nAxisBox: " << AxisBox::intersectCount << endl;
-    char file[100];
-    auto pathTracer = dynamic_pointer_cast<PathTracer>(renderer);
-    if(pathTracer)
-        sprintf(file, "../image/render(%s)_%d_times=%d.png", renderer->name.c_str(), (int)clock(), pathTracer->times);
-    else
-        sprintf(file, "../image/render(%s)_%d.png", renderer->name.c_str(), (int)clock());
-    cv::imwrite(file, mat);
-    cv::imshow("image", mat);
     cv::waitKey(0);
 }
 
@@ -128,7 +138,6 @@ cv::Mat3b imageMerge (vector<string> const& paths)
 
 int main (int argc, char** argv) {
 //    testKDTree();
-    srand((unsigned int) time(0));
     const char* filePath;
     if(argc >= 2 && string(argv[1]) == "merge")
     {

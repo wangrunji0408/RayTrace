@@ -57,41 +57,20 @@ void BiPathTracer::sampleBackwardPath(Ray const& ray0, std::vector<IntersectInfo
     path.reserve(10);
     Ray ray = ray0;
     Color weight = Color(1,1,1);
-    for(int depth = 0; depth<maxDepth && !(weight < epsColor); depth++)
+    for(int depth = 0; depth<maxDepth && !(weight == 0); depth++)
     {
         auto result = world->tryGetFirstIntersectionPoint(ray);
         if(!result.success)
             break;
         result.weight = weight;
         path.push_back(result);
-        auto obj = result.object;
         auto point = result.getPoint();
-        auto material = obj->getMaterialAt(result.uv);
         auto v = ray.getStartPoint() - point;
         auto n = result.normal;
 
-        Color brdf; Vector3f l;
-        if(!(material.reflection < epsColor))
-        {
-            l = World::calcReflectiveDir(v, n);
-            brdf = material.reflection;
-        }
-        else if(!(material.refraction < epsColor))
-        {
-            l = World::calcRefractiveDir(v, n, material.refractiveIndex, material.outRefractiveIndex);
-            brdf = material.refraction;
-        }
-        else
-        {
-            l = Vector3f::getRandUnit();
-            if(material.tdiffuse < epsColor && material.tspecular < epsColor) {
-                l = l.forcePositiveBy(n);
-                weight *= 0.5;
-            }
-            brdf = material.calcCosBRDF(l, v, n);
-        }
+        Color brdf; Vector3f l; int times;
+        weight *= randChoice(result.getMaterial(), n, v, l, true);
         ray = Ray(point + l * 1e-4, l);
-        weight *= brdf;
     }
 }
 
@@ -129,27 +108,8 @@ void BiPathTracer::sampleForwardPath(std::vector<IntersectInfo> &path, LightSour
         auto l = ray.getStartPoint() - point;
         auto n = result.normal;
 
-        Color brdf; Vector3f v;
-        if(!(material.reflection < epsColor))
-        {
-            v = World::calcReflectiveDir(l, n);
-            brdf = material.reflection;
-        }
-        else if(!(material.refraction < epsColor))
-        {
-            v = World::calcRefractiveDir(l, n, material.refractiveIndex, material.outRefractiveIndex);
-            brdf = material.refraction;
-        }
-        else
-        {
-            v = Vector3f::getRandUnit();
-            if(material.tdiffuse < epsColor && material.tspecular < epsColor) {
-                v = v.forcePositiveBy(n);
-                weight *= 0.5;
-            }
-            brdf = material.calcCosBRDF(l, v, n);
-        }
+        Color brdf; Vector3f v; int times;
+        weight *= randChoice(result.getMaterial(), n, l, v, false);
         ray = Ray(point + v * 1e-4, v);
-        weight *= brdf;
     }
 }

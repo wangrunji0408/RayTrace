@@ -20,7 +20,6 @@ protected:
 public:
     RayTracer(shared_ptr<World> world, shared_ptr<Camera> camera);
     std::vector<Light> renderPixelGetLights(int x, int y);
-
     virtual Color renderRay(Ray const &ray) const;
 };
 

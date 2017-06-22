@@ -38,7 +38,11 @@
         "name": "sphere_marble",
         "shape": {"type": "sphere", "o": [0, 6, -1.5], "r": 0.5},
         "material": {
-          "diffuse": {"type": "image", "file": "../Scenes/texture/marble.png"},
+          "diffuse": {
+            "type": "image",
+            "file": "../Scenes/texture/marble.png",
+            "k": 0.7
+          },
           "reflection": 0.3
         }
       },
@@ -65,7 +69,7 @@
         "name": "light_1",
         "type": "point",
         "pos": [3, 3, 3],
-        "color": 25
+        "color": 50
       }
     ],
     "cameras": [
@@ -82,14 +86,14 @@
   },
   "renderers": [
     {
-      "name": "ray_tracer_1",
-      "type": "ray_tracer",
-//      "type": "bi_path_tracer",
+      "name": "path_tracer_1",
+//      "type": "ray_tracer",
+      "type": "path_tracer",
       "camera": "camera_1",
       "super": false,
       "parallel": true,
       "depth": 5,
-      "times": 5
+      "times": 1000
     }
   ]
   // "show_light": [63,252]

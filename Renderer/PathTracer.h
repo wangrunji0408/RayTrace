@@ -10,13 +10,11 @@
 #include "RayTracer.h"
 
 class PathTracer: public RayTracer {
-public:
-    int times = 10;
-    int saveInterval = 10; // TODO 实现功能
 protected:
     Color renderRay(Ray const &ray, int depth, Color weight) const override;
+    Vector3f randChoice(Material const &material, Vector3f const &n, Vector3f const &v,
+                    Vector3f &l, bool reverse) const;
 public:
-    Color renderPixel(int x, int y) const override;
     PathTracer(shared_ptr<World> world, shared_ptr<Camera> camera);
 };
 

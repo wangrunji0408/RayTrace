@@ -73,6 +73,8 @@ Vector3i Camera::getPos(Vector3f const &p) const {
 }
 
 Ray Camera::getRandRay(float x, float y) const {
+    if(aperture == 0)
+        return getRay(x, y);
     float dx, dy;
     do{
         dx = rand01() * 2 - 1;
