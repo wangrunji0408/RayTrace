@@ -8,7 +8,7 @@ PathTracer::PathTracer(shared_ptr<World> world, shared_ptr<Camera> camera) : Ray
 
 Color PathTracer::renderRay(Ray const &ray0) const {
     Color color = Color::zero;
-    Color weight = Color::zero;
+    Color weight = Color(1);
     Ray ray = ray0;
     for(int depth = 0; depth < maxDepth && !(weight == 0); depth++)
     {
