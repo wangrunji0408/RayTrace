@@ -17,6 +17,7 @@ public:
     Vector3f getUnitDir () const;
     Ray getRay () const;
     float len () const;
+    float len2 () const;
     friend std::ostream &operator<<(std::ostream &os, const Light &light);
 };
 

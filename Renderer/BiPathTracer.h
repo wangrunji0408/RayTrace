@@ -14,7 +14,7 @@ public:
 protected:
     void sampleForwardPath(std::vector<IntersectInfo> &forwardPath, LightSource *&lightSource) const;
     void sampleBackwardPath(Ray const& ray, std::vector<IntersectInfo>& backwardPath) const;
-    Color renderRay(Ray const &ray, int depth, Color weight) const override;
+    Color renderRay(Ray const &ray) const override;
 };
 
 

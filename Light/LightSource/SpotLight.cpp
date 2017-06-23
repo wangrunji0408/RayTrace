@@ -16,7 +16,8 @@ Light SpotLight::illuminate(Vector3f const &point) const {
     float theta = acosf(ray.getUnitDir().cos(point - ray.getStartPoint()));
     if(theta < angle + edgeAngle) {
         float t = sqrtf(std::min(1.0f, (angle + edgeAngle - theta) / edgeAngle));
-        c = color / (point - ray.getStartPoint()).len2() * t;
+        c = color * t;
+//        c = color / (point - ray.getStartPoint()).len2() * t;
     }
     return Light(ray.getStartPoint(), point, c);
 }

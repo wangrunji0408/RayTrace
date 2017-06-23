@@ -11,11 +11,11 @@
 
 class PathTracer: public RayTracer {
 protected:
-    Color renderRay(Ray const &ray, int depth, Color weight) const override;
     Vector3f randChoice(Material const &material, Vector3f const &n, Vector3f const &v,
                     Vector3f &l, bool reverse) const;
 public:
     PathTracer(shared_ptr<World> world, shared_ptr<Camera> camera);
+    Color renderRay(Ray const &ray) const override;
 };
 
 

@@ -6,10 +6,11 @@
 
 PathTracer::PathTracer(shared_ptr<World> world, shared_ptr<Camera> camera) : RayTracer(world, camera) {}
 
-Color PathTracer::renderRay(Ray const &ray0, int depth, Color weight) const {
-    Ray ray = ray0;
+Color PathTracer::renderRay(Ray const &ray0) const {
     Color color = Color::zero;
-    while(depth-- && !(weight == 0))
+    Color weight = Color::zero;
+    Ray ray = ray0;
+    for(int depth = 0; depth < maxDepth && !(weight == 0); depth++)
     {
         auto result = world->tryGetFirstIntersectionPoint(ray);
         if(!result.success) {
@@ -28,7 +29,7 @@ Color PathTracer::renderRay(Ray const &ray0, int depth, Color weight) const {
             if(world->testLightBlocked(l))  continue;
             if(saveLights) lights->push_back(l);
             auto brdf = material.calcCosBRDF(-l.getUnitDir(), v, n);
-            color += weight * brdf * l.color;
+            color += weight * brdf * l.color / l.len2();
         }
         Color brdf; Vector3f l; int times;
         weight *= randChoice(material, n, v, l, true);

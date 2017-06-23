@@ -14,6 +14,10 @@ float Light::len() const {
     return (end - begin).len();
 }
 
+float Light::len2() const {
+    return (end - begin).len2();
+}
+
 Ray Light::getRay() const {
     return Ray(begin, end - begin);
 }

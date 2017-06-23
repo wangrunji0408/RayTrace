@@ -24,7 +24,7 @@ Color RayTracer::renderRay(Ray const &ray, int depth, Color weight) const {
         if(light->shade && world->testLightBlocked(l))  continue;
         if(saveLights) lights->push_back(l);
         Color f = material.calcCosBRDF(-l.getUnitDir(), v, n);
-        color += l.color * f;
+        color += l.color * f / l.len2();
     }
     if(!(material.reflection < epsColor))
     {

@@ -8,7 +8,7 @@ BiPathTracer::BiPathTracer(shared_ptr<World> world, shared_ptr<Camera> camera) :
 
 }
 
-Color BiPathTracer::renderRay(Ray const &ray, int depth, Color weight) const {
+Color BiPathTracer::renderRay(Ray const &ray) const {
     std::vector<IntersectInfo> forwardPath, backwardPath;
     LightSource* lightSource = nullptr;
     sampleForwardPath(forwardPath, lightSource);
@@ -26,7 +26,7 @@ Color BiPathTracer::renderRay(Ray const &ray, int depth, Color weight) const {
         {
             auto light = lightSource->illuminate(point);
             if (!world->testLightBlocked(light))
-                color += info.weight * light.color * material.calcCosBRDF(-light.getUnitDir(), v, n);
+                color += info.weight * light.color * material.calcCosBRDF(-light.getUnitDir(), v, n) / light.len2();
         }
         // Indirect
         for(auto const& finfo: forwardPath)
@@ -35,7 +35,8 @@ Color BiPathTracer::renderRay(Ray const &ray, int depth, Color weight) const {
                 break;
             auto fpoint = finfo.getPoint();
             auto ray = Ray::fromTo(fpoint, point);
-            float dist = (fpoint - point).len();
+            float dist2 = (fpoint - point).len2();
+            float dist = sqrtf(dist2);
             if(world->testLightBlocked(ray, dist))
                 continue;
             auto const& dir = ray.getUnitDir();
@@ -43,7 +44,7 @@ Color BiPathTracer::renderRay(Ray const &ray, int depth, Color weight) const {
             auto const& fmaterial = finfo.getMaterial();
             color += weight * fmaterial.calcEmission(dir, finfo.normal);
             weight *= fmaterial.calcCosBRDF(-finfo.ray.getUnitDir(), dir, finfo.normal);
-            color += weight * finfo.weight;
+            color += weight * finfo.weight / dist2;
         }
     }
 //    static int total;

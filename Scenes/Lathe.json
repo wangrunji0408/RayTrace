@@ -55,25 +55,25 @@
         "name": "point_light_1",
         "type": "point",
         "pos": [-4, 0, 4],
-        "color": 0.5
+        "color": 5
       },
       {
         "name": "point_light_1",
         "type": "point",
         "pos": [4, 0, 4],
-        "color": 0.5
+        "color": 5
       },
       {
         "name": "point_light_1",
         "type": "point",
         "pos": [0, 4, 4],
-        "color": 0.5
+        "color": 5
       },
       {
         "name": "point_light_1",
         "type": "point",
         "pos": [0, -4, 4],
-        "color": 0.5
+        "color": 5
       }
     ],
     "cameras": [
