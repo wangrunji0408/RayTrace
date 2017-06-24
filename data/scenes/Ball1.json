@@ -40,7 +40,7 @@
         "material": {
           "diffuse": {
             "type": "image",
-            "file": "../Scenes/texture/marble.png",
+            "file": "../data/texture/marble.png",
             "k": 0.7
           },
           "reflection": 0.3
@@ -60,7 +60,7 @@
         "material": {
           "diffuse": {
             "type": "image",
-            "file": "../Scenes/texture/floor.bmp",
+            "file": "../data/texture/floor.bmp",
             "scale": [8, 8],
             "k": 0.5
           },

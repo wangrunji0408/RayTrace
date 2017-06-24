@@ -33,7 +33,7 @@
         "shape":
         {
           "type": "mesh",
-          "obj_file": "../Scenes/obj/dragon_vrip_res2.obj",
+          "obj_file": "../data/obj/dragon_vrip_res2.obj",
           "cut": 1000000,
           "normal_interpolation": true
         },

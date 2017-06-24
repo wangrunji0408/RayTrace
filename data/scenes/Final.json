@@ -78,7 +78,7 @@
         "name": "dragon",
         "shape": {
           "type": "mesh",
-          "obj_file": "../Scenes/obj/dragon_vrip_res2.obj",
+          "obj_file": "../data/obj/dragon_vrip_res2.obj",
           "cut": 1000000,
           "normal_interpolation": true
         },
@@ -94,7 +94,7 @@
         "name": "bunny",
         "shape": {
           "type": "mesh",
-          "obj_file": "../Scenes/obj/bun_zipper_res4.obj",
+          "obj_file": "../data/obj/bun_zipper_res4.obj",
           "cut": 1000000,
           "normal_interpolation": true
         },
@@ -166,7 +166,7 @@
         "name": "marble",
         "diffuse": {
           "type": "image",
-          "file": "../Scenes/texture/marble.png"
+          "file": "../data/texture/marble.png"
         }
       },
       {

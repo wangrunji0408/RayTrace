@@ -28,6 +28,8 @@ using namespace Json;
 
 shared_ptr<World> SceneParser::load(const char *filePath) {
     std::ifstream fin(filePath);
+    if(!fin)
+        throw std::invalid_argument("Can not open scene file: " + string(filePath));
     fin >> json;
     fin.close();
     world = buildWorld(json["world"]);

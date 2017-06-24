@@ -30,7 +30,10 @@
     },
     {
       "name": "bunny",
-      "shape": {"type": "mesh", "obj_file": "../Scenes/bun_zipper_res4.obj"},
+      "shape": {
+        "type": "mesh",
+        "obj_file": "../data/obj/bun_zipper_res4.obj"
+      },
       "material": "yellow"
     }
   ],

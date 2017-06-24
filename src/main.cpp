@@ -99,7 +99,7 @@ void testLoadFromFile (const char* filePath)
 void testParameterSurfaceToMesh (const char* filePath)
 {
     string name = "spindle";
-    string objPath = "../Scenes/" + name + ".obj";
+    string objPath = "../data/output_objs/" + name + ".obj";
     std::ofstream fout(objPath);
 
     auto parser = SceneParser();

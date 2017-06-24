@@ -80,7 +80,7 @@
     },
     {
       "name": "image",
-      "diffuse": {"type": "image", "file": "../Scenes/texture/marble.png"}
+      "diffuse": {"type": "image", "file": "../data/texture/marble.png"}
     },
     {
       "name": "grid",
