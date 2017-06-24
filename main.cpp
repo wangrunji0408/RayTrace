@@ -68,7 +68,7 @@ void testLoadFromFile (const char* filePath)
         finish = renderer->render();
         mat = renderer->getResult();
 
-        sprintf(str, "%s%s.png", savePath.c_str(), fileName.c_str(), renderer->getRenderTimes());
+        sprintf(str, "%s%s.png", savePath.c_str(), fileName.c_str());
         cv::imwrite(str, mat);
         cv::imshow("render", mat);
         cv::waitKey(1);

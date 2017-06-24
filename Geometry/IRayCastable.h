@@ -21,6 +21,7 @@ public:
     virtual bool testRayBlocked (Ray const& ray, float tmin) const;
     virtual AxisBox getAABB() const;
     virtual Vector3f getNormalVector(Vector3f const &param) const;
+    virtual Vector3f sample () const; // return Param
 };
 
 #endif //INC_2RAYTRACE_IRAYCASTABLE_H

@@ -39,7 +39,7 @@
        "material": "trans"
      },
       {
-        "enable": true,
+        "enable": false,
         "name": "light_big_sphere",
         "shape": {"type": "sphere", "o": [0, 1, 109.98], "r": 100},
         "material": {"emission": 25}
@@ -89,7 +89,7 @@
   ],
     "lights": [
     {
-      "enable": false,
+      "enable": true,
       "name": "light_1",
       "type": "point",
       "pos": [0, 1, 9],
@@ -112,11 +112,11 @@
   },
   "renderers": [
     {
-      "enable": false,
+      "enable": true,
       "name": "ray_tracer",
       "type": "ray_tracer",
       "camera": "camera_1",
-      "super": false,
+      "super": true,
       "parallel": true,
       "depth": 5
     },

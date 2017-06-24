@@ -59,3 +59,7 @@ bool Sphere::testRayBlocked(Ray const &ray, float tmin) const {
     return tryGetIntersectionPoint(ray, t) && t < tmin;
 }
 
+Vector3f Sphere::sample() const {
+    return o + Vector3f::getRandUnit() * r;
+}
+

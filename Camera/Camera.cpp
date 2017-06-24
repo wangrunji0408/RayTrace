@@ -63,8 +63,7 @@ Vector3i Camera::getPos(Vector3f const &p) const {
     auto ray = orthographic?
                Ray(pos, pos - target):
                Ray::fromTo(pos, p);
-    float t;
-    Plane(Ray::fromTo(target, pos)).tryGetIntersectionPoint(ray, t);
+    float t = Plane::intersectWithPlane(Ray::fromTo(target, pos),ray);
     Point point = ray.getEndPoint(t);
     int x = height / 2 - (int)(Ray(target, up).calcProjectionT(point) / realw * width);
     int y = width / 2 + (int)(Ray(target, right).calcProjectionT(point) / realw * width);

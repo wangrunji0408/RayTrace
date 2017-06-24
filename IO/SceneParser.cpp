@@ -43,9 +43,9 @@ unique_ptr<World> SceneParser::buildWorld(Json::Value const &json) {
         materialDict[material->name] = std::move(material);
     }
     for(auto const& j: json["objects"]) {
-        auto object = buildObject(j);
-        if(object->enable)
-            world->addObject(std::move(object));
+        if(j.get("enable", true).asBool() == false)
+            continue;
+        world->addObject(buildObject(j));
     }
     for(auto const& j: json["cameras"]) {
         world->addCamera(buildCamera(j));

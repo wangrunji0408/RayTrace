@@ -37,10 +37,10 @@ std::ostream &operator<<(std::ostream &os, const IntersectInfo &info) {
             os << "\tuv: " << info.param << endl;
         if(info.needUV)
             os << "\tparam: " << info.uv << endl;
-        auto shape = info.getShape();
+        auto shape = dynamic_cast<const Shape*>(info.object);
         if(shape != nullptr)
             os << "\tshape: " << shape->name << endl;
-        auto obj = info.getObject();
+        auto obj = dynamic_cast<const Object*>(info.object);
         if(obj != nullptr)
             os << "\tobject: " << obj->name << endl;
     }

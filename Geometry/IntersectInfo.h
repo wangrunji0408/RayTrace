@@ -24,7 +24,7 @@ struct IntersectInfo {
     // Response
     bool success = false;
     float t = std::numeric_limits<float>::max() / 8;
-    Vector3f normal, param, uv;
+    Vector3f point, normal, param, uv;
     const IRayCastable* object = nullptr;
 
     // temp

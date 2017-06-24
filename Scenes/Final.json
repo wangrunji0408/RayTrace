@@ -1,0 +1,242 @@
+{
+  "world": {
+    "name": "room",
+    "env_color": 0,
+    "objects": [
+      {
+        "name": "left_plane",
+        "shape": {
+          "type": "plane",
+          "point": [ -6, 0, 0],
+          "normal": [ 1, 0, 0],
+          "size": 100
+        },
+        "material": "red"
+      },
+      {
+        "name": "right_plane",
+        "shape": {
+          "type": "plane",
+          "point": [ 6, 0, 0],
+          "normal": [ -1, 0, 0],
+          "size": 100
+        },
+        "material": "blue"
+      },
+      {
+        "name": "buttom_plane",
+        "shape": {
+          "type": "plane",
+          "point": [ 0, 0, 0],
+          "normal": [ 0, 0, 1],
+          "size": 100
+        },
+        "material": "white"
+      },
+      {
+        "name": "up_plane",
+        "shape": {
+          "type": "plane",
+          "point": [ 0, 0, 10],
+          "normal": [ 0, 0, -1],
+          "size": 100
+        },
+        "material": "white"
+      },
+      {
+        "name": "back_plane",
+        "shape": {
+          "type": "plane",
+          "point": [ 0, 5, 0],
+          "normal": [ 0, -1, 0],
+          "size": 10
+        },
+        "material": "white"
+      },
+      {
+        "enable": false,
+        "name": "sphere1",
+        "shape": {
+          "type": "sphere",
+          "o": [ -3, 3, 2],
+          "r": 2
+        },
+        "material": "mirror"
+      },
+      {
+        "enable": false,
+        "name": "sphere2",
+        "shape": {
+          "type": "sphere",
+          "o": [ 3, 0, 2],
+          "r": 2
+        },
+        "material": "trans"
+      },
+      {
+        "enable": true,
+        "name": "dragon",
+        "shape": {
+          "type": "mesh",
+          "obj_file": "../Scenes/obj/dragon_vrip_res2.obj",
+          "cut": 1000000,
+          "normal_interpolation": true
+        },
+        "material": "trans",
+        "transform": {
+          "pos": [ 0, 3, -2],
+          "angle": [90, 0, 0],
+          "scale": 40
+        }
+      },
+      {
+        "enable": false,
+        "name": "bunny",
+        "shape": {
+          "type": "mesh",
+          "obj_file": "../Scenes/obj/bun_zipper_res4.obj",
+          "cut": 1000000,
+          "normal_interpolation": true
+        },
+        "material": "red",
+        "transform": {
+          "pos": [ 0, 3, -2],
+          "angle": [90, 0, -45],
+          "scale": 50
+        }
+      },
+      {
+        "enable": false,
+        "name": "light_big_sphere",
+        "shape": {
+          "type": "sphere",
+          "o": [ 0, 1, 109.98],
+          "r": 10
+        },
+        "material": {
+          "emission": 25
+        }
+      },
+      {
+        "enable": false,
+        "name": "light_point_sphere",
+        "shape": {
+          "type": "sphere",
+          "o": [ 0, 1, 9],
+          "r": 1
+        },
+        "material": {
+          "emission": 1
+        }
+      }
+    ],
+    "materials": [
+      {
+        "name": "red",
+        "diffuse": [ 0.25, 0.25, 0.75],
+        "reflection": 0
+      },
+      {
+        "name": "blue",
+        "diffuse": [ 0.75, 0.25, 0.25],
+        "reflection": 0
+      },
+      {
+        "name": "white",
+        "diffuse": 0.75,
+        "reflection": 0
+      },
+      {
+        "name": "mirror",
+        "diffuse": 0,
+        "reflection": 1
+      },
+      {
+        "name": "trans",
+        "diffuse": 0,
+        "refraction": 1,
+        "refractive_index": 2
+      },
+      {
+        "name": "glass",
+        "refraction": 0.9,
+        "refractive_index": 1.2
+      },
+      {
+        "name": "marble",
+        "diffuse": {
+          "type": "image",
+          "file": "../Scenes/texture/marble.png"
+        }
+      },
+      {
+        "name": "grid",
+        "diffuse": {
+          "type": "grid",
+          "n": 1,
+          "a": 0.2
+        }
+      }
+    ],
+    "lights": [
+      {
+        "enable": true,
+        "name": "light_1",
+        "type": "point",
+        "pos": [ 0, 1, 9],
+        "color": 25
+      }
+    ],
+    "cameras": [
+      {
+        "name": "camera_1",
+        "pos": [ 0, -20, 5],
+        "target": [ 0, 0, 5],
+        "up": [ 0, 0, 10],
+        "resolution": [ 640, 480],
+        "realw": 18,
+        "orthographic": false
+        //      "focal": 20,
+        //      "aperture": 1
+      }
+    ]
+  },
+  "renderers": [
+    {
+      "enable": true,
+      "name": "ray_tracer",
+      "type": "ray_tracer",
+      "camera": "camera_1",
+      "super": true,
+      "parallel": true,
+      "depth": 5
+    },
+    {
+      "enable": false,
+      "name": "path_tracer_1",
+      "type": "path_tracer",
+      "camera": "camera_1",
+      "super": false,
+      "parallel": true,
+      "depth": 5,
+      "times": 10,
+      "min_times": 10,
+      "s2": 0,
+      "round": 10
+    },
+    {
+      "enable": false,
+      "name": "bi_path_tracer_1",
+      "type": "bi_path_tracer",
+      "camera": "camera_1",
+      "super": false,
+      "parallel": true,
+      "depth": 5,
+      "times": 10,
+      "min_times": 10,
+      "s2": 0,
+      "round": 10
+    }
+  ]
+//   "show_light": [300,400]
+}

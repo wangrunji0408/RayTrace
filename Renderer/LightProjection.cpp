@@ -10,16 +10,16 @@ Color LightProjection::renderRay(Ray const &ray) const {
     auto result = world->tryGetFirstIntersectionPoint(ray);
     if(!result.success)
         return world->getEnvColor();
-    auto obj = result.getObject();
+
     auto point = result.getPoint();
-    auto material = obj->getMaterialAt(result.param);
+    auto material = result.getMaterial();
     Color color = world->getEnvColor() * material.ambient;
     for(auto light : world->getLights())
     {
         Light l = light->illuminate(point);
         if(world->testLightBlocked(l))  continue;
         Color f = material.calcCosBRDF(-l.getUnitDir(), ray.getStartPoint() - point, result.normal);
-        color += l.color * f;
+        color += l.color * f / l.len2();
     }
     return color;
 }

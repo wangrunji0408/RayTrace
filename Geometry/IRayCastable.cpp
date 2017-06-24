@@ -55,3 +55,7 @@ bool IRayCastable::testRayBlocked(Ray const &ray, float tmin) const {
 Vector3f IRayCastable::getNormalVector(Vector3f const &param) const {
     throw std::invalid_argument("Function getNormalVector is not implemented.");
 }
+
+Vector3f IRayCastable::sample() const {
+    throw std::invalid_argument("Function sample is not implemented.");
+}

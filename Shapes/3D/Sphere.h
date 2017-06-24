@@ -29,6 +29,8 @@ public:
     Vector3f getNormalVector(Vector3f const &param) const override;
 
     virtual AxisBox getAABB() const override ;
+
+    Vector3f sample() const override;
 };
 
 

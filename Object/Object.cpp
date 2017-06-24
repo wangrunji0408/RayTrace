@@ -25,6 +25,8 @@ void Object::intersect(IntersectInfo &info) const {
     auto ray = info.ray;
     info.ray = transform_i * info.ray;
     shape->intersect(info);
+    info.point = info.ray.getEndPoint(info.t);
+    info.t = (info.point - ray.getStartPoint()).len();
     info.ray = ray;
     info.object = this;
     if(!info.success || info.testBlockT != 0)    return;
