@@ -191,6 +191,13 @@ Vector3f Vector3f::forcePositiveBy(Vector3f const &n) const {
 }
 
 template<class T>
+Vector3<T>::Vector3(cv::Vec<T, 3> vec) {
+    x = vec[0];
+    y = vec[1];
+    z = vec[2];
+}
+
+template<class T>
 Vector3<T>::operator cv::Vec<T, 3>() const {
     return cv::Vec<T, 3>(x, y, z);
 }

@@ -31,6 +31,7 @@ struct IntersectInfo {
     Vector3f weight;
 
     // Methods
+    IntersectInfo(){}
     IntersectInfo(const Ray &ray);
     bool isOuter () const;
     Vector3f getPoint() const;

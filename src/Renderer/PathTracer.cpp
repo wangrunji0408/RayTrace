@@ -49,13 +49,13 @@ Vector3f PathTracer::randChoice(Material const &material, Vector3f const &n, Vec
                 if(material.diffuse < epsColor && material.specular < epsColor)
                     break;
                 l = Vector3f::getRandUnit().forcePositiveBy(n);
-                w = reverse? material.calcCosBRDF(l, v, n): material.calcCosBRDF(v, l, n);
+                w = reverse? material.calcCosBRDF(l, v, n): material.calcBRDF(v, l, n);
                 return w * (4 / times);
             case 1: // 漫透射
                 if(material.tdiffuse < epsColor && material.tspecular < epsColor)
                     break;
                 l = Vector3f::getRandUnit().forcePositiveBy(-n);
-                w = reverse? material.calcCosBRDF(l, v, n): material.calcCosBRDF(v, l, n);
+                w = reverse? material.calcCosBRDF(l, v, n): material.calcBRDF(v, l, n);
                 return w * (4 / times);
             case 2: // 镜面反射
                 if(material.reflection < epsColor)

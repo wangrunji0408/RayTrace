@@ -30,6 +30,8 @@ public:
 
     int getHeight() const;
 
+    const Vector3f &getPos() const;
+
     float getRealw() const;
 
     float getAperture() const;
@@ -50,7 +52,7 @@ public:
 
     void setOrthographic(bool orthographic);
 
-    Vector3i getPos(Vector3f const &p) const;
+    Vector3i getPixel(Vector3f const &p) const;
 
     virtual Ray getRay(float x, float y) const;
 

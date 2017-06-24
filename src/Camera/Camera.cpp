@@ -58,7 +58,7 @@ void Camera::setRealw(float realw) {
     Camera::realw = realw;
 }
 
-Vector3i Camera::getPos(Vector3f const &p) const {
+Vector3i Camera::getPixel(Vector3f const &p) const {
     if(p == pos) return Vector3i(height/2, width/2, 0);
     auto ray = orthographic?
                Ray(pos, pos - target):
@@ -68,7 +68,10 @@ Vector3i Camera::getPos(Vector3f const &p) const {
     int x = height / 2 - (int)(Ray(target, up).calcProjectionT(point) / realw * width);
     int y = width / 2 + (int)(Ray(target, right).calcProjectionT(point) / realw * width);
 //    std::cerr << getRay(x, y).calcDist(p) << std::endl;
-    return Vector3i(x, y, 0);
+    if(x >= 0 && x < height && y >= 0 && y < width)
+        return Vector3i(x, y, 0);
+    else
+        return Vector3i(-1, -1, 0);
 }
 
 Ray Camera::getRandRay(float x, float y) const {
@@ -104,4 +107,8 @@ void Camera::setFocalLength(float focalLength) {
 
 Vector3f Camera::calcDelta(float x, float y) const {
     return (up * (height / 2 - x) + right * (y - width / 2)) * (realw / width);
+}
+
+const Vector3f &Camera::getPos() const {
+    return pos;
 }

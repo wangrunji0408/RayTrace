@@ -63,3 +63,7 @@ Vector3f Sphere::sample() const {
     return o + Vector3f::getRandUnit() * r;
 }
 
+const Vector3f &Sphere::getO() const {
+    return o;
+}
+

@@ -148,3 +148,22 @@ void AABBTree::intersect(IntersectInfo &info) const {
     }
     intersect(info, 0, n);
 }
+
+void AABBTree::getAllPotential(Point const &point, std::vector<shared_ptr<IRayCastable>> &vec, int begin, int end) const {
+    if(end - begin <= 0)
+        return;
+    if(!subtreeAABBs[begin].isInside(point))
+        return;
+    if(shapeAABBs[order[begin]].isInside(point))
+        vec.push_back(shapes[order[begin]]);
+    if(end - begin == 1)
+        return;
+    getAllPotential(point, vec, begin + 1, rightBegin[begin]);
+    getAllPotential(point, vec, rightBegin[begin], end);
+}
+
+std::vector<shared_ptr<IRayCastable>> AABBTree::getAllPotential(Point const &point) const {
+    auto vec = std::vector<shared_ptr<IRayCastable>>();
+    getAllPotential(point, vec, 0, n);
+    return vec;
+}

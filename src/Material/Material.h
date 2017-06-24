@@ -35,6 +35,7 @@ public:
     Color calcBRDF(Vector3f const &inDir, Vector3f const &outDir, Vector3f const &normalDir) const;
     Color calcAttenuation (float dist) const;
     Color calcEmission (Vector3f const &outDir, Vector3f const &normalDir) const;
+    Vector3f calcRefractiveDir (Vector3f const &in, Vector3f const &n) const;
 };
 
 

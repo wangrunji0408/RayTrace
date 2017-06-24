@@ -16,6 +16,7 @@ public:
     Vector3();
     Vector3(T x);
     Vector3(T x, T y, T z);
+    Vector3(cv::Vec<T,3> vec);
 
     T& value (int id);
     T const& value (int id) const;

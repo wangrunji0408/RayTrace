@@ -99,10 +99,10 @@ void BiPathTracer::sampleForwardPath(std::vector<IntersectInfo> &path, LightSour
         else
             result = world->tryGetFirstIntersectionPoint(ray);
 
-        result.weight = weight;
-        path.push_back(result);
         if(!result.success)
             break;
+        result.weight = weight;
+        path.push_back(result);
 
         auto point = result.getPoint();
         auto material = result.getMaterial();

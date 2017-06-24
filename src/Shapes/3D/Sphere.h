@@ -16,6 +16,8 @@ public:
     Sphere();
     Sphere(const Vector3f &o, float r);
 
+    const Vector3f &getO() const;
+
     bool isInside(Vector3f const &point) const override;
 
     bool isOnSurface(Vector3f const &point) const override;

@@ -126,7 +126,7 @@ bool World::testLightBlocked(Point const &p1, Point const &p2) const {
 }
 
 bool World::testLightBlocked(const Ray &ray, float t) const {
-    return aabbTree.testRayBlocked(ray, t * 0.999f);
+    return aabbTree.testRayBlocked(ray, t * 0.99f);
     auto info = IntersectInfo(ray);
     info.testBlockT = t * 0.99f;
     for(int i=0; i<objects.size(); ++i) {

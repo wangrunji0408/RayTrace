@@ -22,6 +22,7 @@
 #include "../UVMaps/SphereMap.h"
 #include "../Shapes/2D/Lathe.h"
 #include "../Renderer/BiPathTracer.h"
+#include "../Renderer/ProgressivePhotonMaps.h"
 #include <fstream>
 
 using namespace Json;
@@ -283,6 +284,12 @@ unique_ptr<Renderer> SceneParser::buildRenderer(Json::Value const &json) {
     else if(type == "bi_path_tracer")
     {
         auto rt = new BiPathTracer(world, camera);
+        rt->maxDepth = json.get("depth", 2).asInt();
+        renderer = rt;
+    }
+    else if(type == "ppm")
+    {
+        auto rt = new ProgressivePhotonMaps(world, camera);
         rt->maxDepth = json.get("depth", 2).asInt();
         renderer = rt;
     }

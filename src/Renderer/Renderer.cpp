@@ -63,7 +63,7 @@ shared_ptr<Camera> Renderer::getCamera() const {
     return camera;
 }
 
-inline int64_t getUsTime()
+int64_t getUsTime()
 {
     using namespace std::chrono;
     return duration_cast<microseconds>(

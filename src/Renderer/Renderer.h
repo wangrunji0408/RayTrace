@@ -38,12 +38,12 @@ protected:
     virtual Color renderRay (Ray const& ray) const = 0;
 public:
     Renderer(shared_ptr<World> world, shared_ptr<Camera> camera);
-
-    void clear();
-    bool render (); // 继续渲染，返回是否完成
+    virtual void clear();
+    virtual bool render (); // 继续渲染，返回是否完成
     cv::Mat getResult() const;
     shared_ptr<Camera> getCamera() const;
 };
 
+int64_t getUsTime();
 
 #endif //INC_2RAYTRACE_RENDERER_H

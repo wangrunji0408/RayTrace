@@ -112,7 +112,7 @@
   },
   "renderers": [
     {
-      "enable": true,
+      "enable": false,
       "name": "ray_tracer",
       "type": "ray_tracer",
       "camera": "camera_1",
@@ -121,7 +121,7 @@
       "depth": 5
     },
     {
-      "enable": true,
+      "enable": false,
       "name": "path_tracer_1",
       "type": "path_tracer",
       "camera": "camera_1",
@@ -145,6 +145,16 @@
       "min_times": 10,
       "s2": 0,
       "round": 10
+    },
+    {
+      "enable": true,
+      "name": "ppm",
+      "type": "ppm",
+      "camera": "camera_1",
+      "super": false,
+      "parallel": true,
+      "depth": 10,
+      "round": 100
     }
   ]
   // "show_light": [63,252]

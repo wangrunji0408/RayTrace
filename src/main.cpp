@@ -63,12 +63,13 @@ void testLoadFromFile (const char* filePath)
     string fileName = str;
 
     cv::Mat mat;
+    renderer->clear();
     for(bool finish = false; !finish; )
     {
         finish = renderer->render();
         mat = renderer->getResult();
 
-        sprintf(str, "%s%s.png", savePath.c_str(), fileName.c_str());
+        sprintf(str, "%s%s_round=%d.png", savePath.c_str(), fileName.c_str(), renderer->getRenderTimes());
         cv::imwrite(str, mat);
         cv::imshow("render", mat);
         cv::waitKey(1);
@@ -80,8 +81,8 @@ void testLoadFromFile (const char* filePath)
         int x = parser.json["show_light"][0].asInt();
         int y = parser.json["show_light"][1].asInt();
         for (auto l: rr->renderPixelGetLights(x, y)) {
-            auto p1 = toPoint(camera->getPos(l.begin));
-            auto p2 = toPoint(camera->getPos(l.end));
+            auto p1 = toPoint(camera->getPixel(l.begin));
+            auto p2 = toPoint(camera->getPixel(l.end));
             cv::arrowedLine(mat, p1, p2, cv::Scalar(255, 255, 255), 6);
             cv::arrowedLine(mat, p1, p2, cv::Scalar(0,0,0), 4);
             cv::arrowedLine(mat, p1, p2, l.color * 255, 2);
