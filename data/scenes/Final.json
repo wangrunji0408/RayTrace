@@ -365,7 +365,7 @@
         "realw": 18,
         "orthographic": false,
         "focal": 23,
-        "aperture": 0.5
+        "aperture": 0
       }
     ]
   },
@@ -378,7 +378,7 @@
       "super": true,
       "parallel": true,
       "depth": 5,
-      "round": 50
+      "round": 1
     },
     {
       "enable": false,

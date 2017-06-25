@@ -2,7 +2,6 @@
 // Created by wangrunji0408 on 2017/6/24.
 //
 
-#include <omp.h>
 #include "ProgressivePhotonMaps.h"
 
 ProgressivePhotonMaps::ProgressivePhotonMaps(shared_ptr<World> world, shared_ptr<Camera> camera) : BiPathTracer(world, camera) {
@@ -56,7 +55,7 @@ bool ProgressivePhotonMaps::render() {
     cv::Mat mat1[N];
     cv::Mat1i cnt1[N];
 
-#pragma omp parallel for
+//#pragma omp parallel for
     for(int i=0; i<N; ++i)
         mat1[i] = renderRay((int)1e5, cnt1[i]);
     // accumlate

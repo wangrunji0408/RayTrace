@@ -99,10 +99,11 @@
       {
         "name": "mesh",
         "shape": {
-          "type": "mesh",                               // 【三角网格】
-          "obj_file": "../Scenes/dragon_vrip_res4.obj", // obj文件地址
-          "cut": 100000,                                // 最大面数（可选，默认为inf）
-          "normal_interpolation": true                  // 法向量插值（可选，默认为false）
+          "type": "mesh",           // 【三角网格】
+          "obj_file":               // obj文件地址
+            "../data/scenes/dragon_vrip_res4.obj",
+          "cut": 100000,            // 最大面数（可选，默认为inf）
+          "normal_interpolation": true  // 法向量插值（可选，默认为false）
         },
         "material": "trans"
       },
@@ -146,7 +147,7 @@
         "refractive_index": 1.05,   // 内部材质折射率（可选，默认为1）
         "out_refractive_index": 1.0 // 外部材质折射率（可选，默认为1）
       },
-      {                      // 纹理（仅diffuse支持）
+      {                      // 纹理（仅diffuse/ambient支持）
         "name": "grid",
         "diffuse": {
           "type": "grid",       // 【棋盘格】
@@ -160,7 +161,8 @@
         "diffuse": {
           "type": "image",      // 【图片】
           "file": "1.png",      // 图片地址
-          "scale": 1            // 放大系数（可选，默认为1）
+          "scale": [8, 8],      // 放大系数（可选，默认为1）
+          "k": 0.8              // 相当于diffuse（可选，默认为1）
         }
       },
       {                     // 以下是一些具体材质样例
@@ -227,7 +229,7 @@
   "renderers": [            // 渲染器
     {
       "name": "renderer_1",   // 名称
-      "enable": true,         // 是否可用（可选，默认为false）：实际选择任一个进行渲染
+      "enable": true,         // 是否可用（可选，默认为false）：实际选择任一个可用的进行渲染
       "camera": "camera_1",   // 照相机名
       "super": false,         // 超级采样抗锯齿（可选，默认为false）
       "parallel": true,       // 并行计算（可选，默认为true）：使用OpenCV自带并行计算
@@ -259,5 +261,6 @@
       "depth": 10,            // 递归深度（可选，默认为2）
       "times": 5,             // 每像素采样次数（可选，默认为5）
     }
-  ]
+  ],
+  "show_light": [301, 379]    // 光线跟踪算法回溯指定像素位置的光路，用于Debug，一般注释掉
 }

@@ -99,7 +99,7 @@ void testLoadFromFile (const char* filePath)
 
 void testParameterSurfaceToMesh (const char* filePath)
 {
-    string name = "spindle";
+    string name = "balling";
     string objPath = "../data/output_objs/" + name + ".obj";
     std::ofstream fout(objPath);
 
