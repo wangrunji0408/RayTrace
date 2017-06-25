@@ -34,7 +34,7 @@ private:
     void intersect(IntersectInfo &info, int begin, int end) const;
     void getAllPotential(Ray const &ray, std::vector<shared_ptr<IRayCastable>> &shapes, int begin, int end) const;
     void getAllPotential(Point const& point, std::vector<shared_ptr<IRayCastable>> &shapes, int begin, int end) const;
-    bool testRayBlocked0(Ray const &ray, float tmin, int begin, int end) const;
+    bool testRayBlocked0(IntersectInfo &info, int begin, int end) const;
     int devide (int begin, int end, int d); // 返回右子树begin位置，若为begin则不分割
     int nextd (int d) const;
 public:

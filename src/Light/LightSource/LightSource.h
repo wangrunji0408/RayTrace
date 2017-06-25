@@ -16,6 +16,7 @@ public:
     bool enable = true;
 public:
     virtual Light illuminate (Vector3f const& point) const = 0;
+    virtual std::vector<Light> illuminates (Vector3f const& point) const;
     virtual Ray sample() const = 0;
 };
 

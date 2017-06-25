@@ -73,10 +73,20 @@
     ],
     "lights": [
       {
-        "enable": true,
+        "enable": false,
         "name": "light_1",
         "type": "point",
         "pos": [3, 3, 3],
+        "color": 50
+      },
+      {
+        "enable": true,
+        "name": "light_4",
+        "type": "rect",
+        "pos": [ 3, 3, 3],
+        "dir": [0, 0, -1],
+        "sample_size": 12,
+        "size": 2,
         "color": 50
       }
     ],

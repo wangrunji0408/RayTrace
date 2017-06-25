@@ -70,3 +70,7 @@ std::ostream &operator<<(std::ostream &os, const Plane &plane) {
     return os;
 }
 
+Point Plane::getPoint(Vector3f const &param) const {
+    return trans_inv * param;
+}
+

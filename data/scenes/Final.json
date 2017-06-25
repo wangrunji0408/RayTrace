@@ -31,7 +31,7 @@
           "normal": [ 0, 0, 1],
           "size": 100
         },
-        "material": "white"
+        "material": "floor"
       },
       {
         "name": "up_plane",
@@ -170,6 +170,14 @@
         }
       },
       {
+        "name": "floor",
+        "diffuse": {
+          "type": "image",
+          "file": "../data/texture/floor.bmp",
+          "scale": [8, 8]
+        }
+      },
+      {
         "name": "grid",
         "diffuse": {
           "type": "grid",
@@ -180,10 +188,20 @@
     ],
     "lights": [
       {
-        "enable": true,
+        "enable": false,
         "name": "light_1",
         "type": "point",
         "pos": [ 0, 1, 9],
+        "color": 25
+      },
+      {
+        "enable": true,
+        "name": "light_4",
+        "type": "rect",
+        "pos": [ 0, 1, 9],
+        "dir": [0, 0, -1],
+        "sample_size": 2,
+        "size": 1,
         "color": 25
       }
     ],

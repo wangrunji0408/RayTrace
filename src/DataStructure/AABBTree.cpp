@@ -92,27 +92,30 @@ void AABBTree::intersect(IntersectInfo &info, int begin, int end) const {
     }
 }
 
-bool AABBTree::testRayBlocked0(Ray const &ray, float tmin, int begin, int end) const {
+bool AABBTree::testRayBlocked0(IntersectInfo &info, int begin, int end) const {
     if(end - begin <= 0)
         return false;
-    if(shapeAABBs[order[begin]].fastIntersect(ray) < tmin)
+    float const& tmin = info.testBlockT;
+    if(shapeAABBs[order[begin]].fastIntersect(info.ray) < tmin)
     {
         auto const& nodeShape = shapes[order[begin]];
-        if(nodeShape->testRayBlocked(ray, tmin))
+        if(nodeShape->testRayBlocked(info.ray, tmin)) {
+            info.object = nodeShape.get();
             return true;
+        }
     }
     if(end - begin == 1)
         return false;
     auto const& leftAABB = subtreeAABBs[begin+1];
     auto const& rightAABB = subtreeAABBs[rightBegin[begin]];
-    float leftT = leftAABB.fastIntersect(ray);
-    float rightT = rightAABB.fastIntersect(ray);
+    float leftT = leftAABB.fastIntersect(info.ray);
+    float rightT = rightAABB.fastIntersect(info.ray);
     if(leftT < rightT)
-        return (leftT < tmin && testRayBlocked0(ray, tmin, begin + 1, rightBegin[begin]))
-               || (rightT < tmin && testRayBlocked0(ray, tmin, rightBegin[begin], end));
+        return (leftT < tmin && testRayBlocked0(info, begin + 1, rightBegin[begin]))
+               || (rightT < tmin && testRayBlocked0(info, rightBegin[begin], end));
     else
-        return (rightT < tmin && testRayBlocked0(ray, tmin, rightBegin[begin], end))
-               || (leftT < tmin && testRayBlocked0(ray, tmin, begin + 1, rightBegin[begin]));
+        return (rightT < tmin && testRayBlocked0(info, rightBegin[begin], end))
+               || (leftT < tmin && testRayBlocked0(info, begin + 1, rightBegin[begin]));
 }
 
 void AABBTree::getAllPotential(Ray const &ray, std::vector<shared_ptr<IRayCastable>> &vec, int begin, int end) const {
@@ -143,7 +146,7 @@ void AABBTree::intersect(IntersectInfo &info) const {
         return;
     }
     if(info.testBlockT != 0) {
-        info.success = testRayBlocked0(info.ray, info.testBlockT, 0, n);
+        info.success = testRayBlocked0(info, 0, n);
         return;
     }
     intersect(info, 0, n);

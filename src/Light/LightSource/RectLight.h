@@ -7,12 +7,16 @@
 
 
 #include "LightSource.h"
+#include "../../Shapes/2D/Plane.h"
 
 class RectLight: public LightSource {
-    Ray normal;
-
+    Plane plane;
 public:
+    int sampleSize = 4;
+public:
+    RectLight(Color const& color, const Ray &normal, float size);
     Light illuminate(Vector3f const &point) const override;
+    std::vector<Light> illuminates(Vector3f const &point) const override;
     Ray sample() const override;
 };
 

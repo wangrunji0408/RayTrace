@@ -145,4 +145,17 @@ void World::makeAABBTree() {
     aabbTree.build(objs);
 }
 
+bool World::testLightBlocked(Light const &light, Object *&maybe) const {
+    auto ray = light.getRay();
+    float t = light.len() * 0.99f;
+    if(maybe != nullptr && maybe->testRayBlocked(ray, t))
+        return true;
+    auto info = IntersectInfo(ray);
+    info.testBlockT = t;
+    aabbTree.intersect(info);
+    if(info.success)
+        maybe = info.getObject();
+    return info.success;
+}
+
 

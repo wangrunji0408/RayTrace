@@ -38,6 +38,8 @@ public:
 
     // 快速平面求交
     static float intersectWithPlane (Ray const& normal, Ray const& ray);
+
+    Point getPoint (Vector3f const& param) const;
 };
 
 

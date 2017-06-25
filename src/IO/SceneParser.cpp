@@ -23,6 +23,7 @@
 #include "../Shapes/2D/Lathe.h"
 #include "../Renderer/BiPathTracer.h"
 #include "../Renderer/ProgressivePhotonMaps.h"
+#include "../Light/LightSource/RectLight.h"
 #include <fstream>
 
 using namespace Json;
@@ -140,6 +141,22 @@ unique_ptr<LightSource> SceneParser::buildLight(Json::Value const &json) {
         auto angle = json["angle"].asFloat();
         auto edgeAngle = json["edge_angle"].asFloat();
         light = new SpotLight(color, Ray(pos, dir), angle, edgeAngle);
+    }
+    else if(json["type"] == "rect")
+    {
+        auto pos = parseVector3f(json["pos"]);
+        Vector3f dir;
+        if(!json["dir"].isNull())
+            dir = parseVector3f(json["dir"]);
+        else if(!json["target"].isNull())
+            dir = parseVector3f(json["target"]) - pos;
+        else
+            throw std::invalid_argument("RectLight does not contain 'dir' or 'target'.");
+        auto color = parseVector3fCanBeSingle(json["color"]);
+        auto size = json.get("size", 1).asFloat();
+        auto l = new RectLight(color, Ray(pos, dir), size);
+        l->sampleSize = json.get("sample_size", 1).asInt();
+        light = l;
     }
     else
         throw std::invalid_argument("LightSource type wrong.");
