@@ -85,7 +85,7 @@
         "type": "rect",
         "pos": [ 3, 3, 3],
         "dir": [0, 0, -1],
-        "sample_size": 12,
+        "sample_size": 6,
         "size": 2,
         "color": 50
       }

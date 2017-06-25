@@ -64,7 +64,7 @@ void TriangleMesh::loadFromObj(std::istream &in) {
 bool TriangleMesh::tryGetIntersectionPoint(Ray const &ray, float &t, Vector3f &param) const {
 
     // AABB
-    Triangle::edge = edge; // TODO 存在多线程竞争问题
+    Triangle::edge = true; // TODO 存在多线程竞争问题
     auto info = IntersectInfo(ray);
     aabbTree.intersect(info);
     if(!info.success)

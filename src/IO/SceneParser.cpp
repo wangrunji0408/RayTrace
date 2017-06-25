@@ -156,6 +156,7 @@ unique_ptr<LightSource> SceneParser::buildLight(Json::Value const &json) {
         auto size = json.get("size", 1).asFloat();
         auto l = new RectLight(color, Ray(pos, dir), size);
         l->sampleSize = json.get("sample_size", 1).asInt();
+        l->sampleRandom = json["sample_random"].asBool();
         light = l;
     }
     else

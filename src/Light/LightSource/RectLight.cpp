@@ -20,8 +20,10 @@ std::vector<Light> RectLight::illuminates(Vector3f const &point) const {
     for(int i=0; i<sampleSize; ++i)
         for(int j=0; j<sampleSize; ++j)
         {
-            float u = (float(i*2+1) / sampleSize - 1) * plane.size;
-            float v = (float(j*2+1) / sampleSize - 1) * plane.size;
+            float e1 = sampleRandom? rand01()*2: 1;
+            float e2 = sampleRandom? rand01()*2: 1;
+            float u = ((i*2+e1) / sampleSize - 1) * plane.size;
+            float v = ((j*2+e2) / sampleSize - 1) * plane.size;
             auto pos = plane.getPoint(Vector3f(u, v, 0));
             float cos = (point - pos).norm().dot(normal);
             if(cos < eps) continue;

@@ -13,6 +13,7 @@ class RectLight: public LightSource {
     Plane plane;
 public:
     int sampleSize = 4;
+    bool sampleRandom = false;
 public:
     RectLight(Color const& color, const Ray &normal, float size);
     Light illuminate(Vector3f const &point) const override;

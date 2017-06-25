@@ -26,8 +26,8 @@ cv::Mat3f ProgressivePhotonMaps::renderRay(int times, cv::Mat1i &cnt) const {
                 int k = (int) (sphere - balls.data());
                 int i = k / camera->getWidth();
                 int j = k % camera->getWidth();
-                if ((point - sphere->getO()).len2() >= radius2.at<float>(i, j))
-//                if ((point - sphere->getO()).len() >= r)
+                float dist2 = (point - sphere->getO()).len2();
+                if (dist2 >= radius2.at<float>(i, j))
                     continue;
                 auto const &pinfo = colls[i][j];
 //            if(!pinfo.success) continue;
@@ -39,7 +39,6 @@ cv::Mat3f ProgressivePhotonMaps::renderRay(int times, cv::Mat1i &cnt) const {
                 auto color = info.weight * pinfo.weight * material.calcBRDF(l, v, n);
                 mat1.at<cv::Vec3f>(i, j) += cv::Vec3f(color);
                 cnt.at<int>(i, j) += 1;
-
             }
         }
     }

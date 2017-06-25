@@ -37,7 +37,7 @@
         "name": "up_plane",
         "shape": {
           "type": "plane",
-          "point": [ 0, 0, 10],
+          "point": [ 0, 0, 9.1],
           "normal": [ 0, 0, -1],
           "size": 100
         },
@@ -51,27 +51,112 @@
           "normal": [ 0, -1, 0],
           "size": 10
         },
-        "material": "white"
+        "material": "wall"
       },
       {
-        "enable": false,
+        "enable": true,
         "name": "sphere1",
         "shape": {
           "type": "sphere",
-          "o": [ -3, 3, 2],
-          "r": 2
+          "o": [ 4, 0, 1.5],
+          "r": 1.5
         },
         "material": "mirror"
       },
       {
-        "enable": false,
+        "enable": true,
         "name": "sphere2",
         "shape": {
           "type": "sphere",
-          "o": [ 3, 0, 2],
-          "r": 2
+          "o": [ 5, -3, 1],
+          "r": 1
         },
         "material": "trans"
+      },
+      {
+        "enable": true,
+        "name": "sphere3",
+        "shape": {
+          "type": "sphere",
+          "o": [ -4.5, -3, 0.5],
+          "r": 0.5
+        },
+        "material": "marble"
+      },
+      {
+        "enable": false,
+        "name": "box",
+        "shape": {
+          "type": "axis_box",
+          "min": [ 0,0,0],
+          "max": [ 2,1,1]
+        },
+        "material": "trans",
+        "transform": {
+          "pos": [5, -3, 0]
+        }
+      },
+      {
+        "enable": false,
+        "name": "curtain",
+        "shape": {
+          "type": "bezier_surface",
+          "points": [
+            [[0, 0, 5], [1, 0, 5], [2, 0, 5], [3, 0, 5], [4, 0, 5], [5, 0, 5]],
+            [[0, 0, 3], [1, 0, 3], [2, 0, 3], [3, 0, 3], [4, 0, 3], [5, 0, 3]],
+            [[0, -1, 0], [1, 1, 0], [2, -2, 0], [3, 0, 0], [4, -1, 0], [5, -1, 0]]
+          ],
+          "mesh_size": [20, 20],
+          "rendering": "iteration",
+          "flip": false
+        },
+        "material": "curtain",
+        "transform": {
+          "pos": [-3, 5, 3],
+          "angle": [0, 0, 0]
+        }
+      },
+      {
+        "name": "spindle",
+        "shape": {
+          "type": "lathe",
+          "axis": [[0.3,0,0], [0,0,1]],
+          "curve": {
+            "type": "bezier_curve",
+            "points": [[1,0,0], [1.2,0,1], [2,0,1], [2.5,0,2.5], [1,0,3]]
+          },
+          "mesh_size": [50, 100],
+          "rendering": "iteration",
+          "iter_times": 5,
+          "flip": true
+        },
+        "material": "blue_white",
+        "transform": {
+          "pos": [ -3.7, 1, 0.1],
+          "angle": [0, 0, 0],
+          "scale": 1
+        }
+      },
+      {
+        "name": "balling",
+        "shape": {
+          "type": "lathe",
+          "axis": [[0,0,0], [0,0,1]],
+          "curve": {
+            "type": "bezier_curve",
+            "points": [[0.4, 0, 0], [2, 0, 4], [-1.5, 0, 4], [1, 0, 4.5], [0.6, 0, 6], [0, 0, 6]]
+          },
+          "mesh_size": [50, 100],
+          "rendering": "iteration",
+          "iter_times": 5,
+          "flip": true
+        },
+        "material": "balling",
+        "transform": {
+          "pos": [ -4, -3, 0],
+          "angle": [-10, 0, 90],
+          "scale": 0.5
+        }
       },
       {
         "enable": true,
@@ -82,11 +167,11 @@
           "cut": 1000000,
           "normal_interpolation": true
         },
-        "material": "trans",
+        "material": "white",
         "transform": {
-          "pos": [ 0, 3, -2],
+          "pos": [ 0.5, 3, -1.5],
           "angle": [90, 0, 0],
-          "scale": 40
+          "scale": 30
         }
       },
       {
@@ -153,9 +238,16 @@
       },
       {
         "name": "trans",
-        "diffuse": 0,
-        "refraction": 1,
-        "refractive_index": 2
+        "diffuse": 0.1,
+        "refraction": 0.9,
+        "refractive_index": 1.5
+      },
+      {
+        "name": "top",
+        "tdiffuse": 0.1,
+        "reflection": 0.1,
+        "refraction": 0.9,
+        "refractive_index": 1.01
       },
       {
         "name": "glass",
@@ -175,47 +267,105 @@
           "type": "image",
           "file": "../data/texture/floor.bmp",
           "scale": [8, 8]
+        },
+        "reflection": 0.2
+      },
+      {
+        "name": "blue_white",
+        "diffuse": {
+          "type": "image",
+          "file": "../data/texture/blue_white.jpg",
+          "k": 1
+        },
+        "specular": 0.5,
+        "shininess": 40
+      },
+      {
+        "name": "curtain",
+        "diffuse": {
+          "type": "image",
+          "file": "../data/texture/curtain.jpg",
+          "k": 1
+        }
+      },
+      {
+        "name": "balling",
+        "diffuse": {
+          "type": "image",
+          "file": "../data/texture/balling.png",
+          "k": 0.8
+        },
+        "specular": 0.5,
+        "shininess": 40
+      },
+      {
+        "name": "wall",
+        "diffuse": {
+          "type": "image",
+          "file": "../data/texture/wall.jpg",
+          "k": 0.75,
+          "scale": [10, 10]
         }
       },
       {
         "name": "grid",
         "diffuse": {
           "type": "grid",
-          "n": 1,
+          "n": 10,
           "a": 0.2
         }
       }
     ],
     "lights": [
       {
-        "enable": false,
-        "name": "light_1",
+        "enable": true,
+        "name": "top_point",
         "type": "point",
-        "pos": [ 0, 1, 9],
+        "pos": [ 0, 0, 9],
         "color": 25
       },
       {
+        "enable": false,
+        "name": "front_parallel",
+        "type": "parallel",
+        "pos": [ 0, -20, 5],  // 发光点
+        "r": 10,               // 发光半径（可选，默认为1）
+        "dir": [0, 1, 0],     // 发光方向（与target二选一，优先）
+        "color": 25          // 颜色
+      },
+      {
         "enable": true,
-        "name": "light_4",
+        "name": "front_rect",
         "type": "rect",
-        "pos": [ 0, 1, 9],
+        "pos": [ 0, -6, 4],
+        "dir": [0, 1, 0],
+        "sample_size": 6,
+        "sample_random": false,
+        "size": 4,
+        "color": 40
+      },
+      {
+        "enable": false,
+        "name": "top_rect",
+        "type": "rect",
+        "pos": [ 0, 0, 9],
         "dir": [0, 0, -1],
         "sample_size": 2,
-        "size": 1,
-        "color": 25
+        "size": 2,
+        "color": 40
       }
     ],
     "cameras": [
       {
         "name": "camera_1",
         "pos": [ 0, -20, 5],
-        "target": [ 0, 0, 5],
+        "target": [ 0, 0, 4],
         "up": [ 0, 0, 10],
         "resolution": [ 640, 480],
         "realw": 18,
-        "orthographic": false
-        //      "focal": 20,
-        //      "aperture": 1
+        "orthographic": false,
+        "focal": 23,
+        "aperture": 0.5
       }
     ]
   },
@@ -227,7 +377,8 @@
       "camera": "camera_1",
       "super": true,
       "parallel": true,
-      "depth": 5
+      "depth": 5,
+      "round": 50
     },
     {
       "enable": false,
@@ -256,5 +407,4 @@
       "round": 10
     }
   ]
-//   "show_light": [300,400]
 }
